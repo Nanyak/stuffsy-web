@@ -2,24 +2,27 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent } from '@/components/ui/card'
-import { Zap, Shield, Smile } from 'lucide-react'
+import { urlShortenerService } from './services/url_shortener_service';
 
+const API_URL = import.meta.env.VITE_API_URL;
 function App() {
   const [url, setUrl] = useState('')
-  const [shortUrl, setShortUrl] = useState('')
+  const [shortUrl, setShortUrl] = useState(null as string | null)
   const [showResult, setShowResult] = useState(false)
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    // Mock shortening
-    const shortCode = Math.random().toString(36).substr(2, 6)
-    const shortened = `https://short.ly/${shortCode}`
-    setShortUrl(shortened)
-    setShowResult(true)
+    urlShortenerService(url).then(response => {
+        const result = `${API_URL}/${response.data.short_url}`
+        setShortUrl(result)
+        setShowResult(true)
+    }).catch(error => {
+        console.error("Error shortening URL:", error)
+    })
   }
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(shortUrl)
+    navigator.clipboard.writeText(shortUrl!)
   }
 
   return (
@@ -54,7 +57,7 @@ function App() {
                 <div className="mt-6 text-center">
                   <p className="text-green-600 font-semibold mb-2">Shortened URL:</p>
                   <a
-                    href={shortUrl}
+                    href={shortUrl!}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-primary underline break-all"
