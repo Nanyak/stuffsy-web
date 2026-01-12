@@ -1,0 +1,48 @@
+name: React CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Log in to Github Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GR_PAT }}
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            ghcr.io/nanyak/stuffsy-web:latest
+            ghcr.io/nanyak/stuffsy-web:${{ github.sha }}
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to VPS via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            echo ${{ secrets.GR_PAT }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+            docker pull ghcr.io/nanyak/stuffsy-web:latest
+            docker stop stuffsy-web || true
+            docker rm stuffsy-web || true
+            docker run -d --name stuffsy-web -p 3000:80 ghcr.io/nanyak/stuffsy-web:latest
