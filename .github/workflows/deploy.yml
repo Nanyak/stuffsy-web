@@ -27,6 +27,8 @@ jobs:
         with:
           context: .
           push: true
+          build-args: |
+            VITE_API_URL=${{ secrets.VITE_API_URL }}
           tags: |
             ghcr.io/nanyak/stuffsy-web:latest
             ghcr.io/nanyak/stuffsy-web:${{ github.sha }}
@@ -43,6 +45,4 @@ jobs:
           script: |
             echo ${{ secrets.CR_PAT }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
             docker pull ghcr.io/nanyak/stuffsy-web:latest
-            docker stop stuffsy-web || true
-            docker rm stuffsy-web || true
-            docker run -d --name stuffsy-web -p 3000:80 ghcr.io/nanyak/stuffsy-web:latest
+            docker compose -f /home/nanyak/stuffsy-web/docker-compose.yml up -d --no-deps --build web
