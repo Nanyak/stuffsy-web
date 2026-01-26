@@ -1,21 +1,15 @@
 import { useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import axios from 'axios'
 
 export function RedirectPage() {
   const { code } = useParams()
   const navigate = useNavigate()
 
   useEffect(() => {
-    const redirectToUrl = async () => {
-      try {
-        const response = await axios.get(`/${code}`)
-        window.location.href = response.data.long_url
-      } catch (error) {
-        navigate('/')
-      }
+    if (code) {
+      // Let the backend handle the redirect via its RedirectURL handler
+      window.location.href = `/s/${code}`
     }
-    redirectToUrl()
   }, [code, navigate])
 
   return <div>Redirecting...</div>
