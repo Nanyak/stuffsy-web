@@ -1,6 +1,5 @@
 import axios from "axios";
 
-const API_URL = import.meta.env.VITE_API_URL;
 
 export interface FileInfo {
   key: string;
@@ -26,7 +25,7 @@ export async function uploadFile(file: File): Promise<UploadResponse> {
   const formData = new FormData();
   formData.append("file", file);
 
-  const apiUrl = `${API_URL}/files`;
+  const apiUrl = `/files`;
   const response = await axios.post<UploadResponse>(apiUrl, formData, {
     headers: {
       "Content-Type": "multipart/form-data",
@@ -36,7 +35,7 @@ export async function uploadFile(file: File): Promise<UploadResponse> {
 }
 
 export async function listFiles(prefix?: string): Promise<ListResponse> {
-  const apiUrl = `${API_URL}/files`;
+  const apiUrl = `/files`;
   const response = await axios.get<ListResponse>(apiUrl, {
     params: prefix ? { prefix } : undefined,
   });
@@ -44,12 +43,12 @@ export async function listFiles(prefix?: string): Promise<ListResponse> {
 }
 
 export async function deleteFile(key: string): Promise<void> {
-  const apiUrl = `${API_URL}/files/${encodeURIComponent(key)}`;
+  const apiUrl = `/files/${encodeURIComponent(key)}`;
   await axios.delete(apiUrl);
 }
 
 export async function getDownloadUrl(key: string): Promise<PresignedURLResponse> {
-  const apiUrl = `${API_URL}/files/${encodeURIComponent(key)}/url`;
+  const apiUrl = `/files/${encodeURIComponent(key)}/url`;
   const response = await axios.get<PresignedURLResponse>(apiUrl);
   return response.data;
 }

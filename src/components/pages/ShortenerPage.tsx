@@ -5,7 +5,6 @@ import { Card, CardContent } from '@/components/ui/card'
 import { urlShortenerService } from '@/services/url_shortener_service'
 import { Link2, Copy, Check, ExternalLink, Loader2 } from 'lucide-react'
 
-const API_URL = import.meta.env.VITE_API_URL
 
 export function ShortenerPage() {
   const [url, setUrl] = useState('')
@@ -19,7 +18,7 @@ export function ShortenerPage() {
     setIsLoading(true)
     try {
       const response = await urlShortenerService(url)
-      const result = `${API_URL}/${response.data.short_url}`
+      const result = `/${response.data.short_url}`
       setShortUrl(result)
       setShowResult(true)
     } catch (error) {
