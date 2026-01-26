@@ -20,7 +20,7 @@ export function ShortenerPage() {
     setIsLoading(true)
     try {
       const response = await urlShortenerService(url)
-      const result = `${API_URL}/${response.data.short_url}`
+      const result = `${API_URL}/s/${response.data.short_url}`
       setShortUrl(result)
       setShowResult(true)
     } catch (error) {
