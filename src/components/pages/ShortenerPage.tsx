@@ -98,13 +98,13 @@ export function ShortenerPage() {
                   className="flex-1 text-primary hover:text-primary/80 font-medium break-all flex items-center gap-2 cursor-pointer transition-colors duration-200"
                 >
                   {shortUrl}
-                  <ExternalLink className="h-4 w-4 flex-shrink-0" />
+                  <ExternalLink className="h-4 w-4 shrink-0" />
                 </a>
                 <Button
                   onClick={copyToClipboard}
                   variant="outline"
                   size="sm"
-                  className="flex-shrink-0 cursor-pointer transition-all duration-200"
+                  className="shrink-0 cursor-pointer transition-all duration-200"
                 >
                   {copied ? (
                     <>
