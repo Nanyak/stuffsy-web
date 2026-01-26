@@ -9,7 +9,7 @@ export function RedirectPage() {
   useEffect(() => {
     const redirectToUrl = async () => {
       try {
-        const response = await axios.get(`/url/${code}`)
+        const response = await axios.get(`/${code}`)
         window.location.href = response.data.long_url
       } catch (error) {
         navigate('/')
