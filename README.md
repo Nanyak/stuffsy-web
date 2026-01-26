@@ -1,73 +1,104 @@
-# React + TypeScript + Vite
+# Stuffsy Web
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Frontend for Stuffsy - a collection of useful online tools.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Cloud Storage** - Upload, download, and manage files with drag & drop support
+- **URL Shortener** - Create short, shareable links from long URLs
+- **More coming soon** - QR Generator, Password Generator, Text Tools
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- React 19
+- TypeScript
+- Vite 7
+- Tailwind CSS 4
+- React Router 7
+- shadcn/ui components
+- Lucide icons
+- Axios
 
-## Expanding the ESLint configuration
+## Getting Started
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Prerequisites
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- Node.js 18+
+- npm or yarn
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### Installation
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+cd stuffsy-web
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Configuration
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Copy `.env.sample` to `.env`:
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+cp .env.sample .env
 ```
+
+| Variable       | Description     | Default                 |
+| -------------- | --------------- | ----------------------- |
+| `VITE_API_URL` | Backend API URL | `http://localhost:9808` |
+
+### Development
+
+```bash
+npm run dev
+```
+
+Open http://localhost:5173
+
+### Build
+
+```bash
+npm run build
+npm run preview
+```
+
+## Project Structure
+
+```
+stuffsy-web/
+├── src/
+│   ├── components/
+│   │   ├── layout/       # Layout components (Navbar, Layout)
+│   │   ├── pages/        # Page components (Home, Storage, Shortener)
+│   │   ├── storage/      # Storage feature components
+│   │   └── ui/           # shadcn/ui components
+│   ├── services/         # API clients
+│   ├── lib/              # Utilities
+│   ├── types/            # TypeScript types
+│   ├── App.tsx           # Main app with routing
+│   └── main.tsx          # Entry point
+├── .claude/              # Claude context files
+├── .github/prompts/      # AI prompts
+└── public/               # Static assets
+```
+
+## Available Scripts
+
+| Script            | Description              |
+| ----------------- | ------------------------ |
+| `npm run dev`     | Start dev server         |
+| `npm run build`   | Build for production     |
+| `npm run preview` | Preview production build |
+| `npm run lint`    | Run ESLint               |
+
+## UI Guidelines
+
+This project follows **ui-ux-pro-max** design guidelines:
+
+- Lucide icons (no emojis)
+- `cursor-pointer` on interactive elements
+- Smooth transitions (150-300ms)
+- Consistent Card/Button patterns
+- Light/dark mode support
+
+## License
+
+MIT
