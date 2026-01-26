@@ -3,10 +3,10 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent } from '@/components/ui/card'
 import { urlShortenerService } from '@/services/url_shortener_service'
-import { Link2, Copy, Check, ExternalLink, Loader2 } from 'lucide-react'
+import { Link2, Copy, Check, ExternalLink, Loader2, AlertCircle } from 'lucide-react'
+import axios from 'axios'
 
 const API_URL = import.meta.env.VITE_API_URL
-
 
 export function ShortenerPage() {
   const [url, setUrl] = useState('')
@@ -14,17 +14,25 @@ export function ShortenerPage() {
   const [showResult, setShowResult] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [copied, setCopied] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
+    setError(null)
+    setShowResult(false)
     try {
       const response = await urlShortenerService(url)
       const result = `${API_URL}/s/${response.data.short_url}`
       setShortUrl(result)
       setShowResult(true)
-    } catch (error) {
-      console.error("Error shortening URL:", error)
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+        const message = err.response?.data?.error || err.message
+        setError(message)
+      } else {
+        setError('Failed to shorten URL. Please try again.')
+      }
     } finally {
       setIsLoading(false)
     }
@@ -83,6 +91,15 @@ export function ShortenerPage() {
               )}
             </Button>
           </form>
+
+          {error && (
+            <div className="mt-6 p-4 bg-red-50 rounded-xl border border-red-200">
+              <div className="flex items-center gap-2">
+                <AlertCircle className="h-5 w-5 text-red-600 shrink-0" />
+                <p className="text-red-700">{error}</p>
+              </div>
+            </div>
+          )}
 
           {showResult && shortUrl && (
             <div className="mt-8 p-6 bg-green-50 rounded-xl border border-green-200">
