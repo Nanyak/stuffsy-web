@@ -1,16 +1,15 @@
 import { useEffect } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 
 export function RedirectPage() {
   const { code } = useParams()
-  const navigate = useNavigate()
 
   useEffect(() => {
     if (code) {
-      // Let the backend handle the redirect via its RedirectURL handler
-      window.location.href = `/s/${code}`
+      // Redirect to API endpoint which performs HTTP 302 to the original URL
+      window.location.href = `${import.meta.env.VITE_API_URL}/${code}`
     }
-  }, [code, navigate])
+  }, [code])
 
   return <div>Redirecting...</div>
 }
