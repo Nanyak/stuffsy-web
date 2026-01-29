@@ -25,7 +25,7 @@ export async function uploadFile(file: File): Promise<UploadResponse> {
   const formData = new FormData();
   formData.append("file", file);
 
-  const apiUrl = `/files`;
+  const apiUrl = `/v1/api/files`;
   const response = await axios.post<UploadResponse>(apiUrl, formData, {
     headers: {
       "Content-Type": "multipart/form-data",
@@ -35,7 +35,7 @@ export async function uploadFile(file: File): Promise<UploadResponse> {
 }
 
 export async function listFiles(prefix?: string): Promise<ListResponse> {
-  const apiUrl = `/files`;
+  const apiUrl = `/v1/api/files`;
   const response = await axios.get<ListResponse>(apiUrl, {
     params: prefix ? { prefix } : "",
   });
@@ -43,12 +43,12 @@ export async function listFiles(prefix?: string): Promise<ListResponse> {
 }
 
 export async function deleteFile(key: string): Promise<void> {
-  const apiUrl = `/files/${encodeURIComponent(key)}`;
+  const apiUrl = `/v1/api/files/${encodeURIComponent(key)}`;
   await axios.delete(apiUrl);
 }
 
 export async function getDownloadUrl(key: string): Promise<PresignedURLResponse> {
-  const apiUrl = `/files/${encodeURIComponent(key)}/url`;
+  const apiUrl = `/v1/api/files/${encodeURIComponent(key)}/url`;
   const response = await axios.get<PresignedURLResponse>(apiUrl);
   return response.data;
 }
