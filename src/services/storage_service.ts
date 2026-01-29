@@ -37,7 +37,7 @@ export async function uploadFile(file: File): Promise<UploadResponse> {
 export async function listFiles(prefix?: string): Promise<ListResponse> {
   const apiUrl = `/files`;
   const response = await axios.get<ListResponse>(apiUrl, {
-    params: prefix ? { prefix } : undefined,
+    params: prefix ? { prefix } : "",
   });
   return response.data;
 }
