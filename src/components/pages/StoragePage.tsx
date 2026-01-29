@@ -33,9 +33,10 @@ export function StoragePage() {
     setIsLoading(true);
     try {
       const response = await listFiles();
-      setUploadedFiles(response.files);
+      setUploadedFiles(response.files ?? []);
     } catch (error) {
       console.error('Failed to fetch files:', error);
+      setUploadedFiles([]);
     } finally {
       setIsLoading(false);
     }

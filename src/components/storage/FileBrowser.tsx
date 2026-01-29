@@ -13,7 +13,7 @@ interface FileBrowserProps {
   isLoading?: boolean;
 }
 
-export function FileBrowser({ files, onDownload, onDelete, isLoading }: FileBrowserProps) {
+export function FileBrowser({ files = [], onDownload, onDelete, isLoading }: FileBrowserProps) {
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
 
   if (isLoading) {
