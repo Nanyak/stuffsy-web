@@ -4,7 +4,8 @@ Frontend for Stuffsy - a collection of useful online tools.
 
 ## Features
 
-- **Cloud Storage** - Upload, download, and manage files with drag & drop support
+- **Authentication** - Sign up, sign in, password reset via AWS Cognito
+- **Cloud Storage** - Upload, download, and manage files with drag & drop support (protected)
 - **URL Shortener** - Create short, shareable links from long URLs
 - **More coming soon** - QR Generator, Password Generator, Text Tools
 
@@ -66,11 +67,13 @@ npm run preview
 stuffsy-web/
 ├── src/
 │   ├── components/
+│   │   ├── auth/         # Auth components (ProtectedRoute)
 │   │   ├── layout/       # Layout components (Navbar, Layout)
-│   │   ├── pages/        # Page components (Home, Storage, Shortener)
+│   │   ├── pages/        # Page components (Home, Storage, Login, Signup, etc.)
 │   │   ├── storage/      # Storage feature components
 │   │   └── ui/           # shadcn/ui components
-│   ├── services/         # API clients
+│   ├── contexts/         # React contexts (AuthContext)
+│   ├── services/         # API clients (auth, storage, url shortener)
 │   ├── lib/              # Utilities
 │   ├── types/            # TypeScript types
 │   ├── App.tsx           # Main app with routing
