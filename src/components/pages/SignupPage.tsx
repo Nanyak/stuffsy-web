@@ -22,7 +22,7 @@ export function SignupPage() {
 
     try {
       await signUp({ username, email, password, name });
-      navigate("/confirm-signup", { state: { email } });
+      navigate("/confirm-signup", { state: { email, username } });
     } catch (err: unknown) {
       if (err && typeof err === "object" && "response" in err) {
         const axiosError = err as { response?: { status?: number; data?: { error?: string } } };

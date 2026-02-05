@@ -32,11 +32,15 @@ export async function signUp(data: SignUpRequest): Promise<SignUpResponse> {
   return response.data;
 }
 
-export async function confirmSignUp(email: string, confirmationCode: string): Promise<void> {
+export async function confirmSignUp(username: string, confirmationCode: string): Promise<void> {
   await axios.post("/v1/api/auth/confirm-signup", {
-    email,
+    username,
     confirmation_code: confirmationCode,
   });
+}
+
+export async function resendConfirmationCode(username: string): Promise<void> {
+  await axios.post("/v1/api/auth/resend-confirmation-code", { username });
 }
 
 export async function signIn(email: string, password: string): Promise<AuthTokens> {

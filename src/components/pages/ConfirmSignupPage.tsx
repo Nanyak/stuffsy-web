@@ -1,26 +1,30 @@
 import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { confirmSignUp } from "@/services/auth_service";
+import { confirmSignUp, resendConfirmationCode } from "@/services/auth_service";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { CheckCircle } from "lucide-react";
+import { CheckCircle, RefreshCw } from "lucide-react";
 
 export function ConfirmSignupPage() {
   const location = useLocation();
-  const [email, setEmail] = useState(location.state?.email || "");
+  const [email] = useState(location.state?.email || "");
+  const [username, setUsername] = useState(location.state?.username || "");
   const [code, setCode] = useState("");
   const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isResending, setIsResending] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setMessage("");
     setIsLoading(true);
 
     try {
-      await confirmSignUp(email, code);
+      await confirmSignUp(username, code);
       navigate("/login", { state: { message: "Account confirmed! Please sign in." } });
     } catch (err: unknown) {
       if (err && typeof err === "object" && "response" in err) {
@@ -34,13 +38,37 @@ export function ConfirmSignupPage() {
     }
   };
 
+  const handleResendCode = async () => {
+    if (!username) {
+      setError("Please enter your username");
+      return;
+    }
+    setError("");
+    setMessage("");
+    setIsResending(true);
+
+    try {
+      await resendConfirmationCode(username);
+      setMessage("A new confirmation code has been sent to your email");
+    } catch (err: unknown) {
+      if (err && typeof err === "object" && "response" in err) {
+        const axiosError = err as { response?: { data?: { error?: string } } };
+        setError(axiosError.response?.data?.error || "Failed to resend code");
+      } else {
+        setError("An error occurred. Please try again.");
+      }
+    } finally {
+      setIsResending(false);
+    }
+  };
+
   return (
     <div className="flex items-center justify-center min-h-[70vh]">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl">Confirm your email</CardTitle>
           <CardDescription>
-            We sent a verification code to your email
+            We sent a verification code to {email || "your email"}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -50,16 +78,21 @@ export function ConfirmSignupPage() {
                 {error}
               </div>
             )}
+            {message && (
+              <div className="p-3 text-sm text-green-600 bg-green-50 rounded-lg">
+                {message}
+              </div>
+            )}
             <div className="space-y-2">
-              <label htmlFor="email" className="text-sm font-medium">
-                Email
+              <label htmlFor="username" className="text-sm font-medium">
+                Username
               </label>
               <Input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@example.com"
+                id="username"
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="johndoe"
                 required
               />
             </div>
@@ -87,6 +120,25 @@ export function ConfirmSignupPage() {
                 <span className="flex items-center gap-2">
                   <CheckCircle className="h-4 w-4" />
                   Confirm
+                </span>
+              )}
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full cursor-pointer"
+              onClick={handleResendCode}
+              disabled={isResending}
+            >
+              {isResending ? (
+                <span className="flex items-center gap-2">
+                  <span className="animate-spin rounded-full h-4 w-4 border-b-2 border-current" />
+                  Sending...
+                </span>
+              ) : (
+                <span className="flex items-center gap-2">
+                  <RefreshCw className="h-4 w-4" />
+                  Resend code
                 </span>
               )}
             </Button>
