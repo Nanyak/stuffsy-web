@@ -69,7 +69,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const tokens = await authService.signIn(email, password);
     setTokens(tokens);
     const userData = await authService.getUser(tokens.access_token);
-    localStorage.setItem(USERNAME_KEY, email);
+    localStorage.setItem(USERNAME_KEY, userData.username);
     setUser(userData);
   }, [setTokens]);
 
@@ -96,6 +96,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           const tokens = await authService.refreshToken(storedRefresh, storedUsername);
           setTokens(tokens);
           const userData = await authService.getUser(tokens.access_token);
+          localStorage.setItem(USERNAME_KEY, userData.username);
           setUser(userData);
         } catch {
           clearAuth();
