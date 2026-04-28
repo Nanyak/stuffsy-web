@@ -110,7 +110,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const requestInterceptor = axios.interceptors.request.use((config) => {
       const token = accessTokenRef.current;
-      if (token && config.url?.startsWith("/v1/api/files")) {
+      if (token && (config.url?.startsWith("/v1/api/files") || config.url?.startsWith("/v1/api/url"))) {
         config.headers.Authorization = `Bearer ${token}`;
       }
       return config;
