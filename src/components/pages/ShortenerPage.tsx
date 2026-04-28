@@ -106,7 +106,7 @@ export function ShortenerPage() {
           <div>
             <h1 className="text-3xl font-extrabold tracking-tight" style={{
               fontFamily: "'Syne', system-ui, sans-serif",
-              color: 'oklch(0.940 0.005 260)',
+              color: 'oklch(0.180 0.014 260)',
             }}>URL Shortener</h1>
             <p className="text-sm mt-0.5 text-muted-foreground">Create short, easy-to-share links from long URLs.</p>
           </div>
