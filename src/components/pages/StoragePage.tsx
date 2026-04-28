@@ -1,23 +1,13 @@
 import { useState, useEffect, useMemo } from "react";
-import { Cloud, HardDrive, FileText, FileImage, FileVideo, File, Upload, ChevronRight, Download, Trash2 } from "lucide-react";
+import { Cloud, HardDrive, FileText, FileImage, FileVideo, File as FileIcon, Upload, AlertCircle, X, CheckCircle2, Download, Trash2 } from "lucide-react";
 import { FileStagingArea } from "@/components/storage/FileStagingArea";
 import { FileBrowser } from "@/components/storage/FileBrowser";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import type { StagedFile, FileInfo } from "@/types/storage";
 import { uploadFile, listFiles, deleteFile, getDownloadUrl } from "@/services/storage_service";
 import { generateFileId, createImagePreview, getFolderContents, formatFileSize, getFileIcon, KEEP_FILE } from "@/lib/storageUtils";
 import { Button } from "@/components/ui/button";
-
-/* ── Design tokens ──────────────────────────────────────── */
-const PRIMARY   = 'oklch(0.545 0.185 268)'
-const PRIMARY_L = 'oklch(0.440 0.185 268)'
-const TEXT_HI   = 'oklch(0.180 0.014 260)'
-const TEXT_MID  = 'oklch(0.430 0.010 260)'
-const TEXT_LO   = 'oklch(0.620 0.008 260)'
-const SURFACE   = 'oklch(1 0 0)'
-const SURFACE2  = 'oklch(0.976 0.004 260)'
-const BORDER    = 'rgba(0,0,0,0.07)'
-const BORDER_EM = 'oklch(0.545 0.185 268 / 0.25)'
-const FONT_DISP = "'Syne', system-ui, sans-serif"
+import { T } from "@/lib/tokens";
 
 type FilterType = 'all' | 'documents' | 'images' | 'videos' | 'other'
 
@@ -26,7 +16,7 @@ const NAV_ITEMS: { id: FilterType; label: string; icon: React.ElementType }[] = 
   { id: 'documents', label: 'Documents',  icon: FileText   },
   { id: 'images',    label: 'Images',     icon: FileImage  },
   { id: 'videos',    label: 'Videos',     icon: FileVideo  },
-  { id: 'other',     label: 'Other',      icon: File       },
+  { id: 'other',     label: 'Other',      icon: FileIcon   },
 ]
 
 function filterFiles(files: FileInfo[], filter: FilterType): FileInfo[] {
@@ -48,6 +38,17 @@ function filterFiles(files: FileInfo[], filter: FilterType): FileInfo[] {
   )
 }
 
+/* ── Notification banner ───────────────────────────────────── */
+type Notification = { type: 'error' | 'success'; message: string }
+
+/* ── Confirm dialog state ──────────────────────────────────── */
+type ConfirmState = {
+  open: boolean
+  title: string
+  description: string
+  onConfirm: () => void
+}
+
 export function StoragePage() {
   const [stagedFiles, setStagedFiles] = useState<StagedFile[]>([]);
   const [allFiles, setAllFiles] = useState<FileInfo[]>([]);
@@ -57,6 +58,10 @@ export function StoragePage() {
   const [isLoading, setIsLoading] = useState(false);
   const [showUpload, setShowUpload] = useState(false);
   const [filterType, setFilterType] = useState<FilterType>('all');
+  const [notification, setNotification] = useState<Notification | null>(null);
+  const [confirmState, setConfirmState] = useState<ConfirmState>({
+    open: false, title: '', description: '', onConfirm: () => {},
+  });
 
   const { folders, files: currentFiles } = getFolderContents(allFiles, currentPath);
   const displayedFiles = filterFiles(currentFiles, filterType);
@@ -77,12 +82,24 @@ export function StoragePage() {
     };
   }, [stagedFiles]);
 
+  const notify = (type: Notification['type'], message: string, duration = 4000) => {
+    setNotification({ type, message })
+    if (duration > 0) setTimeout(() => setNotification(null), duration)
+  }
+
+  const openConfirm = (title: string, description: string, onConfirm: () => void) => {
+    setConfirmState({ open: true, title, description, onConfirm })
+  }
+
+  const closeConfirm = () => setConfirmState(s => ({ ...s, open: false }))
+
   const fetchFiles = async () => {
     setIsLoading(true);
     try {
       const response = await listFiles();
       setAllFiles(response.files ?? []);
     } catch {
+      notify('error', 'Failed to load files. Check your connection and try refreshing.')
       setAllFiles([]);
     } finally {
       setIsLoading(false);
@@ -121,6 +138,8 @@ export function StoragePage() {
   const handleUploadAll = async () => {
     if (stagedFiles.length === 0) return;
     setIsUploading(true);
+    const total = stagedFiles.length
+    let succeeded = 0
     const batchSize = 3;
     const chunks = [];
     for (let i = 0; i < stagedFiles.length; i += batchSize) chunks.push(stagedFiles.slice(i, i + batchSize));
@@ -130,6 +149,7 @@ export function StoragePage() {
           setUploadProgress(prev => ({ ...prev, [sf.id]: 0 }));
           await uploadFile(sf.file, sf.path);
           setUploadProgress(prev => ({ ...prev, [sf.id]: 100 }));
+          succeeded++
         } catch {
           setUploadProgress(prev => { const next = { ...prev }; delete next[sf.id]; return next; });
         }
@@ -140,79 +160,170 @@ export function StoragePage() {
     setIsUploading(false);
     setShowUpload(false);
     await fetchFiles();
+    if (succeeded === total) {
+      notify('success', `${succeeded} file${succeeded !== 1 ? 's' : ''} uploaded successfully`)
+    } else if (succeeded > 0) {
+      notify('error', `${succeeded} of ${total} files uploaded — some failed. Please retry.`)
+    } else {
+      notify('error', 'Upload failed. Please check your connection and try again.')
+    }
   };
 
   const handleDownload = async (key: string) => {
-    try { const response = await getDownloadUrl(key); window.open(response.url, "_blank"); } catch { }
+    try {
+      const response = await getDownloadUrl(key);
+      window.open(response.url, "_blank");
+    } catch {
+      notify('error', 'Failed to get download link. Please try again.')
+    }
   };
 
-  const handleDelete = async (key: string) => {
+  const handleDelete = (key: string) => {
     const fileName = key.split("/").pop() || key;
-    if (!window.confirm(`Delete "${fileName}"?`)) return;
-    try { await deleteFile(key); await fetchFiles(); } catch { }
+    openConfirm(
+      `Delete "${fileName}"?`,
+      'This file will be permanently deleted and cannot be recovered.',
+      async () => {
+        closeConfirm()
+        try {
+          await deleteFile(key);
+          await fetchFiles();
+        } catch {
+          notify('error', `Failed to delete "${fileName}". Please try again.`)
+        }
+      }
+    )
   };
 
   const handleOpenFolder = (name: string) => setCurrentPath(prev => [...prev, name]);
   const handleNavigate  = (path: string[]) => setCurrentPath(path);
 
-  const handleDeleteFolder = async (name: string) => {
-    if (!window.confirm(`Delete folder "${name}" and all its contents?`)) return;
-    const folderPrefix = currentPath.length > 0 ? `${currentPath.join("/")}/${name}/` : `${name}/`;
-    const toDelete = allFiles.filter(f => f.key.startsWith(folderPrefix));
-    try { await Promise.all(toDelete.map(f => deleteFile(f.key))); await fetchFiles(); } catch { }
+  const handleDeleteFolder = (name: string) => {
+    openConfirm(
+      `Delete folder "${name}"?`,
+      'All files inside this folder will be permanently deleted.',
+      async () => {
+        closeConfirm()
+        const folderPrefix = currentPath.length > 0 ? `${currentPath.join("/")}/${name}/` : `${name}/`;
+        const toDelete = allFiles.filter(f => f.key.startsWith(folderPrefix));
+        try {
+          await Promise.all(toDelete.map(f => deleteFile(f.key)));
+          await fetchFiles();
+        } catch {
+          notify('error', `Failed to delete folder "${name}". Please try again.`)
+        }
+      }
+    )
   };
 
   const handleCreateFolder = async (name: string) => {
     const folderPath = currentPath.length > 0 ? `${currentPath.join("/")}/${name}` : name;
     const keepFile = new File([], KEEP_FILE, { type: "application/octet-stream" });
-    await uploadFile(keepFile, folderPath);
-    await fetchFiles();
+    try {
+      await uploadFile(keepFile, folderPath);
+      await fetchFiles();
+    } catch {
+      notify('error', `Failed to create folder "${name}". Please try again.`)
+    }
   };
 
   return (
     <div className="max-w-6xl mx-auto">
 
       {/* ── Page header ───────────────────────────────────── */}
-      <div className="relative overflow-hidden mb-8">
+      <div className="relative overflow-hidden mb-6">
         <div className="relative py-8">
           <div className="flex items-center gap-2 mb-4">
-            <span className="text-xs font-bold tracking-widest uppercase" style={{ color: PRIMARY_L }}>Tool</span>
+            <span className="text-xs font-bold tracking-widest uppercase" style={{ color: T.primaryL }}>Tool</span>
           </div>
           <div className="flex items-start gap-4">
             <div className="p-3.5 rounded-2xl flex-shrink-0" style={{
-              background: 'oklch(0.545 0.185 268 / 0.10)',
-              border: `1px solid ${BORDER_EM}`,
+              background: T.primaryBg,
+              border: '1px solid var(--c-border-primary)',
             }}>
-              <Cloud className="h-7 w-7" style={{ color: PRIMARY }} />
+              <Cloud className="h-7 w-7" style={{ color: T.primary }} />
             </div>
             <div>
               <h1 className="text-4xl font-extrabold tracking-tight leading-tight mb-2" style={{
-                fontFamily: FONT_DISP,
-                background: `linear-gradient(135deg, ${TEXT_HI} 0%, oklch(0.260 0.018 265) 50%, ${PRIMARY} 100%)`,
+                fontFamily: T.fontDisp,
+                background: `linear-gradient(135deg, var(--foreground) 0%, var(--primary) 100%)`,
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
                 backgroundClip: 'text',
               }}>
                 Cloud Storage
               </h1>
-              <p className="text-sm leading-relaxed" style={{ color: TEXT_MID }}>
+              <p className="text-sm leading-relaxed" style={{ color: T.textMid }}>
                 Upload, organize, and share your files securely in the cloud.
               </p>
             </div>
           </div>
         </div>
-        <div style={{ height: '1px', background: `linear-gradient(to right, ${BORDER_EM}, ${BORDER}, transparent)` }} />
+        <div style={{ height: '1px', background: `linear-gradient(to right, var(--c-border-primary), var(--c-border-subtle), transparent)` }} />
+      </div>
+
+      {/* ── Notification banner ────────────────────────────── */}
+      {notification && (
+        <div
+          role={notification.type === 'error' ? 'alert' : 'status'}
+          aria-live={notification.type === 'error' ? 'assertive' : 'polite'}
+          className="flex items-center gap-3 p-4 rounded-xl mb-5 text-sm"
+          style={notification.type === 'error' ? {
+            background: 'oklch(0.580 0.220 27 / 0.08)',
+            border: '1px solid oklch(0.580 0.220 27 / 0.22)',
+            color: 'var(--destructive)',
+          } : {
+            background: 'oklch(0.55 0.150 145 / 0.08)',
+            border: '1px solid oklch(0.55 0.150 145 / 0.22)',
+            color: 'oklch(0.38 0.120 145)',
+          }}
+        >
+          {notification.type === 'error'
+            ? <AlertCircle className="h-4 w-4 shrink-0" />
+            : <CheckCircle2 className="h-4 w-4 shrink-0" />
+          }
+          <span className="flex-1">{notification.message}</span>
+          <button
+            onClick={() => setNotification(null)}
+            className="ml-auto cursor-pointer opacity-60 hover:opacity-100 transition-opacity duration-150"
+            aria-label="Dismiss notification"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+      )}
+
+      {/* ── Mobile filter pills (hidden on md+) ───────────── */}
+      <div className="md:hidden flex gap-2 overflow-x-auto pb-3 mb-4 -mx-1 px-1">
+        {NAV_ITEMS.map(item => {
+          const isActive = filterType === item.id
+          return (
+            <button
+              key={item.id}
+              onClick={() => setFilterType(item.id)}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all duration-150 cursor-pointer shrink-0"
+              style={{
+                background: isActive ? T.primary : T.surface2,
+                color: isActive ? 'white' : T.textMid,
+                border: isActive ? 'none' : '1px solid var(--c-border-subtle)',
+              }}
+            >
+              <item.icon className="h-3.5 w-3.5" />
+              {item.label}
+            </button>
+          )
+        })}
       </div>
 
       {/* ── Body: sidebar + main ──────────────────────────── */}
       <div className="flex gap-6 items-start">
 
-        {/* Sidebar */}
-        <aside className="w-48 shrink-0 sticky top-20">
+        {/* Sidebar — desktop only */}
+        <aside className="hidden md:block w-48 shrink-0 sticky top-20" aria-label="File type filter">
           <div className="rounded-2xl overflow-hidden" style={{
-            background: SURFACE2,
-            border: `1px solid ${BORDER}`,
-            boxShadow: '0 1px 4px rgba(0,0,0,0.04)',
+            background: T.surface2,
+            border: '1px solid var(--c-border-subtle)',
+            boxShadow: 'var(--c-shadow-sm)',
           }}>
             {/* Upload button */}
             <div className="p-3">
@@ -220,10 +331,11 @@ export function StoragePage() {
                 onClick={() => setShowUpload(v => !v)}
                 className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl font-semibold text-sm transition-all duration-200 cursor-pointer"
                 style={{
-                  background: PRIMARY,
+                  background: T.primary,
                   color: 'white',
-                  boxShadow: showUpload ? 'none' : '0 0 16px oklch(0.545 0.185 268 / 0.28)',
+                  boxShadow: showUpload ? 'none' : 'var(--c-shadow-sm)',
                 }}
+                aria-expanded={showUpload}
               >
                 <Upload className="h-3.5 w-3.5" />
                 Upload Files
@@ -231,7 +343,7 @@ export function StoragePage() {
             </div>
 
             {/* Nav */}
-            <div className="px-2 pb-3 space-y-0.5">
+            <nav className="px-2 pb-3 space-y-0.5" aria-label="Filter files by type">
               {NAV_ITEMS.map(item => {
                 const isActive = filterType === item.id
                 return (
@@ -239,10 +351,11 @@ export function StoragePage() {
                     key={item.id}
                     onClick={() => setFilterType(item.id)}
                     className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium transition-all duration-150 cursor-pointer text-left"
+                    aria-current={isActive ? 'page' : undefined}
                     style={{
-                      background: isActive ? 'oklch(0.545 0.185 268 / 0.10)' : 'transparent',
-                      color: isActive ? PRIMARY_L : TEXT_MID,
-                      border: isActive ? `1px solid ${BORDER_EM}` : '1px solid transparent',
+                      background: isActive ? T.primaryBg : 'transparent',
+                      color: isActive ? T.primaryL : T.textMid,
+                      border: isActive ? '1px solid var(--c-border-primary)' : '1px solid transparent',
                     }}
                   >
                     <item.icon className="h-4 w-4 shrink-0" />
@@ -250,12 +363,25 @@ export function StoragePage() {
                   </button>
                 )
               })}
-            </div>
+            </nav>
           </div>
         </aside>
 
         {/* Main content */}
         <div className="flex-1 min-w-0 space-y-6">
+
+          {/* Mobile upload button */}
+          <div className="md:hidden">
+            <button
+              onClick={() => setShowUpload(v => !v)}
+              className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl font-semibold text-sm transition-all duration-200 cursor-pointer"
+              style={{ background: T.primary, color: 'white', boxShadow: 'var(--c-shadow-sm)' }}
+              aria-expanded={showUpload}
+            >
+              <Upload className="h-4 w-4" />
+              Upload Files
+            </button>
+          </div>
 
           {/* Upload staging area */}
           {showUpload && (
@@ -272,40 +398,46 @@ export function StoragePage() {
 
           {/* Recent Files — only at root with "all" filter */}
           {filterType === 'all' && currentPath.length === 0 && recentFiles.length > 0 && (
-            <div className="rounded-2xl overflow-hidden" style={{
-              background: SURFACE,
-              border: `1px solid ${BORDER}`,
-              boxShadow: '0 1px 4px rgba(0,0,0,0.04)',
-            }}>
+            <div className="surface-card rounded-2xl overflow-hidden">
               <div className="px-5 pt-5 pb-3">
-                <p className="text-xs font-bold tracking-widest uppercase mb-4" style={{ color: TEXT_LO }}>Recent Files</p>
-                <div className="space-y-1">
+                <p className="text-xs font-bold tracking-widest uppercase mb-4" style={{ color: T.textLo }}>Recent Files</p>
+                <div className="space-y-1" role="list" aria-label="Recent files">
                   {recentFiles.map(f => {
                     const FileIcon = getFileIcon(f.content_type)
                     const name = f.key.split('/').pop() || f.key
                     return (
                       <div
                         key={f.key}
-                        className="flex items-center gap-3 px-3 py-2.5 rounded-xl group transition-colors duration-150"
-                        style={{ background: 'rgba(0,0,0,0.01)' }}
-                        onMouseEnter={e => e.currentTarget.style.background = 'oklch(0.545 0.185 268 / 0.05)'}
-                        onMouseLeave={e => e.currentTarget.style.background = 'rgba(0,0,0,0.01)'}
+                        role="listitem"
+                        className="flex items-center gap-3 px-3 py-2.5 rounded-xl group transition-colors duration-150 hover:bg-[oklch(0.545_0.185_268_/_0.05)] focus-within:bg-[oklch(0.545_0.185_268_/_0.05)]"
                       >
                         <div className="p-1.5 rounded-lg flex-shrink-0" style={{
-                          background: 'oklch(0.545 0.185 268 / 0.07)',
-                          border: '1px solid rgba(0,0,0,0.05)',
+                          background: T.primaryBg,
+                          border: '1px solid var(--c-border-subtle)',
                         }}>
-                          <FileIcon className="h-3.5 w-3.5" style={{ color: '#7C3AED' }} />
+                          <FileIcon className="h-3.5 w-3.5" style={{ color: T.primaryL }} />
                         </div>
-                        <span className="flex-1 text-sm truncate" style={{ color: TEXT_MID }}>{name}</span>
-                        <span className="text-xs shrink-0" style={{ color: TEXT_LO }}>{formatFileSize(f.size)}</span>
-                        <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-150">
-                          <Button variant="ghost" size="sm" className="h-7 w-7 p-0 cursor-pointer" style={{ color: PRIMARY_L }}
-                            onClick={() => handleDownload(f.key)}>
+                        <span className="flex-1 text-sm truncate" style={{ color: T.textMid }}>{name}</span>
+                        <span className="text-xs shrink-0" style={{ color: T.textLo }}>{formatFileSize(f.size)}</span>
+                        {/* Visible on hover AND keyboard focus */}
+                        <div className="flex gap-1 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity duration-150">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-7 w-7 p-0 cursor-pointer"
+                            style={{ color: T.primaryL }}
+                            aria-label={`Download ${name}`}
+                            onClick={() => handleDownload(f.key)}
+                          >
                             <Download className="h-3.5 w-3.5" />
                           </Button>
-                          <Button variant="ghost" size="sm" className="h-7 w-7 p-0 cursor-pointer hover:bg-destructive hover:text-white transition-all"
-                            onClick={() => handleDelete(f.key)}>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-7 w-7 p-0 cursor-pointer hover:bg-destructive hover:text-white transition-all"
+                            aria-label={`Delete ${name}`}
+                            onClick={() => handleDelete(f.key)}
+                          >
                             <Trash2 className="h-3.5 w-3.5" />
                           </Button>
                         </div>
@@ -332,6 +464,15 @@ export function StoragePage() {
           />
         </div>
       </div>
+
+      {/* ── Confirm dialog ────────────────────────────────── */}
+      <ConfirmDialog
+        open={confirmState.open}
+        title={confirmState.title}
+        description={confirmState.description}
+        onConfirm={confirmState.onConfirm}
+        onCancel={closeConfirm}
+      />
     </div>
   );
 }

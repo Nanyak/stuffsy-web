@@ -137,7 +137,7 @@ export function FileBrowser({
       {isEmpty ? (
         <EmptyState />
       ) : (
-        <div className="rounded-2xl overflow-hidden" style={{ background: 'oklch(1 0 0)', border: '1px solid rgba(0,0,0,0.07)', boxShadow: '0 1px 4px rgba(0,0,0,0.04)' }}>
+        <div className="surface-card rounded-2xl overflow-hidden">
           {viewMode === "grid" ? (
             <div className="p-4"><FileGrid
               folders={folders}

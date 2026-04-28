@@ -5,20 +5,21 @@ import {
   ArrowRight, Zap, Share2, CheckCircle, MousePointer2,
   Folder, FileText, Copy, Upload,
 } from 'lucide-react'
+import { T } from '@/lib/tokens'
 
-/* ── Design tokens — Light mode ────────────────────────── */
-const LIGHT_BG  = 'oklch(0.985 0.003 260)'
-const SURFACE   = 'oklch(1 0 0)'
-const SURFACE2  = 'oklch(0.976 0.004 260)'
-const BORDER    = 'rgba(0,0,0,0.07)'
-const BORDER_EM = 'oklch(0.545 0.185 268 / 0.28)'
-const PRIMARY   = 'oklch(0.545 0.185 268)'
-const PRIMARY_L = 'oklch(0.440 0.185 268)'
-const TEXT_HI   = 'oklch(0.180 0.014 260)'
-const TEXT_MID  = 'oklch(0.430 0.010 260)'
-const TEXT_LO   = 'oklch(0.620 0.008 260)'
-const FONT_DISP = "'Syne', system-ui, sans-serif"
-const FONT_BODY = "'DM Sans', system-ui, sans-serif"
+/* ── Shorthand aliases for template readability ─────────── */
+const LIGHT_BG  = 'var(--background)'
+const SURFACE   = T.surface
+const SURFACE2  = T.surface2
+const BORDER    = T.border
+const BORDER_EM = T.borderEm
+const PRIMARY   = T.primary
+const PRIMARY_L = T.primaryL
+const TEXT_HI   = T.textHi
+const TEXT_MID  = T.textMid
+const TEXT_LO   = T.textLo
+const FONT_DISP = T.fontDisp
+const FONT_BODY = T.fontBody
 
 /* ── Page ─────────────────────────────────────────────────── */
 export function HomePage() {

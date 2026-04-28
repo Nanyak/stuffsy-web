@@ -94,6 +94,34 @@
 }
 
 /* ─────────────────────────────────────────────────────────────
+   Extended tokens — for inline-styled components
+   These complement the Tailwind theme vars above, providing
+   dark-mode-aware values for borders, shadows and tints that
+   can't be expressed through standard shadcn tokens alone.
+   ───────────────────────────────────────────────────────────── */
+:root {
+  --c-primary-text:   oklch(0.440 0.185 268);      /* primary for text/icons */
+  --c-text-lo:        oklch(0.620 0.008 260);       /* low-emphasis text */
+  --c-border-subtle:  rgba(0, 0, 0, 0.07);          /* hair-line card border */
+  --c-border-primary: oklch(0.545 0.185 268 / 0.28);/* primary-tinted border */
+  --c-primary-bg:     oklch(0.545 0.185 268 / 0.10);/* primary tinted bg */
+  --c-shadow-sm:      0 1px 4px rgba(0, 0, 0, 0.04);
+  --c-shadow-md:      0 4px 16px rgba(0, 0, 0, 0.07);
+  --c-shadow-lg:      0 8px 28px rgba(0, 0, 0, 0.08);
+}
+
+.dark {
+  --c-primary-text:   oklch(0.720 0.170 268);
+  --c-text-lo:        oklch(0.430 0.008 265);
+  --c-border-subtle:  rgba(255, 255, 255, 0.07);
+  --c-border-primary: oklch(0.630 0.190 268 / 0.35);
+  --c-primary-bg:     oklch(0.630 0.190 268 / 0.12);
+  --c-shadow-sm:      0 1px 4px rgba(0, 0, 0, 0.20);
+  --c-shadow-md:      0 4px 16px rgba(0, 0, 0, 0.30);
+  --c-shadow-lg:      0 8px 28px rgba(0, 0, 0, 0.35);
+}
+
+/* ─────────────────────────────────────────────────────────────
    Tailwind v4 — map CSS vars to theme utilities
    ───────────────────────────────────────────────────────────── */
 @theme inline {
@@ -231,4 +259,26 @@
   position: relative;
   left: 50%;
   transform: translateX(-50%);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Interactive card — CSS-based hover/focus-within state
+   Replaces onMouseEnter/Leave inline-style hacks; dark-mode safe
+   ───────────────────────────────────────────────────────────── */
+.interactive-card {
+  border: 1px solid var(--c-border-subtle);
+  box-shadow: var(--c-shadow-sm);
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+.interactive-card:hover,
+.interactive-card:focus-within {
+  border-color: var(--c-border-primary);
+  box-shadow: var(--c-shadow-md);
+}
+
+/* Static surface card (no hover effect) */
+.surface-card {
+  background: var(--card);
+  border: 1px solid var(--c-border-subtle);
+  box-shadow: var(--c-shadow-sm);
 }

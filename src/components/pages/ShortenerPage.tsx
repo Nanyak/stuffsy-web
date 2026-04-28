@@ -6,20 +6,10 @@ import { urlShortenerService, getUserLinks } from '@/services/url_shortener_serv
 import type { LinkRecord } from '@/services/url_shortener_service'
 import { useAuth } from '@/contexts/AuthContext'
 import { Link2, Copy, Check, ExternalLink, Loader2, AlertCircle, Clock, History, ArrowRight } from 'lucide-react'
+import { T } from '@/lib/tokens'
 import axios from 'axios'
 
 const API_URL = import.meta.env.VITE_API_URL
-
-const PRIMARY   = 'oklch(0.545 0.185 268)'
-const PRIMARY_L = 'oklch(0.440 0.185 268)'
-const TEXT_HI   = 'oklch(0.180 0.014 260)'
-const TEXT_MID  = 'oklch(0.430 0.010 260)'
-const TEXT_LO   = 'oklch(0.620 0.008 260)'
-const SURFACE   = 'oklch(1 0 0)'
-const SURFACE2  = 'oklch(0.976 0.004 260)'
-const BORDER    = 'rgba(0,0,0,0.07)'
-const BORDER_EM = 'oklch(0.545 0.185 268 / 0.28)'
-const FONT_DISP = "'Syne', system-ui, sans-serif"
 
 export function ShortenerPage() {
   const { isAuthenticated } = useAuth()
@@ -41,7 +31,7 @@ export function ShortenerPage() {
       const res = await getUserLinks()
       setHistory(res.data.links ?? [])
     } catch {
-      // silently ignore
+      // silently ignore — history is non-critical
     } finally {
       setHistoryLoading(false)
     }
@@ -103,53 +93,54 @@ export function ShortenerPage() {
       <div className="relative mb-8 overflow-hidden">
         <div className="relative py-8">
           <div className="flex items-center gap-2 mb-4">
-            <span className="text-xs font-bold tracking-widest uppercase" style={{ color: PRIMARY_L }}>Tool</span>
+            <span className="text-xs font-bold tracking-widest uppercase" style={{ color: T.primaryL }}>Tool</span>
           </div>
           <div className="flex items-start gap-4">
             <div className="p-3.5 rounded-2xl flex-shrink-0" style={{
-              background: 'oklch(0.545 0.185 268 / 0.10)',
-              border: `1px solid ${BORDER_EM}`,
+              background: T.primaryBg,
+              border: '1px solid var(--c-border-primary)',
             }}>
-              <Link2 className="h-7 w-7" style={{ color: PRIMARY }} />
+              <Link2 className="h-7 w-7" style={{ color: T.primary }} />
             </div>
             <div>
               <h1 className="text-4xl font-extrabold tracking-tight leading-tight mb-2" style={{
-                fontFamily: FONT_DISP,
-                background: `linear-gradient(135deg, ${TEXT_HI} 0%, oklch(0.260 0.018 265) 50%, ${PRIMARY} 100%)`,
+                fontFamily: T.fontDisp,
+                background: `linear-gradient(135deg, var(--foreground) 0%, var(--primary) 100%)`,
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
                 backgroundClip: 'text',
               }}>
                 URL Shortener
               </h1>
-              <p className="text-sm leading-relaxed" style={{ color: TEXT_MID }}>
+              <p className="text-sm leading-relaxed" style={{ color: T.textMid }}>
                 Transform long URLs into clean, shareable short links instantly.
               </p>
             </div>
           </div>
         </div>
-        <div style={{ height: '1px', background: `linear-gradient(to right, ${BORDER_EM}, ${BORDER}, transparent)` }} />
+        <div style={{ height: '1px', background: `linear-gradient(to right, var(--c-border-primary), var(--c-border-subtle), transparent)` }} />
       </div>
 
       {/* ── Form card ────────────────────────────────────────── */}
-      <div className="rounded-2xl overflow-hidden mb-8" style={{
-        background: SURFACE,
-        border: `1px solid ${BORDER}`,
-        boxShadow: '0 4px 20px rgba(0,0,0,0.05)',
-      }}>
-        {/* Card top accent */}
+      <div className="surface-card rounded-2xl overflow-hidden mb-8">
         <div className="px-8 pt-7 pb-6">
-          <p className="text-xs font-bold tracking-widest uppercase mb-4" style={{ color: PRIMARY_L }}>
+          <p className="text-xs font-bold tracking-widest uppercase mb-4" style={{ color: T.primaryL }}>
             Shorten a link
           </p>
           <form onSubmit={handleSubmit} className="flex gap-3">
+            {/* Accessible label — visually hidden but announced by screen readers */}
+            <label htmlFor="url-input" className="sr-only">
+              Long URL to shorten
+            </label>
             <Input
+              id="url-input"
               type="url"
               placeholder="https://example.com/your-long-url-here"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
               required
               className="flex-1 h-11 text-sm"
+              aria-describedby={error ? 'url-error' : undefined}
             />
             <Button
               type="submit"
@@ -168,14 +159,19 @@ export function ShortenerPage() {
           </form>
         </div>
 
-        {/* Error */}
+        {/* Error — aria-live so screen readers announce it */}
         {error && (
-          <div className="mx-8 mb-6 flex items-center gap-2 p-4 rounded-xl text-sm" style={{
-            background: 'oklch(0.580 0.220 27 / 0.07)',
-            border: '1px solid oklch(0.580 0.220 27 / 0.20)',
-            color: 'oklch(0.480 0.180 27)',
-          }}>
-            <AlertCircle className="h-4 w-4 shrink-0" />
+          <div
+            id="url-error"
+            role="alert"
+            className="mx-8 mb-6 flex items-center gap-2 p-4 rounded-xl text-sm"
+            style={{
+              background: 'oklch(0.580 0.220 27 / 0.07)',
+              border: '1px solid oklch(0.580 0.220 27 / 0.20)',
+              color: 'var(--destructive)',
+            }}
+          >
+            <AlertCircle className="h-4 w-4 shrink-0" aria-hidden="true" />
             {error}
           </div>
         )}
@@ -190,29 +186,33 @@ export function ShortenerPage() {
               <div className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0" style={{
                 background: 'oklch(0.55 0.150 145 / 0.15)',
               }}>
-                <Check className="h-3 w-3" style={{ color: 'oklch(0.42 0.150 145)' }} />
+                <Check className="h-3 w-3" style={{ color: 'oklch(0.42 0.150 145)' }} aria-hidden="true" />
               </div>
-              <p className="text-sm font-semibold" style={{ color: 'oklch(0.38 0.120 145)' }}>Link shortened successfully!</p>
+              <p className="text-sm font-semibold" style={{ color: 'oklch(0.38 0.120 145)' }} role="status">
+                Link shortened successfully!
+              </p>
             </div>
             <div className="flex items-center gap-3 p-3 rounded-xl" style={{
-              background: SURFACE2,
-              border: `1px solid ${BORDER}`,
+              background: T.surface2,
+              border: '1px solid var(--c-border-subtle)',
             }}>
               <a
                 href={shortUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex-1 text-sm font-medium break-all flex items-center gap-2 cursor-pointer transition-opacity hover:opacity-75"
-                style={{ color: PRIMARY_L }}
+                style={{ color: T.primaryL }}
               >
                 {shortUrl}
-                <ExternalLink className="h-3.5 w-3.5 shrink-0" />
+                <ExternalLink className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+                <span className="sr-only">(opens in new tab)</span>
               </a>
               <Button
                 onClick={() => copyToClipboard(shortUrl)}
                 variant="outline"
                 size="sm"
                 className="shrink-0 cursor-pointer transition-all duration-200"
+                aria-label={copied ? 'Copied to clipboard' : 'Copy short URL to clipboard'}
               >
                 {copied ? (
                   <><Check className="h-3.5 w-3.5" style={{ color: 'oklch(0.42 0.150 145)' }} />Copied!</>
@@ -227,81 +227,75 @@ export function ShortenerPage() {
 
       {/* ── History ──────────────────────────────────────────── */}
       {isAuthenticated && (
-        <div>
+        <section aria-label="Your URL history">
           <div className="flex items-center gap-3 mb-5">
             <div className="p-2 rounded-lg" style={{
-              background: 'oklch(0.545 0.185 268 / 0.09)',
-              border: `1px solid ${BORDER_EM}`,
+              background: T.primaryBg,
+              border: '1px solid var(--c-border-primary)',
             }}>
-              <History className="h-4 w-4" style={{ color: PRIMARY_L }} />
+              <History className="h-4 w-4" style={{ color: T.primaryL }} aria-hidden="true" />
             </div>
-            <h2 className="text-lg font-bold" style={{ fontFamily: FONT_DISP, color: TEXT_HI }}>Your History</h2>
+            <h2 className="text-lg font-bold" style={{ fontFamily: T.fontDisp, color: T.textHi }}>Your History</h2>
           </div>
 
           {historyLoading ? (
-            <div className="space-y-3">
+            <div className="space-y-3" aria-label="Loading history">
               {[1, 2, 3].map((i) => (
-                <div key={i} className="h-20 rounded-2xl animate-pulse" style={{ background: SURFACE, border: `1px solid ${BORDER}` }} />
+                <div key={i} className="h-20 rounded-2xl animate-pulse" style={{
+                  background: T.surface,
+                  border: '1px solid var(--c-border-subtle)',
+                }} />
               ))}
             </div>
           ) : history.length === 0 ? (
-            <div className="text-center py-16 rounded-2xl" style={{ background: SURFACE, border: `1px solid ${BORDER}` }}>
+            <div className="surface-card text-center py-16 rounded-2xl">
               <div className="w-12 h-12 rounded-2xl flex items-center justify-center mx-auto mb-4" style={{
-                background: 'oklch(0.545 0.185 268 / 0.08)',
-                border: `1px solid ${BORDER_EM}`,
+                background: T.primaryBg,
+                border: '1px solid var(--c-border-primary)',
               }}>
-                <Link2 className="h-5 w-5" style={{ color: PRIMARY_L, opacity: 0.5 }} />
+                <Link2 className="h-5 w-5 opacity-50" style={{ color: T.primaryL }} aria-hidden="true" />
               </div>
-              <p className="text-sm font-medium mb-1" style={{ color: TEXT_MID }}>No shortened URLs yet</p>
-              <p className="text-xs" style={{ color: TEXT_LO }}>Create your first one above</p>
+              <p className="text-sm font-medium mb-1" style={{ color: T.textMid }}>No shortened URLs yet</p>
+              <p className="text-xs" style={{ color: T.textLo }}>Create your first one above</p>
             </div>
           ) : (
-            <div className="space-y-3">
+            <ul className="space-y-3">
               {history.map((item) => {
                 const shortLink = `${API_URL}/r/${item.short_code}`
                 const isCopied = copiedCode === item.short_code
                 return (
-                  <div
+                  <li
                     key={item.short_code}
-                    className="group p-5 rounded-2xl transition-all duration-150"
-                    style={{
-                      background: SURFACE,
-                      border: `1px solid ${BORDER}`,
-                      boxShadow: '0 1px 3px rgba(0,0,0,0.03)',
-                    }}
-                    onMouseEnter={e => {
-                      e.currentTarget.style.border = `1px solid oklch(0.545 0.185 268 / 0.28)`
-                      e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,0,0,0.07)'
-                    }}
-                    onMouseLeave={e => {
-                      e.currentTarget.style.border = `1px solid ${BORDER}`
-                      e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.03)'
-                    }}
+                    className="interactive-card group p-5 rounded-2xl"
+                    style={{ background: T.surface }}
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex-1 min-w-0">
                         {item.title && (
-                          <p className="text-sm font-semibold mb-1 truncate" style={{ color: TEXT_HI }}>{item.title}</p>
+                          <p className="text-sm font-semibold mb-1 truncate" style={{ color: T.textHi }}>{item.title}</p>
                         )}
                         <a
                           href={item.original_url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-xs flex items-center gap-1 truncate cursor-pointer transition-colors duration-150 hover:opacity-75"
-                          style={{ color: TEXT_LO }}
+                          className="text-xs flex items-center gap-1 truncate cursor-pointer transition-opacity hover:opacity-75"
+                          style={{ color: T.textLo }}
+                          title={item.original_url}
                         >
                           {truncate(item.original_url, 60)}
-                          <ExternalLink className="h-3 w-3 shrink-0" />
+                          <ExternalLink className="h-3 w-3 shrink-0" aria-hidden="true" />
+                          <span className="sr-only">(opens in new tab)</span>
                         </a>
                         <a
                           href={shortLink}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="mt-2 inline-flex items-center gap-1 text-sm font-medium transition-opacity hover:opacity-75 cursor-pointer"
-                          style={{ color: PRIMARY_L }}
+                          style={{ color: T.primaryL }}
                         >
                           {shortLink}
-                          <ArrowRight className="h-3 w-3" />
+                          <ArrowRight className="h-3 w-3" aria-hidden="true" />
+                          <span className="sr-only">(opens in new tab)</span>
                         </a>
                       </div>
                       <div className="flex flex-col items-end gap-2.5 shrink-0">
@@ -310,6 +304,7 @@ export function ShortenerPage() {
                           variant="outline"
                           size="sm"
                           className="cursor-pointer transition-all duration-200"
+                          aria-label={isCopied ? 'Copied to clipboard' : `Copy ${shortLink} to clipboard`}
                         >
                           {isCopied ? (
                             <><Check className="h-3 w-3" style={{ color: 'oklch(0.42 0.150 145)' }} />Copied!</>
@@ -317,18 +312,18 @@ export function ShortenerPage() {
                             <><Copy className="h-3 w-3" />Copy</>
                           )}
                         </Button>
-                        <span className="flex items-center gap-1 text-xs" style={{ color: TEXT_LO }}>
-                          <Clock className="h-3 w-3" />
+                        <span className="flex items-center gap-1 text-xs" style={{ color: T.textLo }}>
+                          <Clock className="h-3 w-3" aria-hidden="true" />
                           {formatDate(item.created_at)}
                         </span>
                       </div>
                     </div>
-                  </div>
+                  </li>
                 )
               })}
-            </div>
+            </ul>
           )}
-        </div>
+        </section>
       )}
     </div>
   )

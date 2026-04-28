@@ -20,6 +20,7 @@ Copy `.env.sample` to `.env`. Key variable: `VITE_API_URL` (backend API, default
 React 19 + TypeScript + Vite 7 + Tailwind CSS 4 frontend for Stuffsy tools platform.
 
 ### Routing (App.tsx)
+
 - `/` - HomePage
 - `/storage` - StoragePage (file management)
 - `/shortener` - ShortenerPage (URL shortener)
@@ -30,10 +31,12 @@ React 19 + TypeScript + Vite 7 + Tailwind CSS 4 frontend for Stuffsy tools platf
 **Path alias**: `@/` maps to `src/` (configured in tsconfig.json and vite.config.ts)
 
 **Services** (`src/services/`): API clients using axios with relative URLs (proxied via backend):
+
 - `storage_service.ts` - File CRUD operations (`/files` endpoints)
 - `url_shortener_service.tsx` - URL shortening (`/url` endpoint)
 
 **Components structure**:
+
 - `components/ui/` - shadcn/ui primitives (Button, Card, Input)
 - `components/layout/` - Layout wrapper with Navbar
 - `components/pages/` - Route-level page components
@@ -47,3 +50,4 @@ React 19 + TypeScript + Vite 7 + Tailwind CSS 4 frontend for Stuffsy tools platf
 - `cursor-pointer` on interactive elements
 - Smooth transitions (150-300ms)
 - Light/dark mode support
+
