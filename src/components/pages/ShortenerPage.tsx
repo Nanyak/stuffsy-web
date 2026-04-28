@@ -101,9 +101,6 @@ export function ShortenerPage() {
 
       {/* ── Page header ─────────────────────────────────────── */}
       <div className="relative mb-8 overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none" aria-hidden style={{
-          background: 'radial-gradient(ellipse 70% 100% at 0% 50%, oklch(0.545 0.185 268 / 0.09) 0%, transparent 70%)',
-        }} />
         <div className="relative py-8">
           <div className="flex items-center gap-2 mb-4">
             <span className="text-xs font-bold tracking-widest uppercase" style={{ color: PRIMARY_L }}>Tool</span>
