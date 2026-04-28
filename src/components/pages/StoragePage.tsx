@@ -183,12 +183,12 @@ export function StoragePage() {
             background: 'oklch(0.545 0.185 268 / 0.14)',
             border: '1px solid oklch(0.545 0.185 268 / 0.30)',
           }}>
-            <Cloud className="h-7 w-7" style={{ color: 'oklch(0.660 0.185 268)' }} />
+            <Cloud className="h-7 w-7" style={{ color: 'oklch(0.545 0.185 268)' }} />
           </div>
           <div>
             <h1 className="text-3xl font-extrabold tracking-tight" style={{
               fontFamily: "'Syne', system-ui, sans-serif",
-              color: 'oklch(0.940 0.005 260)',
+              color: 'oklch(0.180 0.014 260)',
             }}>Cloud Storage</h1>
             <p className="text-sm mt-0.5 text-muted-foreground">Upload and manage your files securely in the cloud</p>
           </div>

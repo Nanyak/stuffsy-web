@@ -101,7 +101,7 @@ export function ShortenerPage() {
             background: 'oklch(0.545 0.185 268 / 0.14)',
             border: '1px solid oklch(0.545 0.185 268 / 0.30)',
           }}>
-            <Link2 className="h-7 w-7" style={{ color: 'oklch(0.660 0.185 268)' }} />
+            <Link2 className="h-7 w-7" style={{ color: 'oklch(0.545 0.185 268)' }} />
           </div>
           <div>
             <h1 className="text-3xl font-extrabold tracking-tight" style={{
@@ -115,8 +115,9 @@ export function ShortenerPage() {
 
       {/* Form card */}
       <div className="rounded-2xl p-8 mb-8" style={{
-        background: 'oklch(0.105 0.010 265)',
-        border: '1px solid rgba(255,255,255,0.08)',
+        background: 'oklch(1 0 0)',
+        border: '1px solid rgba(0,0,0,0.07)',
+        boxShadow: '0 1px 4px rgba(0,0,0,0.04)',
       }}>
         <form onSubmit={handleSubmit} className="space-y-4">
           <Input
@@ -164,8 +165,8 @@ export function ShortenerPage() {
               <p className="text-sm font-semibold" style={{ color: 'oklch(0.70 0.120 145)' }}>URL shortened successfully!</p>
             </div>
             <div className="flex items-center gap-3 p-3 rounded-lg" style={{
-              background: 'rgba(255,255,255,0.04)',
-              border: '1px solid rgba(255,255,255,0.08)',
+              background: 'oklch(0.976 0.004 260)',
+              border: '1px solid rgba(0,0,0,0.07)',
             }}>
               <a
                 href={shortUrl}
@@ -218,8 +219,8 @@ export function ShortenerPage() {
                 const isCopied = copiedCode === item.short_code
                 return (
                   <div key={item.short_code} className="p-4 rounded-xl transition-colors duration-150" style={{
-                    background: 'oklch(0.105 0.010 265)',
-                    border: '1px solid rgba(255,255,255,0.08)',
+                    background: 'oklch(1 0 0)',
+                    border: '1px solid rgba(0,0,0,0.07)',
                   }}>
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex-1 min-w-0">
