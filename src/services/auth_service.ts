@@ -67,9 +67,10 @@ export async function confirmForgotPassword(
   });
 }
 
-export async function refreshToken(refreshToken: string): Promise<AuthTokens> {
+export async function refreshToken(refreshToken: string, username: string): Promise<AuthTokens> {
   const response = await axios.post<AuthTokens>("/v1/api/auth/refresh", {
     refresh_token: refreshToken,
+    username,
   });
   return response.data;
 }

@@ -4,27 +4,26 @@ import { FileStagingArea } from "@/components/storage/FileStagingArea";
 import { FileBrowser } from "@/components/storage/FileBrowser";
 import type { StagedFile, FileInfo } from "@/types/storage";
 import { uploadFile, listFiles, deleteFile, getDownloadUrl } from "@/services/storage_service";
-import { generateFileId, createImagePreview } from "@/lib/storageUtils";
+import { generateFileId, createImagePreview, getFolderContents, KEEP_FILE } from "@/lib/storageUtils";
 
 export function StoragePage() {
   const [stagedFiles, setStagedFiles] = useState<StagedFile[]>([]);
-  const [uploadedFiles, setUploadedFiles] = useState<FileInfo[]>([]);
+  const [allFiles, setAllFiles] = useState<FileInfo[]>([]);
+  const [currentPath, setCurrentPath] = useState<string[]>([]);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<Record<string, number>>({});
   const [isLoading, setIsLoading] = useState(false);
 
-  // Fetch uploaded files on mount
+  const { folders, files: currentFiles } = getFolderContents(allFiles, currentPath);
+
   useEffect(() => {
     fetchFiles();
   }, []);
 
-  // Cleanup previews on unmount
   useEffect(() => {
     return () => {
-      stagedFiles.forEach((stagedFile) => {
-        if (stagedFile.preview) {
-          URL.revokeObjectURL(stagedFile.preview);
-        }
+      stagedFiles.forEach((sf) => {
+        if (sf.preview) URL.revokeObjectURL(sf.preview);
       });
     };
   }, [stagedFiles]);
@@ -33,26 +32,40 @@ export function StoragePage() {
     setIsLoading(true);
     try {
       const response = await listFiles();
-      setUploadedFiles(response.files ?? []);
-    } catch (error) {
-      console.error('Failed to fetch files:', error);
-      setUploadedFiles([]);
+      setAllFiles(response.files ?? []);
+    } catch {
+      setAllFiles([]);
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleAddFiles = async (files: File[]) => {
+    const currentFolderPath = currentPath.join("/");
     const newStagedFiles: StagedFile[] = [];
 
     for (const file of files) {
       const id = generateFileId();
       const preview = await createImagePreview(file);
 
+      // webkitRelativePath is set for folder uploads
+      const relPath = (file as File & { webkitRelativePath?: string }).webkitRelativePath;
+      let uploadPath = currentFolderPath;
+      let displayRelPath: string | undefined;
+
+      if (relPath) {
+        // relPath = "FolderName/subdir/file.ext" — preserve full structure
+        const dirPart = relPath.split("/").slice(0, -1).join("/");
+        uploadPath = currentFolderPath ? `${currentFolderPath}/${dirPart}` : dirPart;
+        displayRelPath = relPath;
+      }
+
       newStagedFiles.push({
         file,
         id,
         preview: preview || undefined,
+        path: uploadPath || undefined,
+        relativePath: displayRelPath,
       });
     }
 
@@ -62,82 +75,100 @@ export function StoragePage() {
   const handleRemoveFile = (id: string) => {
     setStagedFiles((prev) => {
       const removed = prev.find((f) => f.id === id);
-      if (removed?.preview) {
-        URL.revokeObjectURL(removed.preview);
-      }
+      if (removed?.preview) URL.revokeObjectURL(removed.preview);
       return prev.filter((f) => f.id !== id);
     });
-
-    // Remove progress tracking for this file
     setUploadProgress((prev) => {
-      const newProgress = { ...prev };
-      delete newProgress[id];
-      return newProgress;
+      const next = { ...prev };
+      delete next[id];
+      return next;
     });
   };
 
   const handleUploadAll = async () => {
     if (stagedFiles.length === 0) return;
-
     setIsUploading(true);
-    const uploadPromises = stagedFiles.map(async (stagedFile) => {
-      try {
-        // Simulate progress tracking (since uploadFile doesn't provide progress callback)
-        setUploadProgress((prev) => ({ ...prev, [stagedFile.id]: 0 }));
 
-        // Start upload
-        await uploadFile(stagedFile.file);
-
-        // Mark as complete
-        setUploadProgress((prev) => ({ ...prev, [stagedFile.id]: 100 }));
-      } catch (error) {
-        console.error(`Failed to upload ${stagedFile.file.name}:`, error);
-        // Remove failed file from progress
-        setUploadProgress((prev) => {
-          const newProgress = { ...prev };
-          delete newProgress[stagedFile.id];
-          return newProgress;
-        });
-      }
-    });
-
-    // Upload all files in parallel (max 3 concurrent)
     const batchSize = 3;
-    for (let i = 0; i < uploadPromises.length; i += batchSize) {
-      const batch = uploadPromises.slice(i, i + batchSize);
-      await Promise.all(batch);
+    const chunks = [];
+    for (let i = 0; i < stagedFiles.length; i += batchSize) {
+      chunks.push(stagedFiles.slice(i, i + batchSize));
     }
 
-    // Clear staged files and refresh uploaded files list
+    for (const chunk of chunks) {
+      await Promise.all(
+        chunk.map(async (sf) => {
+          try {
+            setUploadProgress((prev) => ({ ...prev, [sf.id]: 0 }));
+            await uploadFile(sf.file, sf.path);
+            setUploadProgress((prev) => ({ ...prev, [sf.id]: 100 }));
+          } catch {
+            setUploadProgress((prev) => {
+              const next = { ...prev };
+              delete next[sf.id];
+              return next;
+            });
+          }
+        })
+      );
+    }
+
     setStagedFiles([]);
     setUploadProgress({});
     setIsUploading(false);
-
-    // Refresh the file list
     await fetchFiles();
   };
 
   const handleDownload = async (key: string) => {
     try {
       const response = await getDownloadUrl(key);
-      window.open(response.url, '_blank');
-    } catch (error) {
-      console.error('Failed to download file:', error);
+      window.open(response.url, "_blank");
+    } catch {
+      // silent
     }
   };
 
   const handleDelete = async (key: string) => {
-    const fileName = key.split('/').pop() || key;
-    const confirmed = window.confirm(`Are you sure you want to delete "${fileName}"?`);
-
-    if (!confirmed) return;
-
+    const fileName = key.split("/").pop() || key;
+    if (!window.confirm(`Delete "${fileName}"?`)) return;
     try {
       await deleteFile(key);
       await fetchFiles();
-    } catch (error) {
-      console.error('Failed to delete file:', error);
+    } catch {
+      // silent
     }
+  };
+
+  const handleOpenFolder = (name: string) => {
+    setCurrentPath((prev) => [...prev, name]);
+  };
+
+  const handleNavigate = (path: string[]) => {
+    setCurrentPath(path);
+  };
+
+  const handleDeleteFolder = async (name: string) => {
+    if (!window.confirm(`Delete folder "${name}" and all its contents?`)) return;
+    const folderPrefix = currentPath.length > 0
+      ? `${currentPath.join("/")}/${name}/`
+      : `${name}/`;
+    const toDelete = allFiles.filter((f) => f.key.startsWith(folderPrefix));
+    try {
+      await Promise.all(toDelete.map((f) => deleteFile(f.key)));
+      await fetchFiles();
+    } catch {
+      // silent
+    }
+  };
+
+  const handleCreateFolder = async (name: string) => {
+    const folderPath = currentPath.length > 0
+      ? `${currentPath.join("/")}/${name}`
+      : name;
+    // Upload a zero-byte placeholder to persist the folder in S3
+    const keepFile = new File([], KEEP_FILE, { type: "application/octet-stream" });
+    await uploadFile(keepFile, folderPath);
+    await fetchFiles();
   };
 
   return (
@@ -147,17 +178,14 @@ export function StoragePage() {
           <div className="p-3 bg-primary/10 rounded-xl">
             <Cloud className="h-8 w-8 text-primary" />
           </div>
-          <h1 className="text-4xl font-bold text-slate-900 font-heading">
-            Cloud Storage
-          </h1>
+          <h1 className="text-4xl font-bold text-slate-900 font-heading">Cloud Storage</h1>
         </div>
-        <p className="text-slate-600">
-          Upload and manage your files securely in the cloud
-        </p>
+        <p className="text-slate-600">Upload and manage your files securely in the cloud</p>
       </div>
 
       <FileStagingArea
         stagedFiles={stagedFiles}
+        currentPath={currentPath}
         onAddFiles={handleAddFiles}
         onRemoveFile={handleRemoveFile}
         onUploadAll={handleUploadAll}
@@ -167,9 +195,15 @@ export function StoragePage() {
 
       <div className="border-t border-slate-200 pt-8">
         <FileBrowser
-          files={uploadedFiles}
+          folders={folders}
+          files={currentFiles}
+          currentPath={currentPath}
+          onNavigate={handleNavigate}
+          onOpenFolder={handleOpenFolder}
           onDownload={handleDownload}
           onDelete={handleDelete}
+          onDeleteFolder={handleDeleteFolder}
+          onCreateFolder={handleCreateFolder}
           isLoading={isLoading}
         />
       </div>

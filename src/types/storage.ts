@@ -1,4 +1,3 @@
-// From existing storage_service.ts (re-exported for consistency)
 export interface FileInfo {
   key: string
   size: number
@@ -6,11 +5,17 @@ export interface FileInfo {
   last_modified: string
 }
 
-// New interfaces for staging workflow
+export interface FolderInfo {
+  name: string
+  path: string  // full path relative to user root, e.g. "documents/2024"
+}
+
 export interface StagedFile {
   file: File
-  id: string                    // Unique identifier for React keys
-  preview?: string              // Data URL for image thumbnails
+  id: string
+  preview?: string
+  path?: string          // folder path to upload to (e.g. "documents/2024")
+  relativePath?: string  // display path for folder uploads
 }
 
 export interface FileAction {
@@ -20,7 +25,6 @@ export interface FileAction {
 
 export type ViewMode = 'grid' | 'list'
 
-// Upload progress tracking
 export interface UploadProgress {
-  [fileId: string]: number      // 0-100 percentage
+  [fileId: string]: number
 }

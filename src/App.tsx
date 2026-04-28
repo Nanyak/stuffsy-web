@@ -10,12 +10,14 @@ import { SignupPage } from "@/components/pages/SignupPage";
 import { ConfirmSignupPage } from "@/components/pages/ConfirmSignupPage";
 import { ForgotPasswordPage } from "@/components/pages/ForgotPasswordPage";
 import { ResetPasswordPage } from "@/components/pages/ResetPasswordPage";
+import { RedirectPage } from "@/components/pages/RedirectPage";
 
 function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
         <Routes>
+          <Route path="/s/:code" element={<RedirectPage />} />
           <Route element={<Layout />}>
             <Route path="/" element={<HomePage />} />
             <Route

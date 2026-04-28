@@ -16,6 +16,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | null>(null);
 
 const REFRESH_TOKEN_KEY = "stuffsy_refresh_token";
+const USERNAME_KEY = "stuffsy_username";
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
@@ -27,6 +28,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     accessTokenRef.current = null;
     setUser(null);
     localStorage.removeItem(REFRESH_TOKEN_KEY);
+    localStorage.removeItem(USERNAME_KEY);
     if (refreshTimeoutRef.current) {
       clearTimeout(refreshTimeoutRef.current);
       refreshTimeoutRef.current = null;
@@ -42,9 +44,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (refreshTime > 0) {
       refreshTimeoutRef.current = window.setTimeout(async () => {
         const storedRefresh = localStorage.getItem(REFRESH_TOKEN_KEY);
-        if (storedRefresh) {
+        const storedUsername = localStorage.getItem(USERNAME_KEY);
+        if (storedRefresh && storedUsername) {
           try {
-            const tokens = await authService.refreshToken(storedRefresh);
+            const tokens = await authService.refreshToken(storedRefresh, storedUsername);
             accessTokenRef.current = tokens.access_token;
             localStorage.setItem(REFRESH_TOKEN_KEY, tokens.refresh_token);
             scheduleRefresh(tokens.expires_in);
@@ -66,6 +69,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const tokens = await authService.signIn(email, password);
     setTokens(tokens);
     const userData = await authService.getUser(tokens.access_token);
+    localStorage.setItem(USERNAME_KEY, email);
     setUser(userData);
   }, [setTokens]);
 
@@ -86,9 +90,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const init = async () => {
       const storedRefresh = localStorage.getItem(REFRESH_TOKEN_KEY);
-      if (storedRefresh) {
+      const storedUsername = localStorage.getItem(USERNAME_KEY);
+      if (storedRefresh && storedUsername) {
         try {
-          const tokens = await authService.refreshToken(storedRefresh);
+          const tokens = await authService.refreshToken(storedRefresh, storedUsername);
           setTokens(tokens);
           const userData = await authService.getUser(tokens.access_token);
           setUser(userData);
@@ -118,9 +123,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (error.response?.status === 401 && !originalRequest._retry) {
           originalRequest._retry = true;
           const storedRefresh = localStorage.getItem(REFRESH_TOKEN_KEY);
-          if (storedRefresh) {
+          const storedUsername = localStorage.getItem(USERNAME_KEY);
+          if (storedRefresh && storedUsername) {
             try {
-              const tokens = await authService.refreshToken(storedRefresh);
+              const tokens = await authService.refreshToken(storedRefresh, storedUsername);
               setTokens(tokens);
               originalRequest.headers.Authorization = `Bearer ${tokens.access_token}`;
               return axios(originalRequest);
