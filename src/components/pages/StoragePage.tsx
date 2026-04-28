@@ -173,14 +173,26 @@ export function StoragePage() {
 
   return (
     <div className="max-w-6xl mx-auto space-y-8">
-      <div className="mb-2">
-        <div className="flex items-center gap-3 mb-4">
-          <div className="p-3 bg-primary/10 rounded-xl">
-            <Cloud className="h-8 w-8 text-primary" />
+      {/* Page header */}
+      <div className="relative pb-6 border-b border-border overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none" style={{
+          background: 'radial-gradient(ellipse 60% 80% at 0% 50%, oklch(0.545 0.185 268 / 0.10) 0%, transparent 70%)',
+        }} />
+        <div className="relative flex items-center gap-4">
+          <div className="p-3 rounded-xl flex-shrink-0" style={{
+            background: 'oklch(0.545 0.185 268 / 0.14)',
+            border: '1px solid oklch(0.545 0.185 268 / 0.30)',
+          }}>
+            <Cloud className="h-7 w-7" style={{ color: 'oklch(0.660 0.185 268)' }} />
           </div>
-          <h1 className="text-4xl font-bold text-slate-900 font-heading">Cloud Storage</h1>
+          <div>
+            <h1 className="text-3xl font-extrabold tracking-tight" style={{
+              fontFamily: "'Syne', system-ui, sans-serif",
+              color: 'oklch(0.940 0.005 260)',
+            }}>Cloud Storage</h1>
+            <p className="text-sm mt-0.5 text-muted-foreground">Upload and manage your files securely in the cloud</p>
+          </div>
         </div>
-        <p className="text-slate-600">Upload and manage your files securely in the cloud</p>
       </div>
 
       <FileStagingArea
@@ -193,7 +205,7 @@ export function StoragePage() {
         uploadProgress={uploadProgress}
       />
 
-      <div className="border-t border-slate-200 pt-8">
+      <div className="border-t border-border pt-8">
         <FileBrowser
           folders={folders}
           files={currentFiles}

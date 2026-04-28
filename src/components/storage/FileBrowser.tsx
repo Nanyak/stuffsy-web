@@ -72,7 +72,7 @@ export function FileBrowser({
     return (
       <div className="flex flex-col items-center justify-center py-20">
         <Loader2 className="h-10 w-10 animate-spin text-primary mb-4" />
-        <p className="text-sm text-slate-500">Loading your files...</p>
+        <p className="text-sm text-muted-foreground">Loading your files...</p>
       </div>
     );
   }
@@ -84,7 +84,7 @@ export function FileBrowser({
         <div className="flex items-center gap-3 flex-1 min-w-0">
           <Breadcrumb path={currentPath} onNavigate={onNavigate} />
           {(folders.length > 0 || files.length > 0) && (
-            <span className="text-xs text-slate-400 whitespace-nowrap">
+            <span className="text-xs text-muted-foreground whitespace-nowrap">
               {folders.length + files.length} item{folders.length + files.length !== 1 ? "s" : ""}
             </span>
           )}
@@ -137,7 +137,7 @@ export function FileBrowser({
       {isEmpty ? (
         <EmptyState />
       ) : (
-        <div className="bg-white rounded-xl border border-slate-200 p-4">
+        <div className="bg-card rounded-xl border border-border p-4">
           {viewMode === "grid" ? (
             <FileGrid
               folders={folders}

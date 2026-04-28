@@ -88,21 +88,21 @@ export function FileStagingArea({
         onClick={() => fileInputRef.current?.click()}
         className={`border-2 border-dashed rounded-xl p-10 text-center transition-all duration-200 cursor-pointer ${
           isDragging
-            ? "border-primary bg-primary/5 scale-[1.01]"
-            : "border-slate-300 hover:border-primary hover:bg-slate-50"
+            ? "border-primary bg-primary/10 scale-[1.01]"
+            : "border-border hover:border-primary/50 hover:bg-muted/30"
         }`}
       >
-        <div className={`p-4 bg-slate-100 rounded-full inline-block mb-4 transition-colors duration-200 ${isDragging ? "bg-primary/20" : ""}`}>
-          <Upload className={`h-8 w-8 transition-colors duration-200 ${isDragging ? "text-primary" : "text-slate-400"}`} />
+        <div className={`p-4 rounded-full inline-block mb-4 transition-colors duration-200 ${isDragging ? "bg-primary/20" : "bg-muted"}`}>
+          <Upload className={`h-8 w-8 transition-colors duration-200 ${isDragging ? "text-primary" : "text-muted-foreground"}`} />
         </div>
-        <p className="text-slate-700 font-medium mb-1">
+        <p className="text-foreground font-medium mb-1">
           Drag and drop files or folders here
         </p>
-        <p className="text-slate-500 text-sm mb-1">
+        <p className="text-muted-foreground text-sm mb-1">
           or click to browse your computer
         </p>
-        <p className="text-xs text-slate-400 mb-4">
-          Uploading to: <span className="font-medium text-slate-500">{currentPathLabel}</span>
+        <p className="text-xs text-muted-foreground mb-4">
+          Uploading to: <span className="font-medium text-foreground">{currentPathLabel}</span>
         </p>
         <div className="flex items-center justify-center gap-3">
           <Button
@@ -127,9 +127,9 @@ export function FileStagingArea({
       </div>
 
       {stagedFiles.length > 0 && (
-        <div className="space-y-4 p-4 bg-slate-50 rounded-xl border border-slate-200">
+        <div className="space-y-4 p-4 bg-muted/30 rounded-xl border border-border">
           <div className="flex items-center justify-between">
-            <p className="text-sm font-semibold text-slate-700">
+            <p className="text-sm font-semibold text-foreground">
               {stagedFiles.length} file{stagedFiles.length !== 1 ? "s" : ""} ready to upload
             </p>
             <Button

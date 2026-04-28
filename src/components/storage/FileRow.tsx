@@ -16,24 +16,24 @@ export function FileRow({ file, onDownload, onDelete }: FileRowProps) {
   const fileType = file.content_type.split('/')[0] || 'file';
 
   return (
-    <tr className="border-b hover:bg-primary/5 transition-colors duration-200 cursor-pointer group">
+    <tr className="border-b border-border hover:bg-primary/5 transition-colors duration-200 cursor-pointer group">
       <td className="py-3 px-4">
         <div className="flex items-center gap-3">
-          <div className="p-1.5 bg-slate-100 rounded-lg group-hover:bg-primary/10 transition-colors duration-200">
-            <FileIcon className="h-5 w-5 text-slate-500 group-hover:text-primary transition-colors duration-200" />
+          <div className="p-1.5 bg-muted rounded-lg group-hover:bg-primary/10 transition-colors duration-200">
+            <FileIcon className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors duration-200" />
           </div>
-          <span className="font-medium text-sm text-slate-900 truncate max-w-xs" title={fileName}>
+          <span className="font-medium text-sm text-foreground truncate max-w-xs" title={fileName}>
             {fileName}
           </span>
         </div>
       </td>
-      <td className="py-3 px-4 text-sm text-slate-600">
+      <td className="py-3 px-4 text-sm text-muted-foreground">
         {formatFileSize(file.size)}
       </td>
-      <td className="py-3 px-4 text-sm text-slate-600 capitalize">
+      <td className="py-3 px-4 text-sm text-muted-foreground capitalize">
         {fileType}
       </td>
-      <td className="py-3 px-4 text-sm text-slate-500">
+      <td className="py-3 px-4 text-sm text-muted-foreground">
         {formattedDate}
       </td>
       <td className="py-3 px-4">

@@ -10,7 +10,7 @@ interface FolderRowProps {
 export function FolderRow({ name, onOpen, onDelete }: FolderRowProps) {
   return (
     <tr
-      className="border-b hover:bg-amber-50/60 transition-colors duration-150 cursor-pointer group"
+      className="border-b border-border hover:bg-amber-400/5 transition-colors duration-150 cursor-pointer group"
       onDoubleClick={() => onOpen(name)}
     >
       <td className="py-3 px-4">
@@ -18,18 +18,18 @@ export function FolderRow({ name, onOpen, onDelete }: FolderRowProps) {
           className="flex items-center gap-3 w-full text-left cursor-pointer"
           onClick={() => onOpen(name)}
         >
-          <div className="p-1.5 bg-amber-50 rounded-lg group-hover:bg-amber-100 transition-colors duration-150">
-            <Folder className="h-5 w-5 text-amber-500" />
+          <div className="p-1.5 bg-amber-400/10 rounded-lg group-hover:bg-amber-400/20 transition-colors duration-150">
+            <Folder className="h-5 w-5 text-amber-400" />
           </div>
-          <span className="font-medium text-sm text-slate-900 flex items-center gap-1">
+          <span className="font-medium text-sm text-foreground flex items-center gap-1">
             {name}
-            <ChevronRight className="h-3.5 w-3.5 text-slate-400 opacity-0 group-hover:opacity-100 transition-opacity duration-150" />
+            <ChevronRight className="h-3.5 w-3.5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity duration-150" />
           </span>
         </button>
       </td>
-      <td className="py-3 px-4 text-sm text-slate-400">—</td>
-      <td className="py-3 px-4 text-sm text-slate-500">Folder</td>
-      <td className="py-3 px-4 text-sm text-slate-400">—</td>
+      <td className="py-3 px-4 text-sm text-muted-foreground">—</td>
+      <td className="py-3 px-4 text-sm text-muted-foreground">Folder</td>
+      <td className="py-3 px-4 text-sm text-muted-foreground">—</td>
       <td className="py-3 px-4">
         <div className="flex gap-1 justify-end">
           <Button

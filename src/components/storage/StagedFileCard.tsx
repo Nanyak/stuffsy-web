@@ -16,7 +16,7 @@ export function StagedFileCard({ stagedFile, onRemove, uploadProgress }: StagedF
   const FileIcon = getFileIcon(file.type);
 
   return (
-    <Card className="p-4 flex gap-4 relative bg-white hover:shadow-sm transition-all duration-200 border border-slate-200">
+    <Card className="p-4 flex gap-4 relative hover:shadow-sm transition-all duration-200 border border-border bg-card">
       <Button
         variant="ghost"
         size="sm"
@@ -32,23 +32,23 @@ export function StagedFileCard({ stagedFile, onRemove, uploadProgress }: StagedF
         <img
           src={preview}
           alt={file.name}
-          className="w-16 h-16 object-cover rounded-lg border border-slate-200"
+          className="w-16 h-16 object-cover rounded-lg border border-border"
         />
       ) : (
-        <div className="w-16 h-16 flex items-center justify-center bg-slate-100 rounded-lg">
-          <FileIcon className="h-8 w-8 text-slate-500" />
+        <div className="w-16 h-16 flex items-center justify-center bg-muted rounded-lg">
+          <FileIcon className="h-8 w-8 text-muted-foreground" />
         </div>
       )}
 
       <div className="flex-1 min-w-0 pr-8">
-        <p className="font-medium text-sm text-slate-900 truncate">{file.name}</p>
-        <p className="text-xs text-slate-500 mt-1">
+        <p className="font-medium text-sm text-foreground truncate">{file.name}</p>
+        <p className="text-xs text-muted-foreground mt-1">
           {formatFileSize(file.size)} • {file.type || 'Unknown type'}
         </p>
 
         {isUploading && (
           <div className="mt-3">
-            <div className="h-1.5 bg-slate-200 rounded-full overflow-hidden">
+            <div className="h-1.5 bg-muted rounded-full overflow-hidden">
               <div
                 className="h-full bg-primary rounded-full transition-all duration-300 ease-out"
                 style={{ width: `${uploadProgress}%` }}

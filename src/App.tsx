@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { HelmetProvider } from "react-helmet-async";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { Layout } from "@/components/layout/Layout";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
@@ -14,6 +15,7 @@ import { RedirectPage } from "@/components/pages/RedirectPage";
 
 function App() {
   return (
+    <HelmetProvider>
     <BrowserRouter>
       <AuthProvider>
         <Routes>
@@ -38,6 +40,7 @@ function App() {
         </Routes>
       </AuthProvider>
     </BrowserRouter>
+    </HelmetProvider>
   );
 }
 

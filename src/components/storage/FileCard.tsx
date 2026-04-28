@@ -16,20 +16,20 @@ export function FileCard({ file, onDownload, onDelete }: FileCardProps) {
   const formattedDate = new Date(file.last_modified).toLocaleDateString();
 
   return (
-    <Card className="p-4 hover:shadow-lg hover:border-primary/30 transition-all duration-200 cursor-pointer group border-2 border-transparent bg-white">
+    <Card className="p-4 hover:shadow-lg hover:border-primary/30 transition-all duration-200 cursor-pointer group border-2 border-transparent">
       <div className="flex flex-col items-center text-center space-y-3">
-        <div className="p-3 bg-slate-100 rounded-xl group-hover:bg-primary/10 transition-colors duration-200">
-          <FileIcon className="h-10 w-10 text-slate-500 group-hover:text-primary transition-colors duration-200" />
+        <div className="p-3 bg-muted rounded-xl group-hover:bg-primary/10 transition-colors duration-200">
+          <FileIcon className="h-10 w-10 text-muted-foreground group-hover:text-primary transition-colors duration-200" />
         </div>
 
         <div className="w-full space-y-1">
-          <p className="font-medium text-sm text-slate-900 truncate" title={fileName}>
+          <p className="font-medium text-sm text-foreground truncate" title={fileName}>
             {fileName}
           </p>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-muted-foreground">
             {formatFileSize(file.size)}
           </p>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-muted-foreground">
             {formattedDate}
           </p>
         </div>

@@ -11,18 +11,18 @@ interface FolderCardProps {
 export function FolderCard({ name, onOpen, onDelete }: FolderCardProps) {
   return (
     <Card
-      className="p-4 hover:shadow-lg hover:border-amber-300 transition-all duration-200 cursor-pointer group border-2 border-transparent bg-white"
+      className="p-4 hover:shadow-lg hover:border-amber-400/40 transition-all duration-200 cursor-pointer group border-2 border-transparent"
       onDoubleClick={() => onOpen(name)}
     >
       <div className="flex flex-col items-center text-center space-y-3">
-        <div className="p-3 bg-amber-50 rounded-xl group-hover:bg-amber-100 transition-colors duration-200">
-          <Folder className="h-10 w-10 text-amber-500" />
+        <div className="p-3 bg-amber-400/10 rounded-xl group-hover:bg-amber-400/20 transition-colors duration-200">
+          <Folder className="h-10 w-10 text-amber-400" />
         </div>
         <div className="w-full space-y-1">
-          <p className="font-medium text-sm text-slate-900 truncate" title={name}>
+          <p className="font-medium text-sm text-foreground truncate" title={name}>
             {name}
           </p>
-          <p className="text-xs text-slate-400">Folder</p>
+          <p className="text-xs text-muted-foreground">Folder</p>
         </div>
         <div className="flex gap-2 w-full pt-1">
           <Button

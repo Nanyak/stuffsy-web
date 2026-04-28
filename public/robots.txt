@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Disallow: /storage
+Disallow: /login
+Disallow: /signup
+Disallow: /confirm-signup
+Disallow: /forgot-password
+Disallow: /reset-password
+Disallow: /s/
+
+Sitemap: https://stuffsy.site/sitemap.xml
