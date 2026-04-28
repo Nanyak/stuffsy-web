@@ -26,11 +26,7 @@ export function SignupPage() {
     } catch (err: unknown) {
       if (err && typeof err === "object" && "response" in err) {
         const axiosError = err as { response?: { status?: number; data?: { error?: string } } };
-        if (axiosError.response?.status === 409) {
-          setError("An account with this email already exists");
-        } else {
-          setError(axiosError.response?.data?.error || "Failed to create account");
-        }
+        setError(axiosError.response?.data?.error || "Failed to create account");
       } else {
         setError("An error occurred. Please try again.");
       }
