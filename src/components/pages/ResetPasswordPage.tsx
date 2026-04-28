@@ -3,8 +3,16 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { confirmForgotPassword } from "@/services/auth_service";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { KeyRound } from "lucide-react";
+import { KeyRound, AlertCircle, ArrowLeft } from "lucide-react";
+
+const PRIMARY   = 'oklch(0.545 0.185 268)'
+const PRIMARY_L = 'oklch(0.440 0.185 268)'
+const TEXT_HI   = 'oklch(0.180 0.014 260)'
+const TEXT_MID  = 'oklch(0.430 0.010 260)'
+const SURFACE   = 'oklch(1 0 0)'
+const BORDER    = 'rgba(0,0,0,0.07)'
+const BORDER_EM = 'oklch(0.545 0.185 268 / 0.28)'
+const FONT_DISP = "'Syne', system-ui, sans-serif"
 
 export function ResetPasswordPage() {
   const location = useLocation();
@@ -19,7 +27,6 @@ export function ResetPasswordPage() {
     e.preventDefault();
     setError("");
     setIsLoading(true);
-
     try {
       await confirmForgotPassword(email, code, newPassword);
       navigate("/login", { state: { message: "Password reset successful! Please sign in." } });
@@ -36,83 +43,79 @@ export function ResetPasswordPage() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-[70vh]">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <CardTitle className="text-2xl">Reset password</CardTitle>
-          <CardDescription>
-            Enter the code sent to your email and your new password
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
+    <div className="flex items-center justify-center min-h-[80vh] relative">
+      <div className="absolute inset-0 pointer-events-none" aria-hidden style={{
+        background: 'radial-gradient(ellipse 70% 50% at 50% 0%, oklch(0.545 0.185 268 / 0.07) 0%, transparent 70%)',
+      }} />
+
+      <div className="relative w-full max-w-sm">
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl mb-4" style={{
+            background: 'oklch(0.545 0.185 268 / 0.10)',
+            border: `1px solid ${BORDER_EM}`,
+          }}>
+            <KeyRound className="h-5 w-5" style={{ color: PRIMARY }} />
+          </div>
+          <h1 className="text-2xl font-bold tracking-tight mb-1" style={{ fontFamily: FONT_DISP, color: TEXT_HI }}>
+            Reset password
+          </h1>
+          <p className="text-sm" style={{ color: TEXT_MID }}>Enter the code sent to your email</p>
+        </div>
+
+        <div className="rounded-2xl p-7" style={{
+          background: SURFACE,
+          border: `1px solid ${BORDER}`,
+          boxShadow: '0 4px 24px rgba(0,0,0,0.06)',
+        }}>
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
-              <div className="p-3 text-sm text-red-600 bg-red-50 rounded-lg">
+              <div className="flex items-center gap-2 p-3 rounded-xl text-sm" style={{
+                background: 'oklch(0.580 0.220 27 / 0.07)',
+                border: '1px solid oklch(0.580 0.220 27 / 0.20)',
+                color: 'oklch(0.480 0.180 27)',
+              }}>
+                <AlertCircle className="h-4 w-4 shrink-0" />
                 {error}
               </div>
             )}
-            <div className="space-y-2">
-              <label htmlFor="email" className="text-sm font-medium">
-                Email
-              </label>
-              <Input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@example.com"
-                required
-              />
+            <div className="space-y-1.5">
+              <label htmlFor="email" className="text-sm font-medium" style={{ color: TEXT_HI }}>Email</label>
+              <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" required />
             </div>
-            <div className="space-y-2">
-              <label htmlFor="code" className="text-sm font-medium">
-                Reset code
-              </label>
-              <Input
-                id="code"
-                type="text"
-                value={code}
-                onChange={(e) => setCode(e.target.value)}
-                placeholder="Enter 6-digit code"
-                maxLength={6}
-                required
-              />
+            <div className="space-y-1.5">
+              <label htmlFor="code" className="text-sm font-medium" style={{ color: TEXT_HI }}>Reset code</label>
+              <Input id="code" type="text" value={code} onChange={(e) => setCode(e.target.value)} placeholder="Enter 6-digit code" maxLength={6} required />
             </div>
-            <div className="space-y-2">
-              <label htmlFor="newPassword" className="text-sm font-medium">
-                New password
-              </label>
-              <Input
-                id="newPassword"
-                type="password"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                placeholder="Min 8 characters"
-                minLength={8}
-                required
-              />
+            <div className="space-y-1.5">
+              <label htmlFor="newPassword" className="text-sm font-medium" style={{ color: TEXT_HI }}>New password</label>
+              <Input id="newPassword" type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} placeholder="Min 8 characters" minLength={8} required />
             </div>
-            <Button type="submit" className="w-full cursor-pointer" disabled={isLoading}>
+            <Button
+              type="submit"
+              className="w-full h-11 font-semibold cursor-pointer transition-all duration-200"
+              disabled={isLoading}
+              style={!isLoading ? { boxShadow: '0 0 20px oklch(0.545 0.185 268 / 0.28)' } : {}}
+            >
               {isLoading ? (
-                <span className="flex items-center gap-2">
-                  <span className="animate-spin rounded-full h-4 w-4 border-b-2 border-white" />
-                  Resetting...
-                </span>
+                <><span className="animate-spin rounded-full h-4 w-4 border-b-2 border-white" />Resetting...</>
               ) : (
-                <span className="flex items-center gap-2">
-                  <KeyRound className="h-4 w-4" />
-                  Reset password
-                </span>
+                <><KeyRound className="h-4 w-4" />Reset password</>
               )}
             </Button>
-            <p className="text-center text-sm text-slate-600">
-              <Link to="/login" className="text-primary hover:underline cursor-pointer">
-                Back to sign in
-              </Link>
-            </p>
           </form>
-        </CardContent>
-      </Card>
+
+          <div className="mt-5 pt-5 text-center" style={{ borderTop: `1px solid ${BORDER}` }}>
+            <Link
+              to="/login"
+              className="inline-flex items-center gap-1.5 text-sm font-medium transition-opacity hover:opacity-75"
+              style={{ color: PRIMARY_L }}
+            >
+              <ArrowLeft className="h-3.5 w-3.5" />
+              Back to sign in
+            </Link>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

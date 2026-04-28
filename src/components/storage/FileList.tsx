@@ -15,13 +15,13 @@ export function FileList({ folders, files, onDownload, onDelete, onOpenFolder, o
   return (
     <div className="overflow-x-auto">
       <table className="w-full">
-        <thead className="bg-muted/50 border-b border-border">
+        <thead style={{ borderBottom: '1px solid rgba(0,0,0,0.07)', background: 'oklch(0.976 0.004 260)' }}>
           <tr>
-            <th className="py-3 px-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Name</th>
-            <th className="py-3 px-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Size</th>
-            <th className="py-3 px-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Type</th>
-            <th className="py-3 px-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Modified</th>
-            <th className="py-3 px-4 text-right text-xs font-semibold text-muted-foreground uppercase tracking-wider">Actions</th>
+            <th className="py-2.5 px-4 text-left text-xs font-bold text-muted-foreground uppercase tracking-wider">Name</th>
+            <th className="py-2.5 px-4 text-left text-xs font-bold text-muted-foreground uppercase tracking-wider">Size</th>
+            <th className="py-2.5 px-4 text-left text-xs font-bold text-muted-foreground uppercase tracking-wider">Type</th>
+            <th className="py-2.5 px-4 text-left text-xs font-bold text-muted-foreground uppercase tracking-wider">Modified</th>
+            <th className="py-2.5 px-4 text-right text-xs font-bold text-muted-foreground uppercase tracking-wider">Actions</th>
           </tr>
         </thead>
         <tbody>

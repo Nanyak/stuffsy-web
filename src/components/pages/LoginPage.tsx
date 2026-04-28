@@ -3,8 +3,16 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { LogIn } from "lucide-react";
+import { LogIn, AlertCircle } from "lucide-react";
+
+const PRIMARY   = 'oklch(0.545 0.185 268)'
+const PRIMARY_L = 'oklch(0.440 0.185 268)'
+const TEXT_HI   = 'oklch(0.180 0.014 260)'
+const TEXT_MID  = 'oklch(0.430 0.010 260)'
+const SURFACE   = 'oklch(1 0 0)'
+const BORDER    = 'rgba(0,0,0,0.07)'
+const BORDER_EM = 'oklch(0.545 0.185 268 / 0.28)'
+const FONT_DISP = "'Syne', system-ui, sans-serif"
 
 export function LoginPage() {
   const [email, setEmail] = useState("");
@@ -21,7 +29,6 @@ export function LoginPage() {
     e.preventDefault();
     setError("");
     setIsLoading(true);
-
     try {
       await login(email, password);
       navigate(from, { replace: true });
@@ -42,75 +49,76 @@ export function LoginPage() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-[70vh]">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <CardTitle className="text-2xl">Welcome back</CardTitle>
-          <CardDescription>Sign in to your account</CardDescription>
-        </CardHeader>
-        <CardContent>
+    <div className="flex items-center justify-center min-h-[80vh] relative">
+      <div className="absolute inset-0 pointer-events-none" aria-hidden style={{
+        background: 'radial-gradient(ellipse 70% 50% at 50% 0%, oklch(0.545 0.185 268 / 0.07) 0%, transparent 70%)',
+      }} />
+
+      <div className="relative w-full max-w-sm">
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl mb-4" style={{
+            background: 'oklch(0.545 0.185 268 / 0.10)',
+            border: `1px solid ${BORDER_EM}`,
+          }}>
+            <LogIn className="h-5 w-5" style={{ color: PRIMARY }} />
+          </div>
+          <h1 className="text-2xl font-bold tracking-tight mb-1" style={{ fontFamily: FONT_DISP, color: TEXT_HI }}>
+            Welcome back
+          </h1>
+          <p className="text-sm" style={{ color: TEXT_MID }}>Sign in to your Stuffsy account</p>
+        </div>
+
+        <div className="rounded-2xl p-7" style={{
+          background: SURFACE,
+          border: `1px solid ${BORDER}`,
+          boxShadow: '0 4px 24px rgba(0,0,0,0.06)',
+        }}>
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
-              <div className="p-3 text-sm text-red-600 bg-red-50 rounded-lg">
+              <div className="flex items-center gap-2 p-3 rounded-xl text-sm" style={{
+                background: 'oklch(0.580 0.220 27 / 0.07)',
+                border: '1px solid oklch(0.580 0.220 27 / 0.20)',
+                color: 'oklch(0.480 0.180 27)',
+              }}>
+                <AlertCircle className="h-4 w-4 shrink-0" />
                 {error}
               </div>
             )}
-            <div className="space-y-2">
-              <label htmlFor="email" className="text-sm font-medium">
-                Email
-              </label>
-              <Input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@example.com"
-                required
-              />
+            <div className="space-y-1.5">
+              <label htmlFor="email" className="text-sm font-medium" style={{ color: TEXT_HI }}>Email</label>
+              <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" required />
             </div>
-            <div className="space-y-2">
-              <label htmlFor="password" className="text-sm font-medium">
-                Password
-              </label>
-              <Input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter your password"
-                required
-              />
+            <div className="space-y-1.5">
+              <label htmlFor="password" className="text-sm font-medium" style={{ color: TEXT_HI }}>Password</label>
+              <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Enter your password" required />
             </div>
-            <Button type="submit" className="w-full cursor-pointer" disabled={isLoading}>
+            <Button
+              type="submit"
+              className="w-full h-11 font-semibold cursor-pointer transition-all duration-200"
+              disabled={isLoading}
+              style={!isLoading ? { boxShadow: '0 0 20px oklch(0.545 0.185 268 / 0.28)' } : {}}
+            >
               {isLoading ? (
-                <span className="flex items-center gap-2">
-                  <span className="animate-spin rounded-full h-4 w-4 border-b-2 border-white" />
-                  Signing in...
-                </span>
+                <><span className="animate-spin rounded-full h-4 w-4 border-b-2 border-white" />Signing in...</>
               ) : (
-                <span className="flex items-center gap-2">
-                  <LogIn className="h-4 w-4" />
-                  Sign in
-                </span>
+                <><LogIn className="h-4 w-4" />Sign in</>
               )}
             </Button>
-            <div className="text-center text-sm space-y-2">
-              <Link
-                to="/forgot-password"
-                className="text-primary hover:underline cursor-pointer"
-              >
+          </form>
+
+          <div className="mt-5 pt-5 text-center space-y-2" style={{ borderTop: `1px solid ${BORDER}` }}>
+            <div>
+              <Link to="/forgot-password" className="text-sm font-medium transition-opacity hover:opacity-75" style={{ color: PRIMARY_L }}>
                 Forgot password?
               </Link>
-              <p className="text-slate-600">
-                Don't have an account?{" "}
-                <Link to="/signup" className="text-primary hover:underline cursor-pointer">
-                  Sign up
-                </Link>
-              </p>
             </div>
-          </form>
-        </CardContent>
-      </Card>
+            <p className="text-sm" style={{ color: TEXT_MID }}>
+              Don't have an account?{" "}
+              <Link to="/signup" className="font-medium transition-opacity hover:opacity-75" style={{ color: PRIMARY_L }}>Sign up</Link>
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

@@ -137,16 +137,16 @@ export function FileBrowser({
       {isEmpty ? (
         <EmptyState />
       ) : (
-        <div className="bg-card rounded-xl border border-border p-4">
+        <div className="rounded-2xl overflow-hidden" style={{ background: 'oklch(1 0 0)', border: '1px solid rgba(0,0,0,0.07)', boxShadow: '0 1px 4px rgba(0,0,0,0.04)' }}>
           {viewMode === "grid" ? (
-            <FileGrid
+            <div className="p-4"><FileGrid
               folders={folders}
               files={files}
               onDownload={onDownload}
               onDelete={onDelete}
               onOpenFolder={onOpenFolder}
               onDeleteFolder={onDeleteFolder}
-            />
+            /></div>
           ) : (
             <FileList
               folders={folders}

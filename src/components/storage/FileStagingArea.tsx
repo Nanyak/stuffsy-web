@@ -127,7 +127,7 @@ export function FileStagingArea({
       </div>
 
       {stagedFiles.length > 0 && (
-        <div className="space-y-4 p-4 bg-muted/30 rounded-xl border border-border">
+        <div className="space-y-4 p-4 rounded-2xl" style={{ background: 'oklch(0.976 0.004 260)', border: '1px solid rgba(0,0,0,0.07)' }}>
           <div className="flex items-center justify-between">
             <p className="text-sm font-semibold text-foreground">
               {stagedFiles.length} file{stagedFiles.length !== 1 ? "s" : ""} ready to upload

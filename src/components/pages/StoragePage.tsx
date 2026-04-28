@@ -174,25 +174,38 @@ export function StoragePage() {
   return (
     <div className="max-w-6xl mx-auto space-y-8">
       {/* Page header */}
-      <div className="relative pb-6 border-b border-border overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none" style={{
-          background: 'radial-gradient(ellipse 60% 80% at 0% 50%, oklch(0.545 0.185 268 / 0.10) 0%, transparent 70%)',
+      <div className="relative overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none" aria-hidden style={{
+          background: 'radial-gradient(ellipse 70% 100% at 0% 50%, oklch(0.545 0.185 268 / 0.09) 0%, transparent 70%)',
         }} />
-        <div className="relative flex items-center gap-4">
-          <div className="p-3 rounded-xl flex-shrink-0" style={{
-            background: 'oklch(0.545 0.185 268 / 0.14)',
-            border: '1px solid oklch(0.545 0.185 268 / 0.30)',
-          }}>
-            <Cloud className="h-7 w-7" style={{ color: 'oklch(0.545 0.185 268)' }} />
+        <div className="relative py-8">
+          <div className="flex items-center gap-2 mb-4">
+            <span className="text-xs font-bold tracking-widest uppercase" style={{ color: 'oklch(0.440 0.185 268)' }}>Tool</span>
           </div>
-          <div>
-            <h1 className="text-3xl font-extrabold tracking-tight" style={{
-              fontFamily: "'Syne', system-ui, sans-serif",
-              color: 'oklch(0.180 0.014 260)',
-            }}>Cloud Storage</h1>
-            <p className="text-sm mt-0.5 text-muted-foreground">Upload and manage your files securely in the cloud</p>
+          <div className="flex items-start gap-4">
+            <div className="p-3.5 rounded-2xl flex-shrink-0" style={{
+              background: 'oklch(0.545 0.185 268 / 0.10)',
+              border: '1px solid oklch(0.545 0.185 268 / 0.28)',
+            }}>
+              <Cloud className="h-7 w-7" style={{ color: 'oklch(0.545 0.185 268)' }} />
+            </div>
+            <div>
+              <h1 className="text-4xl font-extrabold tracking-tight leading-tight mb-2" style={{
+                fontFamily: "'Syne', system-ui, sans-serif",
+                background: `linear-gradient(135deg, oklch(0.180 0.014 260) 0%, oklch(0.260 0.018 265) 50%, oklch(0.545 0.185 268) 100%)`,
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+              }}>
+                Cloud Storage
+              </h1>
+              <p className="text-sm leading-relaxed" style={{ color: 'oklch(0.430 0.010 260)' }}>
+                Upload, organize, and share your files securely in the cloud.
+              </p>
+            </div>
           </div>
         </div>
+        <div style={{ height: '1px', background: 'linear-gradient(to right, oklch(0.545 0.185 268 / 0.28), rgba(0,0,0,0.07), transparent)' }} />
       </div>
 
       <FileStagingArea
@@ -205,7 +218,7 @@ export function StoragePage() {
         uploadProgress={uploadProgress}
       />
 
-      <div className="border-t border-border pt-8">
+      <div className="pt-2">
         <FileBrowser
           folders={folders}
           files={currentFiles}
