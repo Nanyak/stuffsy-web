@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { signUp } from "@/services/auth_service";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { UserPlus, AlertCircle } from "lucide-react";
+import { UserPlus, AlertCircle, Check, X } from "lucide-react";
 
 const PRIMARY   = 'oklch(0.545 0.185 268)'
 const PRIMARY_L = 'oklch(0.440 0.185 268)'
@@ -14,17 +14,54 @@ const BORDER    = 'rgba(0,0,0,0.07)'
 const BORDER_EM = 'oklch(0.545 0.185 268 / 0.28)'
 const FONT_DISP = "'Syne', system-ui, sans-serif"
 
+const PASSWORD_RULES = [
+  { label: "At least 8 characters", test: (p: string) => p.length >= 8 },
+  { label: "Uppercase letter", test: (p: string) => /[A-Z]/.test(p) },
+  { label: "Lowercase letter", test: (p: string) => /[a-z]/.test(p) },
+  { label: "Number", test: (p: string) => /\d/.test(p) },
+  { label: "Special character", test: (p: string) => /[^A-Za-z0-9]/.test(p) },
+];
+
+function parseApiError(raw: string): string {
+  // Cognito password policy errors
+  if (raw.includes("Password did not conform with policy")) {
+    if (raw.includes("uppercase")) return "Password must contain at least one uppercase letter.";
+    if (raw.includes("lowercase")) return "Password must contain at least one lowercase letter.";
+    if (raw.includes("numeric")) return "Password must contain at least one number.";
+    if (raw.includes("symbol")) return "Password must contain at least one special character.";
+    if (raw.includes("long enough")) return "Password must be at least 8 characters.";
+    return "Password does not meet the requirements below.";
+  }
+  if (raw.includes("UsernameExistsException") || raw.includes("already exists")) {
+    return "An account with this username or email already exists.";
+  }
+  if (raw.includes("InvalidPasswordException")) {
+    return "Password does not meet the requirements below.";
+  }
+  return raw;
+}
+
 export function SignupPage() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordFocused, setPasswordFocused] = useState(false);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
+  const passwordRulesMet = PASSWORD_RULES.map((r) => r.test(password));
+  const allRulesMet = passwordRulesMet.every(Boolean);
+  const showRules = passwordFocused || (password.length > 0 && !allRulesMet);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!allRulesMet) {
+      setError("Password does not meet the requirements below.");
+      setPasswordFocused(true);
+      return;
+    }
     setError("");
     setIsLoading(true);
     try {
@@ -33,7 +70,8 @@ export function SignupPage() {
     } catch (err: unknown) {
       if (err && typeof err === "object" && "response" in err) {
         const axiosError = err as { response?: { data?: { error?: string } } };
-        setError(axiosError.response?.data?.error || "Failed to create account");
+        const raw = axiosError.response?.data?.error || "Failed to create account";
+        setError(parseApiError(raw));
       } else {
         setError("An error occurred. Please try again.");
       }
@@ -92,7 +130,30 @@ export function SignupPage() {
             </div>
             <div className="space-y-1.5">
               <label htmlFor="password" className="text-sm font-medium" style={{ color: TEXT_HI }}>Password</label>
-              <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Min 8 characters" minLength={8} required />
+              <Input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                onFocus={() => setPasswordFocused(true)}
+                onBlur={() => setPasswordFocused(false)}
+                placeholder="Min 8 characters"
+                required
+              />
+              {showRules && (
+                <ul className="mt-2 space-y-1">
+                  {PASSWORD_RULES.map((rule, i) => (
+                    <li key={rule.label} className="flex items-center gap-1.5 text-xs" style={{
+                      color: passwordRulesMet[i] ? 'oklch(0.55 0.15 145)' : 'oklch(0.50 0.010 260)',
+                    }}>
+                      {passwordRulesMet[i]
+                        ? <Check className="h-3 w-3 shrink-0" />
+                        : <X className="h-3 w-3 shrink-0" />}
+                      {rule.label}
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
             <Button
               type="submit"

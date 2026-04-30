@@ -17,6 +17,7 @@ const AuthContext = createContext<AuthContextType | null>(null);
 
 const REFRESH_TOKEN_KEY = "stuffsy_refresh_token";
 const USERNAME_KEY = "stuffsy_username";
+const USER_KEY = "stuffsy_user";
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
@@ -29,6 +30,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
     localStorage.removeItem(REFRESH_TOKEN_KEY);
     localStorage.removeItem(USERNAME_KEY);
+    localStorage.removeItem(USER_KEY);
     if (refreshTimeoutRef.current) {
       clearTimeout(refreshTimeoutRef.current);
       refreshTimeoutRef.current = null;
@@ -70,6 +72,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setTokens(tokens);
     const userData = await authService.getUser(tokens.access_token);
     localStorage.setItem(USERNAME_KEY, userData.username);
+    localStorage.setItem(USER_KEY, JSON.stringify(userData));
     setUser(userData);
   }, [setTokens]);
 
@@ -86,23 +89,42 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const getAccessToken = useCallback(() => accessTokenRef.current, []);
 
-  // Initialize: try to restore session from refresh token
+  // Initialize: restore session immediately from cache, then validate in background
   useEffect(() => {
     const init = async () => {
       const storedRefresh = localStorage.getItem(REFRESH_TOKEN_KEY);
       const storedUsername = localStorage.getItem(USERNAME_KEY);
-      if (storedRefresh && storedUsername) {
-        try {
-          const tokens = await authService.refreshToken(storedRefresh, storedUsername);
-          setTokens(tokens);
-          const userData = await authService.getUser(tokens.access_token);
-          localStorage.setItem(USERNAME_KEY, userData.username);
-          setUser(userData);
-        } catch {
-          clearAuth();
-        }
+      const storedUser = localStorage.getItem(USER_KEY);
+
+      if (!storedRefresh || !storedUsername) {
+        setIsLoading(false);
+        return;
       }
-      setIsLoading(false);
+
+      // Show cached user immediately — no waiting for network
+      if (storedUser) {
+        try {
+          setUser(JSON.parse(storedUser));
+        } catch {
+          // ignore malformed cache
+        }
+        setIsLoading(false);
+      }
+
+      try {
+        const tokens = await authService.refreshToken(storedRefresh, storedUsername);
+        setTokens(tokens);
+        const userData = await authService.getUser(tokens.access_token);
+        localStorage.setItem(USERNAME_KEY, userData.username);
+        localStorage.setItem(USER_KEY, JSON.stringify(userData));
+        setUser(userData);
+      } catch {
+        clearAuth();
+      }
+
+      if (!storedUser) {
+        setIsLoading(false);
+      }
     };
     init();
   }, [setTokens, clearAuth]);
