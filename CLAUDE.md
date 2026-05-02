@@ -50,4 +50,4 @@ React 19 + TypeScript + Vite 7 + Tailwind CSS 4 frontend for Stuffsy tools platf
 - `cursor-pointer` on interactive elements
 - Smooth transitions (150-300ms)
 - Light/dark mode support
-
+- always follow DESIGN.md instructions

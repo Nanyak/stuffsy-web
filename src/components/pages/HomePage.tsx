@@ -5,16 +5,7 @@ import {
   ArrowRight, Zap, Share2, CheckCircle, MousePointer2,
   Folder, FileText, Copy, Upload,
 } from 'lucide-react'
-
-/* ── Titan palette shortcuts ───────────────────────────────── */
-const INK    = '#111111'
-const GUN    = '#615e5b'
-const SAGE   = '#f3efeb'
-const STONE  = '#e9eaeb'
-const SOFT   = '#d8d3cc'
-const BLACK  = '#000000'
-const WHITE  = '#ffffff'
-const FONT   = "'Inter', system-ui, sans-serif"
+import { ink as INK, gun as GUN, sage as SAGE, stone as STONE, soft as SOFT, black as BLACK, white as WHITE, font as FONT } from '@/lib/tokens'
 
 /* ── Pill button helpers ───────────────────────────────────── */
 const pillPrimary: React.CSSProperties = {

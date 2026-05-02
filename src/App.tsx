@@ -6,6 +6,7 @@ import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { HomePage } from "@/components/pages/HomePage";
 import { StoragePage } from "@/components/pages/StoragePage";
 import { ShortenerPage } from "@/components/pages/ShortenerPage";
+import { AiPage } from "@/components/pages/AiPage";
 import { LoginPage } from "@/components/pages/LoginPage";
 import { SignupPage } from "@/components/pages/SignupPage";
 import { ConfirmSignupPage } from "@/components/pages/ConfirmSignupPage";
@@ -31,6 +32,14 @@ function App() {
               }
             />
             <Route path="/shortener" element={<ShortenerPage />} />
+            <Route
+              path="/ai"
+              element={
+                <ProtectedRoute>
+                  <AiPage />
+                </ProtectedRoute>
+              }
+            />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/confirm-signup" element={<ConfirmSignupPage />} />

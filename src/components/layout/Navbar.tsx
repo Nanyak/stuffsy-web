@@ -1,5 +1,5 @@
 import { Link, NavLink } from "react-router-dom";
-import { Cloud, Link2, LogIn, LogOut, User } from "lucide-react";
+import { Cloud, Link2, LogIn, LogOut, User, Sparkles } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 
 const NAV_LINK_BASE = "flex items-center gap-1.5 px-[18px] py-[9px] text-sm font-medium transition-colors duration-150 cursor-pointer"
@@ -46,6 +46,16 @@ export function Navbar() {
             >
               <Link2 className="h-3.5 w-3.5" />
               Shortener
+            </NavLink>
+            <NavLink
+              to="/ai"
+              style={{ borderRadius: '140px' }}
+              className={({ isActive }) =>
+                `${NAV_LINK_BASE} ${isActive ? NAV_LINK_ACTIVE : NAV_LINK_INACTIVE}`
+              }
+            >
+              <Sparkles className="h-3.5 w-3.5" />
+              AI
             </NavLink>
 
             <div className="h-4 w-px bg-[#e9eaeb] mx-2" />
