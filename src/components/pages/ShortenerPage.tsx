@@ -79,7 +79,7 @@ export function ShortenerPage() {
     text.length > max ? text.slice(0, max) + '…' : text
 
   return (
-    <div className="max-w-2xl mx-auto">
+    <div className="max-w-4xl mx-auto">
       <Helmet>
         <title>URL Shortener – Stuffsy</title>
         <meta name="description" content="Shorten long URLs into clean, shareable links instantly. Free to use, no account required." />
@@ -147,7 +147,7 @@ export function ShortenerPage() {
               className="h-11 px-5 font-semibold cursor-pointer transition-all duration-200 shrink-0"
               disabled={isLoading || !url.trim()}
               style={(!isLoading && url.trim()) ? {
-                boxShadow: '0 0 20px oklch(0.545 0.185 268 / 0.30)',
+                boxShadow: '0 0 20px rgba(231,197,154,0.25)',
               } : {}}
             >
               {isLoading ? (
@@ -166,9 +166,9 @@ export function ShortenerPage() {
             role="alert"
             className="mx-8 mb-6 flex items-center gap-2 p-4 rounded-xl text-sm"
             style={{
-              background: 'oklch(0.580 0.220 27 / 0.07)',
-              border: '1px solid oklch(0.580 0.220 27 / 0.20)',
-              color: 'var(--destructive)',
+              background: 'rgba(239,68,68,0.08)',
+              border: '1px solid rgba(239,68,68,0.20)',
+              color: '#ef4444',
             }}
           >
             <AlertCircle className="h-4 w-4 shrink-0" aria-hidden="true" />
@@ -179,16 +179,16 @@ export function ShortenerPage() {
         {/* Result */}
         {showResult && shortUrl && (
           <div className="mx-8 mb-7 p-5 rounded-xl" style={{
-            background: 'oklch(0.55 0.150 145 / 0.06)',
-            border: '1px solid oklch(0.55 0.150 145 / 0.22)',
+            background: 'rgba(0,172,92,0.08)',
+            border: '1px solid rgba(0,172,92,0.22)',
           }}>
             <div className="flex items-center gap-2 mb-3">
               <div className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0" style={{
-                background: 'oklch(0.55 0.150 145 / 0.15)',
+                background: 'rgba(0,172,92,0.15)',
               }}>
-                <Check className="h-3 w-3" style={{ color: 'oklch(0.42 0.150 145)' }} aria-hidden="true" />
+                <Check className="h-3 w-3" style={{ color: '#00AC5C' }} aria-hidden="true" />
               </div>
-              <p className="text-sm font-semibold" style={{ color: 'oklch(0.38 0.120 145)' }} role="status">
+              <p className="text-sm font-semibold" style={{ color: '#00AC5C' }} role="status">
                 Link shortened successfully!
               </p>
             </div>
@@ -215,7 +215,7 @@ export function ShortenerPage() {
                 aria-label={copied ? 'Copied to clipboard' : 'Copy short URL to clipboard'}
               >
                 {copied ? (
-                  <><Check className="h-3.5 w-3.5" style={{ color: 'oklch(0.42 0.150 145)' }} />Copied!</>
+                  <><Check className="h-3.5 w-3.5" style={{ color: '#00AC5C' }} />Copied!</>
                 ) : (
                   <><Copy className="h-3.5 w-3.5" />Copy</>
                 )}
@@ -307,7 +307,7 @@ export function ShortenerPage() {
                           aria-label={isCopied ? 'Copied to clipboard' : `Copy ${shortLink} to clipboard`}
                         >
                           {isCopied ? (
-                            <><Check className="h-3 w-3" style={{ color: 'oklch(0.42 0.150 145)' }} />Copied!</>
+                            <><Check className="h-3 w-3" style={{ color: '#00AC5C' }} />Copied!</>
                           ) : (
                             <><Copy className="h-3 w-3" />Copy</>
                           )}

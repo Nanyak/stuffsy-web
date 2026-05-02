@@ -5,14 +5,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { UserPlus, AlertCircle, Check, X } from "lucide-react";
 
-const PRIMARY   = 'oklch(0.545 0.185 268)'
-const PRIMARY_L = 'oklch(0.440 0.185 268)'
-const TEXT_HI   = 'oklch(0.180 0.014 260)'
-const TEXT_MID  = 'oklch(0.430 0.010 260)'
-const SURFACE   = 'oklch(1 0 0)'
-const BORDER    = 'rgba(0,0,0,0.07)'
-const BORDER_EM = 'oklch(0.545 0.185 268 / 0.28)'
-const FONT_DISP = "'Syne', system-ui, sans-serif"
+const PRIMARY   = '#E7C59A'
+const PRIMARY_L = '#E7C59A'
+const TEXT_HI   = '#F3F3F3'
+const TEXT_MID  = '#949494'
+const SURFACE   = '#080808'
+const BORDER    = '#333333'
+const BORDER_EM = 'rgba(231,197,154,0.30)'
+const FONT_DISP = "'Inter', system-ui, sans-serif"
 
 const PASSWORD_RULES = [
   { label: "At least 8 characters", test: (p: string) => p.length >= 8 },
@@ -23,7 +23,6 @@ const PASSWORD_RULES = [
 ];
 
 function parseApiError(raw: string): string {
-  // Cognito password policy errors
   if (raw.includes("Password did not conform with policy")) {
     if (raw.includes("uppercase")) return "Password must contain at least one uppercase letter.";
     if (raw.includes("lowercase")) return "Password must contain at least one lowercase letter.";
@@ -83,13 +82,13 @@ export function SignupPage() {
   return (
     <div className="flex items-center justify-center min-h-[80vh] relative py-8">
       <div className="absolute inset-0 pointer-events-none" aria-hidden style={{
-        background: 'radial-gradient(ellipse 70% 50% at 50% 0%, oklch(0.545 0.185 268 / 0.07) 0%, transparent 70%)',
+        background: 'radial-gradient(ellipse 70% 50% at 50% 0%, rgba(231,197,154,0.06) 0%, transparent 70%)',
       }} />
 
       <div className="relative w-full max-w-sm">
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl mb-4" style={{
-            background: 'oklch(0.545 0.185 268 / 0.10)',
+            background: 'rgba(231,197,154,0.08)',
             border: `1px solid ${BORDER_EM}`,
           }}>
             <UserPlus className="h-5 w-5" style={{ color: PRIMARY }} />
@@ -103,14 +102,14 @@ export function SignupPage() {
         <div className="rounded-2xl p-7" style={{
           background: SURFACE,
           border: `1px solid ${BORDER}`,
-          boxShadow: '0 4px 24px rgba(0,0,0,0.06)',
+          boxShadow: '0 4px 24px rgba(0,0,0,0.40)',
         }}>
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
               <div className="flex items-center gap-2 p-3 rounded-xl text-sm" style={{
-                background: 'oklch(0.580 0.220 27 / 0.07)',
-                border: '1px solid oklch(0.580 0.220 27 / 0.20)',
-                color: 'oklch(0.480 0.180 27)',
+                background: 'rgba(239,68,68,0.08)',
+                border: '1px solid rgba(239,68,68,0.20)',
+                color: '#ef4444',
               }}>
                 <AlertCircle className="h-4 w-4 shrink-0" />
                 {error}
@@ -144,7 +143,7 @@ export function SignupPage() {
                 <ul className="mt-2 space-y-1">
                   {PASSWORD_RULES.map((rule, i) => (
                     <li key={rule.label} className="flex items-center gap-1.5 text-xs" style={{
-                      color: passwordRulesMet[i] ? 'oklch(0.55 0.15 145)' : 'oklch(0.50 0.010 260)',
+                      color: passwordRulesMet[i] ? '#00AC5C' : '#949494',
                     }}>
                       {passwordRulesMet[i]
                         ? <Check className="h-3 w-3 shrink-0" />
@@ -159,7 +158,7 @@ export function SignupPage() {
               type="submit"
               className="w-full h-11 font-semibold cursor-pointer transition-all duration-200"
               disabled={isLoading}
-              style={!isLoading ? { boxShadow: '0 0 20px oklch(0.545 0.185 268 / 0.28)' } : {}}
+              style={!isLoading ? { boxShadow: '0 0 20px rgba(231,197,154,0.25)' } : {}}
             >
               {isLoading ? (
                 <><span className="animate-spin rounded-full h-4 w-4 border-b-2 border-white" />Creating account...</>

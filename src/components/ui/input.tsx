@@ -1,5 +1,4 @@
 import * as React from "react"
-
 import { cn } from "@/lib/utils"
 
 const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
@@ -8,11 +7,12 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
       <input
         type={type}
         className={cn(
-          "flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm text-foreground shadow-none transition-all duration-150",
-          "placeholder:text-muted-foreground",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60 focus-visible:border-ring",
+          "flex h-9 w-full rounded-[8px] border border-[#333333] bg-[#1a1a1a] px-3 py-1 text-sm text-[#F3F3F3]",
+          "placeholder:text-[#949494]",
+          "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#E7C59A] focus-visible:border-[#E7C59A]",
           "disabled:cursor-not-allowed disabled:opacity-50",
-          "file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground",
+          "file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-[#F3F3F3]",
+          "transition-colors duration-150",
           className
         )}
         ref={ref}

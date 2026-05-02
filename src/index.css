@@ -2,74 +2,58 @@
 @config "../tailwind.config.js";
 
 /* ─────────────────────────────────────────────────────────────
-   Titan — Monochrome Financial Ledger
-   Light-only. Palette: black/white with warm off-white depth.
+   Hyperstudio — Dark terminal with amber accents
    ───────────────────────────────────────────────────────────── */
 :root {
-  /* ── Titan color palette ── */
-  --color-midnight-ink:     #111111;
-  --color-canvas-white:     #ffffff;
-  --color-off-white-sage:   #f3efeb;
-  --color-faded-stone:      #e9eaeb;
-  --color-gunmetal-gray:    #615e5b;
-  --color-soft-concrete:    #d8d3cc;
-  --color-action-black:     #000000;
-  --color-highlight-orange: #ff9900;
-
-  /* ── Semantic aliases (shadcn + Tailwind utilities) ── */
-  --background:             #ffffff;
-  --foreground:             #111111;
-  --card:                   #ffffff;
-  --card-foreground:        #111111;
-  --popover:                #ffffff;
-  --popover-foreground:     #111111;
-  --primary:                #000000;
-  --primary-foreground:     #ffffff;
-  --secondary:              #f3efeb;
-  --secondary-foreground:   #111111;
-  --muted:                  #f3efeb;
-  --muted-foreground:       #615e5b;
-  --accent:                 #f3efeb;
-  --accent-foreground:      #111111;
-  --destructive:            #dc2626;
-  --destructive-foreground: #ffffff;
-  --border:                 #e9eaeb;
-  --input:                  #e9eaeb;
-  --ring:                   #111111;
+  --background:             #101010;
+  --foreground:             #F3F3F3;
+  --card:                   #080808;
+  --card-foreground:        #F3F3F3;
+  --popover:                #080808;
+  --popover-foreground:     #F3F3F3;
+  --primary:                #333333;
+  --primary-foreground:     #FFFFFF;
+  --secondary:              #1a1a1a;
+  --secondary-foreground:   #F3F3F3;
+  --muted:                  #1a1a1a;
+  --muted-foreground:       #949494;
+  --accent:                 #1a1a1a;
+  --accent-foreground:      #F3F3F3;
+  --destructive:            #ef4444;
+  --destructive-foreground: #FFFFFF;
+  --border:                 #333333;
+  --input:                  #1a1a1a;
+  --ring:                   #E7C59A;
   --radius:                 0.5rem;
 
-  /* ── Sidebar (shadcn compat) ── */
-  --sidebar:                        #f3efeb;
-  --sidebar-foreground:             #111111;
-  --sidebar-primary:                #000000;
-  --sidebar-primary-foreground:     #ffffff;
-  --sidebar-accent:                 #e9eaeb;
-  --sidebar-accent-foreground:      #111111;
-  --sidebar-border:                 #e9eaeb;
-  --sidebar-ring:                   #111111;
+  --sidebar:                        #080808;
+  --sidebar-foreground:             #F3F3F3;
+  --sidebar-primary:                #333333;
+  --sidebar-primary-foreground:     #FFFFFF;
+  --sidebar-accent:                 #1a1a1a;
+  --sidebar-accent-foreground:      #F3F3F3;
+  --sidebar-border:                 #333333;
+  --sidebar-ring:                   #E7C59A;
 
-  /* ── Component-level inline-style tokens ── */
-  --c-text-hi:       #111111;
-  --c-text-mid:      #615e5b;
-  --c-text-lo:       #615e5b;
-  --c-border:        #e9eaeb;
-  --c-border-soft:   #d8d3cc;
-  --c-surface:       #ffffff;
-  --c-surface-2:     #f3efeb;
+  /* component inline-style tokens */
+  --c-text-hi:       #F3F3F3;
+  --c-text-mid:      #949494;
+  --c-text-lo:       #949494;
+  --c-border:        #333333;
+  --c-border-soft:   #E7C59A;
+  --c-surface:       #080808;
+  --c-surface-2:     #101010;
 
-  /* Legacy compat tokens (consumed by remaining shadcn components) */
-  --c-primary-text:   #111111;
-  --c-border-subtle:  #e9eaeb;
-  --c-border-primary: #d8d3cc;
-  --c-primary-bg:     #f3efeb;
+  /* legacy compat */
+  --c-primary-text:   #E7C59A;
+  --c-border-subtle:  #333333;
+  --c-border-primary: rgba(231,197,154,0.30);
+  --c-primary-bg:     rgba(231,197,154,0.08);
   --c-shadow-sm:      none;
   --c-shadow-md:      none;
   --c-shadow-lg:      none;
 }
 
-/* ─────────────────────────────────────────────────────────────
-   Tailwind v4 — map CSS vars to theme utilities
-   ───────────────────────────────────────────────────────────── */
 @theme inline {
   --radius-sm:  calc(var(--radius) - 4px);
   --radius-md:  calc(var(--radius) - 2px);
@@ -107,13 +91,8 @@
   --color-sidebar-ring:                var(--sidebar-ring);
 }
 
-/* ─────────────────────────────────────────────────────────────
-   Base
-   ───────────────────────────────────────────────────────────── */
 @layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
+  * { @apply border-border outline-ring/50; }
 
   html {
     scroll-behavior: smooth;
@@ -125,12 +104,11 @@
     font-family: 'Inter', system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    font-feature-settings: "ss02", "ss03";
   }
 
   h1, h2, h3, h4, h5, h6 {
-    letter-spacing: -0.030em;
     font-weight: 700;
+    letter-spacing: -0.011em;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -142,27 +120,22 @@
   }
 }
 
-/* ─────────────────────────────────────────────────────────────
-   Animations
-   ───────────────────────────────────────────────────────────── */
 @keyframes fade-up {
   from { opacity: 0; transform: translateY(6px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-
 @keyframes fade-up-lg {
   from { opacity: 0; transform: translateY(16px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
 .fade-in   { animation: fade-up    0.30s ease-out both; }
-.fade-in-1 { animation: fade-up-lg 0.60s cubic-bezier(0.16, 1, 0.3, 1) 0.05s both; }
-.fade-in-2 { animation: fade-up-lg 0.60s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both; }
-.fade-in-3 { animation: fade-up-lg 0.60s cubic-bezier(0.16, 1, 0.3, 1) 0.25s both; }
-.fade-in-4 { animation: fade-up-lg 0.60s cubic-bezier(0.16, 1, 0.3, 1) 0.35s both; }
-.fade-in-5 { animation: fade-up-lg 0.60s cubic-bezier(0.16, 1, 0.3, 1) 0.45s both; }
+.fade-in-1 { animation: fade-up-lg 0.55s cubic-bezier(0.16,1,0.3,1) 0.05s both; }
+.fade-in-2 { animation: fade-up-lg 0.55s cubic-bezier(0.16,1,0.3,1) 0.15s both; }
+.fade-in-3 { animation: fade-up-lg 0.55s cubic-bezier(0.16,1,0.3,1) 0.25s both; }
+.fade-in-4 { animation: fade-up-lg 0.55s cubic-bezier(0.16,1,0.3,1) 0.35s both; }
+.fade-in-5 { animation: fade-up-lg 0.55s cubic-bezier(0.16,1,0.3,1) 0.45s both; }
 
-/* Full-bleed helper */
 .full-bleed {
   width: 100vw;
   position: relative;
@@ -170,18 +143,16 @@
   transform: translateX(-50%);
 }
 
-/* Surface card */
 .surface-card {
   background: var(--card);
   border: 1px solid var(--c-border-subtle);
 }
 
-/* Interactive card — CSS-based hover */
 .interactive-card {
-  border: 1px solid #e9eaeb;
+  border: 1px solid #333333;
   transition: border-color 150ms ease;
 }
 .interactive-card:hover,
 .interactive-card:focus-within {
-  border-color: #d8d3cc;
+  border-color: #E7C59A;
 }

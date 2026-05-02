@@ -5,30 +5,32 @@ import {
   ArrowRight, Zap, Share2, CheckCircle, MousePointer2,
   Folder, FileText, Copy, Upload,
 } from 'lucide-react'
-import { ink as INK, gun as GUN, sage as SAGE, stone as STONE, soft as SOFT, black as BLACK, white as WHITE, font as FONT } from '@/lib/tokens'
+import { ink as INK, gun as GUN, sage as SAGE, stone as STONE, soft as SOFT, black as BLACK, white as WHITE, font as FONT, void_ as VOID } from '@/lib/tokens'
 
 /* ── Pill button helpers ───────────────────────────────────── */
 const pillPrimary: React.CSSProperties = {
   display: 'inline-flex', alignItems: 'center', gap: '8px',
   background: BLACK, color: WHITE,
-  padding: '12px 28px', borderRadius: '160px',
+  padding: '12px 28px', borderRadius: '8px',
   fontWeight: 600, fontSize: '14px', textDecoration: 'none',
   fontFamily: FONT, cursor: 'pointer', transition: 'opacity 150ms',
+  letterSpacing: '0.04em',
 }
 const pillGhost: React.CSSProperties = {
   display: 'inline-flex', alignItems: 'center', gap: '8px',
-  background: WHITE, color: INK,
-  padding: '11px 24px', borderRadius: '160px',
-  border: `1px solid ${SOFT}`,
+  background: 'transparent', color: GUN,
+  padding: '11px 24px', borderRadius: '8px',
+  border: `1px solid ${STONE}`,
   fontWeight: 600, fontSize: '14px', textDecoration: 'none',
-  fontFamily: FONT, cursor: 'pointer', transition: 'border-color 150ms',
+  fontFamily: FONT, cursor: 'pointer', transition: 'color 150ms, border-color 150ms',
+  letterSpacing: '0.04em',
 }
 
 export function HomePage() {
   return (
     <div
       className="full-bleed -mt-8 overflow-x-hidden"
-      style={{ background: WHITE, fontFamily: FONT, minHeight: '100vh' }}
+      style={{ background: VOID, fontFamily: FONT, minHeight: '100vh' }}
     >
       <Helmet>
         <title>Stuffsy – Free Online Tools for Everyday Use</title>
@@ -48,12 +50,12 @@ export function HomePage() {
             <div
               className="fade-in-1 inline-flex items-center gap-2 mb-8"
               style={{
-                padding: '5px 16px', borderRadius: '160px',
+                padding: '5px 16px', borderRadius: '99px',
                 border: `1px solid ${STONE}`,
                 fontSize: '12px', fontWeight: 500, color: GUN,
               }}
             >
-              <Zap className="h-3 w-3" />
+              <Zap className="h-3 w-3" style={{ color: SOFT }} />
               Free &amp; open to everyone
             </div>
 
@@ -61,10 +63,10 @@ export function HomePage() {
             <h1
               className="fade-in-2"
               style={{
-                fontSize: 'clamp(40px, 5vw, 60px)',
+                fontSize: 'clamp(40px, 5vw, 63px)',
                 fontWeight: 700,
-                letterSpacing: '-0.03em',
-                lineHeight: 1.1,
+                letterSpacing: '-0.011em',
+                lineHeight: 0.95,
                 color: INK,
                 marginBottom: '24px',
               }}
@@ -96,8 +98,14 @@ export function HomePage() {
               <Link
                 to="/shortener"
                 style={pillGhost}
-                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = INK }}
-                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = SOFT }}
+                onMouseEnter={e => {
+                  (e.currentTarget as HTMLElement).style.color = INK
+                  ;(e.currentTarget as HTMLElement).style.borderColor = INK
+                }}
+                onMouseLeave={e => {
+                  (e.currentTarget as HTMLElement).style.color = GUN
+                  ;(e.currentTarget as HTMLElement).style.borderColor = STONE
+                }}
               >
                 Explore Tools
               </Link>
@@ -115,9 +123,9 @@ export function HomePage() {
       <div style={{ borderTop: `1px solid ${STONE}`, borderBottom: `1px solid ${STONE}`, background: SAGE }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '14px 24px' }}>
           <div className="flex flex-wrap items-center justify-center gap-8">
-            {['2 Tools Available', 'Always Free', 'No Account Required', 'Fast & Secure'].map((s, i) => (
+            {['3 Tools Available', 'Always Free', 'No Account Required', 'Fast & Secure'].map((s, i) => (
               <span key={i} className="flex items-center gap-2 text-xs font-medium" style={{ color: GUN }}>
-                <CheckCircle className="h-3.5 w-3.5" style={{ color: INK }} />
+                <CheckCircle className="h-3.5 w-3.5" style={{ color: SOFT }} />
                 {s}
               </span>
             ))}
@@ -129,7 +137,7 @@ export function HomePage() {
       <section style={{ maxWidth: '1200px', margin: '0 auto', padding: '80px 24px' }}>
         <div className="text-center mb-16">
           <span className="text-xs font-bold tracking-widest uppercase" style={{ color: GUN }}>Simple by design</span>
-          <h2 style={{ marginTop: '12px', fontSize: '40px', fontWeight: 700, letterSpacing: '-0.03em', color: INK }}>
+          <h2 style={{ marginTop: '12px', fontSize: '40px', fontWeight: 700, letterSpacing: '-0.011em', color: INK }}>
             Here's how it works
           </h2>
         </div>
@@ -161,7 +169,7 @@ export function HomePage() {
         <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '80px 24px' }}>
           <div className="text-center mb-12">
             <span className="text-xs font-bold tracking-widest uppercase" style={{ color: GUN }}>Available now</span>
-            <h2 style={{ marginTop: '12px', fontSize: '40px', fontWeight: 700, letterSpacing: '-0.03em', color: INK }}>
+            <h2 style={{ marginTop: '12px', fontSize: '40px', fontWeight: 700, letterSpacing: '-0.011em', color: INK }}>
               Tools ready to use
             </h2>
           </div>
@@ -187,7 +195,7 @@ export function HomePage() {
       {/* ── COMING SOON ─────────────────────────────────────── */}
       <section style={{ maxWidth: '1200px', margin: '0 auto', padding: '80px 24px' }}>
         <div className="text-center mb-10">
-          <h2 style={{ fontSize: '24px', fontWeight: 700, letterSpacing: '-0.03em', color: GUN }}>Coming soon</h2>
+          <h2 style={{ fontSize: '24px', fontWeight: 700, letterSpacing: '-0.011em', color: GUN }}>Coming soon</h2>
         </div>
         <div className="grid sm:grid-cols-3 gap-4">
           {[
@@ -199,13 +207,13 @@ export function HomePage() {
               key={tool.name}
               className="p-7 text-center"
               style={{
-                background: WHITE, border: `1px solid ${STONE}`,
-                borderRadius: '32px', opacity: 0.5,
+                background: SAGE, border: `1px solid ${STONE}`,
+                borderRadius: '8px', opacity: 0.4,
               }}
             >
               <div
                 className="w-10 h-10 rounded-[10px] flex items-center justify-center mx-auto mb-4"
-                style={{ background: SAGE, color: GUN }}
+                style={{ background: '#1a1a1a', color: GUN }}
               >
                 {tool.icon}
               </div>
@@ -219,7 +227,7 @@ export function HomePage() {
       {/* ── FINAL CTA ───────────────────────────────────────── */}
       <section style={{ background: SAGE, borderTop: `1px solid ${STONE}` }}>
         <div style={{ maxWidth: '600px', margin: '0 auto', padding: '80px 24px', textAlign: 'center' }}>
-          <h2 style={{ fontSize: '40px', fontWeight: 700, letterSpacing: '-0.03em', color: INK, marginBottom: '16px' }}>
+          <h2 style={{ fontSize: '40px', fontWeight: 700, letterSpacing: '-0.011em', color: INK, marginBottom: '16px' }}>
             Ready to get started?
           </h2>
           <p style={{ fontSize: '16px', lineHeight: 1.6, color: GUN, marginBottom: '40px' }}>
@@ -237,8 +245,14 @@ export function HomePage() {
             <Link
               to="/shortener"
               style={pillGhost}
-              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = INK }}
-              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = SOFT }}
+              onMouseEnter={e => {
+                (e.currentTarget as HTMLElement).style.color = INK
+                ;(e.currentTarget as HTMLElement).style.borderColor = INK
+              }}
+              onMouseLeave={e => {
+                (e.currentTarget as HTMLElement).style.color = GUN
+                ;(e.currentTarget as HTMLElement).style.borderColor = STONE
+              }}
             >
               Try URL Shortener
             </Link>
@@ -247,13 +261,13 @@ export function HomePage() {
       </section>
 
       {/* ── FOOTER ──────────────────────────────────────────── */}
-      <footer style={{ borderTop: `1px solid ${STONE}` }}>
+      <footer style={{ borderTop: `1px solid ${STONE}`, background: VOID }}>
         <div
           className="flex flex-col sm:flex-row items-center justify-between gap-4 py-10 px-6"
           style={{ maxWidth: '1200px', margin: '0 auto' }}
         >
           <div>
-            <p className="font-bold text-base" style={{ letterSpacing: '-0.03em', color: INK }}>Stuffsy</p>
+            <p className="font-bold text-base" style={{ letterSpacing: '-0.011em', color: INK }}>Stuffsy</p>
             <p className="text-xs mt-1" style={{ color: GUN }}>Built for everyday needs.</p>
           </div>
           <p className="text-xs" style={{ color: GUN }}>&copy; 2026 Stuffsy. All rights reserved.</p>
@@ -266,32 +280,32 @@ export function HomePage() {
 /* ── Mock UI: Large file browser (Hero) ─────────────────── */
 function MockFileBrowser() {
   const files = [
-    { icon: <FileText className="h-4 w-4" />, name: 'project-report.pdf', size: '2.4 MB', color: '#111111' },
-    { icon: <FileText className="h-4 w-4" />, name: 'hero-image.png',     size: '1.2 MB', color: '#615e5b' },
-    { icon: <FileText className="h-4 w-4" />, name: 'design-specs.fig',   size: '8.1 MB', color: '#111111' },
+    { icon: <FileText className="h-4 w-4" />, name: 'project-report.pdf', size: '2.4 MB' },
+    { icon: <FileText className="h-4 w-4" />, name: 'hero-image.png',     size: '1.2 MB' },
+    { icon: <FileText className="h-4 w-4" />, name: 'design-specs.fig',   size: '8.1 MB' },
   ]
   return (
     <div style={{
-      background: WHITE,
+      background: SAGE,
       border: `1px solid ${STONE}`,
-      borderRadius: '20px',
+      borderRadius: '8px',
       overflow: 'hidden',
       maxWidth: '520px',
       userSelect: 'none',
     }}>
       {/* Title bar */}
       <div style={{
-        background: SAGE, borderBottom: `1px solid ${STONE}`,
+        background: '#0d0d0d', borderBottom: `1px solid ${STONE}`,
         padding: '10px 16px', display: 'flex', alignItems: 'center', gap: '10px',
       }}>
         <div style={{ display: 'flex', gap: '6px' }}>
-          <div style={{ width: 10, height: 10, borderRadius: '50%', background: SOFT }} />
-          <div style={{ width: 10, height: 10, borderRadius: '50%', background: SOFT }} />
+          <div style={{ width: 10, height: 10, borderRadius: '50%', background: STONE }} />
+          <div style={{ width: 10, height: 10, borderRadius: '50%', background: STONE }} />
           <div style={{ width: 10, height: 10, borderRadius: '50%', background: SOFT }} />
         </div>
         <div style={{
-          flex: 1, height: 22, borderRadius: '140px',
-          background: STONE, display: 'flex', alignItems: 'center',
+          flex: 1, height: 22, borderRadius: '99px',
+          background: '#1a1a1a', display: 'flex', alignItems: 'center',
           paddingInline: '10px', fontSize: '10px', color: GUN,
           maxWidth: '240px', margin: '0 auto',
         }}>
@@ -305,12 +319,12 @@ function MockFileBrowser() {
         <div style={{
           width: '148px', flexShrink: 0,
           borderRight: `1px solid ${STONE}`,
-          background: SAGE, padding: '12px 8px',
+          background: '#0d0d0d', padding: '12px 8px',
           display: 'flex', flexDirection: 'column', gap: '2px',
         }}>
           <div style={{
             background: BLACK, color: WHITE,
-            borderRadius: '140px', padding: '7px 12px',
+            borderRadius: '8px', padding: '7px 12px',
             fontSize: '11px', fontWeight: 600,
             display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px',
           }}>
@@ -319,7 +333,7 @@ function MockFileBrowser() {
           </div>
           {['All Files', 'Documents', 'Images', 'Shared'].map((item, i) => (
             <div key={item} style={{
-              padding: '5px 12px', borderRadius: '140px', fontSize: '11px',
+              padding: '5px 12px', borderRadius: '8px', fontSize: '11px',
               color: i === 0 ? INK : GUN,
               background: i === 0 ? STONE : 'transparent',
               fontWeight: i === 0 ? 600 : 400,
@@ -330,15 +344,15 @@ function MockFileBrowser() {
         </div>
 
         {/* Main */}
-        <div style={{ flex: 1, padding: '14px', minWidth: 0, background: WHITE }}>
+        <div style={{ flex: 1, padding: '14px', minWidth: 0, background: SAGE }}>
           <p style={{ fontSize: '10px', color: GUN, marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 600 }}>Folders</p>
           <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
             {[{ name: 'Documents', n: '12 files' }, { name: 'Photos', n: '34 files' }].map(f => (
               <div key={f.name} style={{
-                flex: 1, background: SAGE,
-                border: `1px solid ${STONE}`, borderRadius: '10px', padding: '10px',
+                flex: 1, background: '#141414',
+                border: `1px solid ${STONE}`, borderRadius: '8px', padding: '10px',
               }}>
-                <Folder className="h-4 w-4" style={{ color: INK, marginBottom: '6px' }} />
+                <Folder className="h-4 w-4" style={{ color: SOFT, marginBottom: '6px' }} />
                 <p style={{ fontSize: '11px', fontWeight: 600, color: INK, marginBottom: '2px' }}>{f.name}</p>
                 <p style={{ fontSize: '10px', color: GUN }}>{f.n}</p>
               </div>
@@ -350,9 +364,9 @@ function MockFileBrowser() {
             {files.map(f => (
               <div key={f.name} style={{
                 display: 'flex', alignItems: 'center', gap: '8px',
-                padding: '6px 8px', borderRadius: '10px', background: SAGE,
+                padding: '6px 8px', borderRadius: '8px', background: '#141414',
               }}>
-                <span style={{ color: f.color, flexShrink: 0 }}>{f.icon}</span>
+                <span style={{ color: GUN, flexShrink: 0 }}>{f.icon}</span>
                 <span style={{ flex: 1, fontSize: '11px', color: GUN, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{f.name}</span>
                 <span style={{ fontSize: '10px', color: SOFT, flexShrink: 0, fontWeight: 500 }}>{f.size}</span>
               </div>
@@ -377,17 +391,17 @@ function MockStepPicker() {
         ].map(t => (
           <div key={t.name} style={{
             display: 'flex', alignItems: 'center', gap: '10px',
-            padding: '9px 12px', borderRadius: '10px',
-            background: t.dim ? WHITE : SAGE,
+            padding: '9px 12px', borderRadius: '8px',
+            background: t.dim ? '#1a1a1a' : '#141414',
             border: `1px solid ${t.dim ? STONE : SOFT}`,
             opacity: t.dim ? 0.45 : 1,
           }}>
             <span style={{ color: t.dim ? GUN : INK }}>{t.icon}</span>
             <span style={{ flex: 1, fontSize: '12px', fontWeight: 600, color: t.dim ? GUN : INK }}>{t.name}</span>
             <span style={{
-              fontSize: '10px', padding: '2px 10px', borderRadius: '160px',
+              fontSize: '10px', padding: '2px 10px', borderRadius: '99px',
               background: t.dim ? STONE : SOFT,
-              color: t.dim ? GUN : INK, fontWeight: 600,
+              color: t.dim ? GUN : '#101010', fontWeight: 600,
             }}>
               {t.tag}
             </span>
@@ -404,10 +418,10 @@ function MockStepUse() {
       <p style={{ fontSize: '10px', color: GUN, marginBottom: '10px', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 600 }}>Upload Files</p>
       <div style={{
         border: `1.5px dashed ${SOFT}`,
-        borderRadius: '10px', padding: '20px', textAlign: 'center',
-        background: SAGE, marginBottom: '12px',
+        borderRadius: '8px', padding: '20px', textAlign: 'center',
+        background: '#141414', marginBottom: '12px',
       }}>
-        <Upload className="h-5 w-5" style={{ color: INK, margin: '0 auto 8px' }} />
+        <Upload className="h-5 w-5" style={{ color: SOFT, margin: '0 auto 8px' }} />
         <p style={{ fontSize: '12px', fontWeight: 600, color: INK, marginBottom: '2px' }}>Drop files here</p>
         <p style={{ fontSize: '11px', color: GUN }}>or click to browse</p>
       </div>
@@ -419,7 +433,7 @@ function MockStepUse() {
         <div key={f.name} style={{ marginBottom: '8px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
             <span style={{ fontSize: '11px', color: GUN }}>{f.name}</span>
-            <span style={{ fontSize: '11px', color: INK, fontWeight: 600 }}>{f.label}</span>
+            <span style={{ fontSize: '11px', color: f.done ? SOFT : INK, fontWeight: 600 }}>{f.label}</span>
           </div>
           <div style={{ height: '3px', background: STONE, borderRadius: '99px', overflow: 'hidden' }}>
             <div style={{ width: f.pct, height: '100%', background: f.done ? SOFT : INK, borderRadius: '99px' }} />
@@ -442,15 +456,15 @@ function MockStepShare() {
         ].map((l, i) => (
           <div key={i} style={{
             display: 'flex', alignItems: 'center', gap: '8px',
-            padding: '8px 12px', borderRadius: '10px',
-            background: l.active ? SAGE : WHITE,
+            padding: '8px 12px', borderRadius: '8px',
+            background: l.active ? '#141414' : '#1a1a1a',
             border: `1px solid ${l.active ? SOFT : STONE}`,
           }}>
             <span style={{ flex: 1, fontSize: '11px', fontFamily: 'monospace', color: l.active ? INK : GUN }}>{l.label}</span>
             <span style={{
-              fontSize: '10px', padding: '2px 8px', borderRadius: '160px',
+              fontSize: '10px', padding: '2px 8px', borderRadius: '99px',
               background: l.active ? SOFT : STONE,
-              color: l.active ? INK : GUN,
+              color: l.active ? '#101010' : GUN,
               display: 'flex', alignItems: 'center', gap: '4px', fontWeight: 600,
             }}>
               {l.active ? <><CheckCircle className="h-2.5 w-2.5" /> Copied</> : <><Copy className="h-2.5 w-2.5" /> Copy</>}
@@ -465,18 +479,18 @@ function MockStepShare() {
 /* ── Mini previews for Tool cards ───────────────────────── */
 function MiniStoragePreview() {
   return (
-    <div style={{ padding: '12px', borderRadius: '10px', background: SAGE, border: `1px solid ${STONE}`, marginBottom: '20px' }}>
+    <div style={{ padding: '12px', borderRadius: '8px', background: '#141414', border: `1px solid ${STONE}`, marginBottom: '20px' }}>
       <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
         {['Documents', 'Photos'].map(name => (
-          <div key={name} style={{ flex: 1, background: WHITE, border: `1px solid ${STONE}`, borderRadius: '8px', padding: '8px' }}>
-            <Folder className="h-4 w-4" style={{ color: INK, marginBottom: '5px' }} />
+          <div key={name} style={{ flex: 1, background: '#1a1a1a', border: `1px solid ${STONE}`, borderRadius: '6px', padding: '8px' }}>
+            <Folder className="h-4 w-4" style={{ color: SOFT, marginBottom: '5px' }} />
             <p style={{ fontSize: '10px', fontWeight: 600, color: INK }}>{name}</p>
           </div>
         ))}
       </div>
       {[{ name: 'report.pdf', size: '2.4 MB' }, { name: 'image.png', size: '1.2 MB' }].map(f => (
-        <div key={f.name} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '5px 7px', borderRadius: '6px', background: WHITE, marginBottom: '3px' }}>
-          <FileText className="h-3 w-3" style={{ color: INK }} />
+        <div key={f.name} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '5px 7px', borderRadius: '6px', background: '#1a1a1a', marginBottom: '3px' }}>
+          <FileText className="h-3 w-3" style={{ color: GUN }} />
           <span style={{ flex: 1, fontSize: '10px', color: GUN }}>{f.name}</span>
           <span style={{ fontSize: '10px', color: SOFT, fontWeight: 500 }}>{f.size}</span>
         </div>
@@ -487,18 +501,18 @@ function MiniStoragePreview() {
 
 function MiniShortenerPreview() {
   return (
-    <div style={{ padding: '12px', borderRadius: '10px', background: SAGE, border: `1px solid ${STONE}`, marginBottom: '20px' }}>
+    <div style={{ padding: '12px', borderRadius: '8px', background: '#141414', border: `1px solid ${STONE}`, marginBottom: '20px' }}>
       <div style={{ display: 'flex', gap: '6px', marginBottom: '10px' }}>
         <div style={{
-          flex: 1, height: '30px', borderRadius: '140px',
-          background: WHITE, border: `1px solid ${STONE}`,
+          flex: 1, height: '30px', borderRadius: '8px',
+          background: '#1a1a1a', border: `1px solid ${STONE}`,
           display: 'flex', alignItems: 'center', paddingInline: '10px',
           fontSize: '10px', color: GUN,
         }}>
           https://very-long-url.com/page/with/params...
         </div>
         <div style={{
-          height: '30px', paddingInline: '14px', borderRadius: '160px',
+          height: '30px', paddingInline: '14px', borderRadius: '8px',
           background: BLACK, display: 'flex', alignItems: 'center',
           fontSize: '10px', fontWeight: 700, color: WHITE, flexShrink: 0,
         }}>
@@ -508,13 +522,13 @@ function MiniShortenerPreview() {
       {[{ label: 'stuffsy.site/xK9p', active: true }, { label: 'stuffsy.site/mR3t', active: false }].map((l, i) => (
         <div key={i} style={{
           display: 'flex', alignItems: 'center', gap: '7px',
-          padding: '6px 9px', borderRadius: '8px',
-          background: l.active ? WHITE : WHITE,
+          padding: '6px 9px', borderRadius: '6px',
+          background: '#1a1a1a',
           border: `1px solid ${l.active ? SOFT : STONE}`,
           marginBottom: '4px',
         }}>
           <span style={{ flex: 1, fontSize: '10px', fontFamily: 'monospace', color: l.active ? INK : GUN }}>{l.label}</span>
-          <Copy className="h-3 w-3" style={{ color: l.active ? INK : GUN }} />
+          <Copy className="h-3 w-3" style={{ color: l.active ? SOFT : GUN }} />
         </div>
       ))}
     </div>
@@ -525,18 +539,18 @@ function MiniShortenerPreview() {
 function MockPanel({ children }: { children: React.ReactNode }) {
   return (
     <div style={{
-      background: WHITE,
+      background: SAGE,
       border: `1px solid ${STONE}`,
-      borderRadius: '20px',
+      borderRadius: '8px',
       overflow: 'hidden',
       userSelect: 'none',
     }}>
       <div style={{
-        background: SAGE, borderBottom: `1px solid ${STONE}`,
+        background: '#0d0d0d', borderBottom: `1px solid ${STONE}`,
         padding: '9px 14px', display: 'flex', alignItems: 'center', gap: '6px',
       }}>
-        <div style={{ width: 9, height: 9, borderRadius: '50%', background: SOFT }} />
-        <div style={{ width: 9, height: 9, borderRadius: '50%', background: SOFT }} />
+        <div style={{ width: 9, height: 9, borderRadius: '50%', background: STONE }} />
+        <div style={{ width: 9, height: 9, borderRadius: '50%', background: STONE }} />
         <div style={{ width: 9, height: 9, borderRadius: '50%', background: SOFT }} />
       </div>
       <div style={{ padding: '16px' }}>{children}</div>
@@ -550,10 +564,10 @@ function StepText({ num, icon, title, desc }: { num: string; icon: React.ReactNo
     <div>
       <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
         <div style={{
-          width: '44px', height: '44px', borderRadius: '10px',
+          width: '44px', height: '44px', borderRadius: '8px',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           background: SAGE, border: `1px solid ${STONE}`,
-          color: INK, flexShrink: 0,
+          color: SOFT, flexShrink: 0,
         }}>
           {icon}
         </div>
@@ -561,7 +575,7 @@ function StepText({ num, icon, title, desc }: { num: string; icon: React.ReactNo
       </div>
       <h3 style={{
         fontSize: '28px', fontWeight: 700,
-        letterSpacing: '-0.03em', color: INK,
+        letterSpacing: '-0.011em', color: INK,
         marginBottom: '12px', lineHeight: 1.2,
         fontFamily: FONT,
       }}>{title}</h3>
@@ -579,32 +593,30 @@ function ToolCard({ to, icon, name, description, preview }: {
       to={to}
       className="group block cursor-pointer"
       style={{
-        background: WHITE, border: `1px solid ${STONE}`,
-        borderRadius: '32px', padding: '28px',
-        textDecoration: 'none', transition: 'border-color 150ms, background 150ms',
+        background: '#141414', border: `1px solid ${STONE}`,
+        borderRadius: '8px', padding: '28px',
+        textDecoration: 'none', transition: 'border-color 150ms',
       }}
       onMouseEnter={e => {
         (e.currentTarget as HTMLElement).style.borderColor = SOFT
-        ;(e.currentTarget as HTMLElement).style.background = SAGE
       }}
       onMouseLeave={e => {
         (e.currentTarget as HTMLElement).style.borderColor = STONE
-        ;(e.currentTarget as HTMLElement).style.background = WHITE
       }}
     >
       {preview}
 
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '16px' }}>
         <div style={{
-          width: '44px', height: '44px', borderRadius: '10px',
+          width: '44px', height: '44px', borderRadius: '8px',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          background: SAGE, border: `1px solid ${STONE}`, color: INK,
+          background: SAGE, border: `1px solid ${STONE}`, color: SOFT,
         }}>
           {icon}
         </div>
         <span style={{
-          fontSize: '10px', padding: '3px 12px', borderRadius: '160px',
-          background: INK, color: WHITE,
+          fontSize: '10px', padding: '3px 12px', borderRadius: '99px',
+          background: SOFT, color: '#101010',
           fontWeight: 700, letterSpacing: '0.04em',
         }}>
           Live
@@ -613,12 +625,12 @@ function ToolCard({ to, icon, name, description, preview }: {
 
       <h3
         className="flex items-center gap-2 text-lg font-bold mb-2"
-        style={{ letterSpacing: '-0.03em', color: INK, fontFamily: FONT }}
+        style={{ letterSpacing: '-0.011em', color: INK, fontFamily: FONT }}
       >
         {name}
         <ArrowRight
           className="h-4 w-4 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200"
-          style={{ color: INK }}
+          style={{ color: SOFT }}
         />
       </h3>
       <p style={{ fontSize: '13px', lineHeight: 1.6, color: GUN }}>{description}</p>

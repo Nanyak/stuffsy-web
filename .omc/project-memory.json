@@ -171,21 +171,45 @@
   },
   "hotPaths": [
     {
+      "path": "src/components/pages/ShortenerPage.tsx",
+      "accessCount": 8,
+      "lastAccessed": 1777750147083,
+      "type": "file"
+    },
+    {
       "path": "src/components/pages/HomePage.tsx",
-      "accessCount": 5,
-      "lastAccessed": 1777748385415,
+      "accessCount": 7,
+      "lastAccessed": 1777750250236,
       "type": "file"
     },
     {
       "path": "src/components/layout/Navbar.tsx",
-      "accessCount": 4,
-      "lastAccessed": 1777748222226,
+      "accessCount": 6,
+      "lastAccessed": 1777749721258,
       "type": "file"
     },
     {
       "path": "src/index.css",
-      "accessCount": 3,
-      "lastAccessed": 1777747806760,
+      "accessCount": 6,
+      "lastAccessed": 1777749977303,
+      "type": "file"
+    },
+    {
+      "path": "src/lib/tokens.ts",
+      "accessCount": 5,
+      "lastAccessed": 1777749698269,
+      "type": "file"
+    },
+    {
+      "path": "src/components/layout/Layout.tsx",
+      "accessCount": 4,
+      "lastAccessed": 1777749726006,
+      "type": "file"
+    },
+    {
+      "path": "index.html",
+      "accessCount": 4,
+      "lastAccessed": 1777749914922,
       "type": "file"
     },
     {
@@ -195,15 +219,33 @@
       "type": "file"
     },
     {
-      "path": "src/lib/tokens.ts",
+      "path": "src/components/pages/LoginPage.tsx",
       "accessCount": 3,
-      "lastAccessed": 1777748364318,
+      "lastAccessed": 1777750043982,
       "type": "file"
     },
     {
-      "path": "src/components/layout/Layout.tsx",
-      "accessCount": 2,
-      "lastAccessed": 1777747678393,
+      "path": "src/components/pages/SignupPage.tsx",
+      "accessCount": 3,
+      "lastAccessed": 1777750064197,
+      "type": "file"
+    },
+    {
+      "path": "src/components/pages/ForgotPasswordPage.tsx",
+      "accessCount": 3,
+      "lastAccessed": 1777750073864,
+      "type": "file"
+    },
+    {
+      "path": "src/components/pages/ResetPasswordPage.tsx",
+      "accessCount": 3,
+      "lastAccessed": 1777750084859,
+      "type": "file"
+    },
+    {
+      "path": "src/components/pages/ConfirmSignupPage.tsx",
+      "accessCount": 3,
+      "lastAccessed": 1777750100420,
       "type": "file"
     },
     {
@@ -213,21 +255,27 @@
       "type": "file"
     },
     {
+      "path": "src/components/ui/button.tsx",
+      "accessCount": 2,
+      "lastAccessed": 1777749705374,
+      "type": "file"
+    },
+    {
+      "path": "src/components/ui/input.tsx",
+      "accessCount": 2,
+      "lastAccessed": 1777749709660,
+      "type": "file"
+    },
+    {
       "path": "DESIGN.md",
-      "accessCount": 1,
-      "lastAccessed": 1777747428337,
+      "accessCount": 2,
+      "lastAccessed": 1777749921034,
       "type": "file"
     },
     {
       "path": "tailwind.config.js",
       "accessCount": 1,
       "lastAccessed": 1777747563713,
-      "type": "file"
-    },
-    {
-      "path": "index.html",
-      "accessCount": 1,
-      "lastAccessed": 1777747802531,
       "type": "file"
     },
     {

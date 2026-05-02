@@ -1,56 +1,54 @@
-# Titan — Style Reference
-> monochrome financial ledger
+# Hyperstudio — Style Reference
+> Monochrome terminal with amber accents. The design feels like a precisely coded interface, where every element serves a distinct, functional purpose against a dark, featureless backdrop.
 
-**Theme:** light
+**Theme:** dark
 
-Titan presents a refined, high-contrast, monochrome aesthetic, marrying the sharpness of financial precision with an underlying human warmth. Its visual language prioritizes clear information hierarchy and direct interaction, utilizing stark black and white with subtle, almost imperceptible, warm off-white and gray undertones for depth. Components are lightweight and interaction-focused, often featuring generous padding and distinctive pill-shaped radii to create a sense of approachability within a formal system. The design feels grounded and authoritative, not through heavy elements, but through its disciplined use of space, typography, and a distinct lack of decorative flourishes, allowing content and functionality to lead.
+This design system evokes a sparse, high-contrast digital workspace, reminiscent of a command line interface or early internet text modes but with a refined typographic sensibility. The stark black backgrounds (#101010, #080808) are punctuated by crisp white text (#F3F3F3, #FFFFFF), creating a sense of technical precision and directness. Minimal chromatic accents (#E7C59A, #00AC5C) are used sparingly, like status lights, ensuring they immediately draw the eye and signify interactive elements or states without overwhelming the monochrome base. Custom Aeonik and Input fonts lend a distinctive, somewhat retro-futuristic feel, reinforcing the tech-focused brand identity.
 
 ## Tokens — Colors
 
 | Name | Value | Token | Role |
 |------|-------|-------|------|
-| Midnight Ink | `#111111` | `--color-midnight-ink` | Primary text, darkest surface. Creates stark contrast against lighter backgrounds |
-| Canvas White | `#ffffff` | `--color-canvas-white` | Page backgrounds, card surfaces, ghost button text. The primary backdrop for all content |
-| Off-White Sage | `#f3efeb` | `--color-off-white-sage` | Subtle background for card variants and secondary sections, provides a soft, warm surface distinction |
-| Faded Stone | `#e9eaeb` | `--color-faded-stone` | Subtle borders and dividers, navigation backgrounds, a very light gray that acts as an almost invisible separator |
-| Gunmetal Gray | `#615e5b` | `--color-gunmetal-gray` | Secondary text, muted helper text, and subtle icon details. Provides lower contrast for less prominent information |
-| Soft Concrete | `#d8d3cc` | `--color-soft-concrete` | Subtle borders for ghost buttons and card containers, provides minimal visual separation |
-| Action Black | `#000000` | `--color-action-black` | Primary button backgrounds, key interactive elements. The pure black stands out against the near-white canvas |
-| Highlight Orange | `#ff9900` | `--color-highlight-orange` | Decorative strokes and subtle highlights, often within SVG elements. A small splash of vivid color |
+| Midnight Void | `#101010` | `--color-midnight-void` | Primary page background, deepest dark surface. |
+| Deep Space | `#080808` | `--color-deep-space` | Secondary background, slightly darker than Midnight Void, used for subtle depth. |
+| Polar White | `#F3F3F3` | `--color-polar-white` | Primary text color, hero headlines, clear contrast against dark backgrounds. |
+| Absolute Zero | `#FFFFFF` | `--color-absolute-zero` | Accent text and background for interactive elements like buttons, header text. |
+| Ash Gray | `#949494` | `--color-ash-gray` | Secondary text, subtle borders, slightly toned down from main text. |
+| Dark Carbon | `#333333` | `--color-dark-carbon` | Border colors, muted backgrounds for secondary elements. |
+| Slate | `#C1C1C1` | `--color-slate` | Subtle borders, outlines, dividers. |
+| Light Gradients | `linear-gradient(rgb(181, 181, 181), rgb(228, 228, 228))` | `--color-light-gradients` | Subtle background gradient for UI elements, providing a soft, almost imperceptible texture. |
+| Amber Glow | `#E7C59A` | `--color-amber-glow` | Key accent color for interactive elements, 'NEW' tags, drawing attention in a restrained way appropriate for a tech brand. |
+| Neon Green | `#00AC5C` | `--color-neon-green` | Small status indicators, 'spots left' tags, indicating positive status or availability. |
 
 ## Tokens — Typography
 
-### Geist — Primary typeface for all UI elements, headings, body text, and links. Its clean, modern lines reinforce the site's precision. Key use cases: weight 700 at 60px for prominent hero headlines, weight 400 at 16px for body content. Features 'ss02' and 'ss03' for consistent brand character. · `--font-geist`
+### Aeonik — Primary typeface for all headlines, body text, and UI elements. Its confident, geometric forms convey technical modernity and clarity consistently across sizes. · `--font-aeonik`
 - **Substitute:** Inter
-- **Weights:** 400, 500, 700
-- **Sizes:** 10px, 12px, 14px, 16px, 18px, 20px, 24px, 32px, 40px, 60px
-- **Line height:** 1.00, 1.10, 1.20, 1.30, 1.50
-- **Letter spacing:** -0.0300em, 0.0200em, 0.0300em
-- **OpenType features:** `"ss02", "ss03"`
-- **Role:** Primary typeface for all UI elements, headings, body text, and links. Its clean, modern lines reinforce the site's precision. Key use cases: weight 700 at 60px for prominent hero headlines, weight 400 at 16px for body content. Features 'ss02' and 'ss03' for consistent brand character.
+- **Weights:** 400, 700
+- **Sizes:** 13px, 14px, 16px, 17px, 18px, 21px, 23px, 34px, 44px, 63px
+- **Line height:** 0.95, 1.03, 1.05, 1.07, 1.11, 1.22, 1.28, 1.29, 1.34, 1.35, 1.38, 1.43, 2.69
+- **Letter spacing:** -0.011, -0.007
+- **Role:** Primary typeface for all headlines, body text, and UI elements. Its confident, geometric forms convey technical modernity and clarity consistently across sizes.
 
-### Geist Mono — Used sparingly for data displays or code-like elements, lending a technical and precise feel. Its monospaced nature is a deliberate choice for presenting numerical or categorical information. Features 'ss08' for specific character variations. · `--font-geist-mono`
-- **Substitute:** JetBrains Mono
-- **Weights:** 400, 500
-- **Sizes:** 11px, 13px, 20px, 28px, 48px
-- **Line height:** 1.00, 1.10
-- **Letter spacing:** -0.0100em, 0.0300em
-- **OpenType features:** `"ss08"`
-- **Role:** Used sparingly for data displays or code-like elements, lending a technical and precise feel. Its monospaced nature is a deliberate choice for presenting numerical or categorical information. Features 'ss08' for specific character variations.
+### Input — Secondary typeface used for specific data points and code-like elements, adding a monospaced, technical contrast to Aeonik for specialized information. The tighter letter spacing enhances its code-like appearance. · `--font-input`
+- **Substitute:** IBM Plex Mono
+- **Weights:** 400
+- **Sizes:** 13px, 14px, 16px, 17px, 18px
+- **Line height:** 1.20, 1.21, 1.25, 1.31, 1.48, 1.50, 1.54
+- **Letter spacing:** -0.037, -0.022
+- **Role:** Secondary typeface used for specific data points and code-like elements, adding a monospaced, technical contrast to Aeonik for specialized information. The tighter letter spacing enhances its code-like appearance.
 
 ### Type Scale
 
 | Role | Size | Line Height | Letter Spacing | Token |
 |------|------|-------------|----------------|-------|
-| caption | 10px | 1.2 | — | `--text-caption` |
-| body-sm | 12px | 1.2 | — | `--text-body-sm` |
-| body | 14px | 1.2 | — | `--text-body` |
-| body-lg | 16px | 1.2 | — | `--text-body-lg` |
-| heading-sm | 20px | 1.2 | — | `--text-heading-sm` |
-| heading | 24px | 1.2 | — | `--text-heading` |
-| heading-lg | 32px | 1.2 | — | `--text-heading-lg` |
-| display-sm | 40px | 1.2 | — | `--text-display-sm` |
-| display | 60px | 1.2 | — | `--text-display` |
+| caption | 13px | 1.43 | -0.007px | `--text-caption` |
+| subheading | 18px | 1.28 | — | `--text-subheading` |
+| heading-sm | 21px | 1.22 | — | `--text-heading-sm` |
+| heading | 23px | 1.11 | — | `--text-heading` |
+| heading-lg | 34px | 1.07 | — | `--text-heading-lg` |
+| display | 44px | 1.03 | — | `--text-display` |
+| display-lg | 63px | 0.95 | -0.011px | `--text-display-lg` |
 
 ## Tokens — Spacing & Shapes
 
@@ -68,127 +66,113 @@ Titan presents a refined, high-contrast, monochrome aesthetic, marrying the shar
 | 16 | 16px | `--spacing-16` |
 | 20 | 20px | `--spacing-20` |
 | 24 | 24px | `--spacing-24` |
-| 28 | 28px | `--spacing-28` |
-| 32 | 32px | `--spacing-32` |
-| 36 | 36px | `--spacing-36` |
 | 40 | 40px | `--spacing-40` |
-| 52 | 52px | `--spacing-52` |
-| 56 | 56px | `--spacing-56` |
-| 60 | 60px | `--spacing-60` |
-| 64 | 64px | `--spacing-64` |
-| 80 | 80px | `--spacing-80` |
-| 88 | 88px | `--spacing-88` |
 
 ### Border Radius
 
 | Element | Value |
 |---------|-------|
-| cards | 32px |
-| small | 10px |
-| medium | 20px |
-| buttons | 160px |
-| navigation | 140px |
+| tags | 20px |
+| buttons | 8px |
+| default | 8px |
+| statusIcons | 99px |
 
 ### Layout
 
-- **Page max-width:** 1200px
-- **Section gap:** 80px
-- **Card padding:** 28px
-- **Element gap:** 24px
+- **Section gap:** 64px
+- **Card padding:** 24px
+- **Element gap:** 10px
 
 ## Components
 
-### Primary Filled Button
-**Role:** Call to action
+### Primary Ghost Button
+**Role:** Call to action button for primary actions
 
-Filled with Action Black (#000000) background, Canvas White (#ffffff) text, and a highly rounded 160px border-radius. Padding is 24px horizontal, with implied vertical padding from line height for text.
+Transparent background, Polar White text (#F3F3F3), no visible border, 8px radius. Text uses Aeonik, weight 400, size 16px. Example: 'START NOW'.
 
-### Ghost Button
-**Role:** Secondary action or link
+### Secondary Ghost Button
+**Role:** Call to action button for secondary actions
 
-Transparent background with Midnight Ink (#111111) text and a subtle Soft Concrete (#d8d3cc) 1px border, 160px border-radius. Padding is 24px horizontal and 11px vertical.
+Transparent background, Ash Gray text (#949494), no visible border, 8px radius. Text uses Aeonik, weight 400, size 16px. Example: 'VIEW WORK'.
 
-### Navigation Link Button
-**Role:** Tertiary action or inline navigation link
+### Small Status Pill Tag
+**Role:** Indicates status or limited availability
 
-Transparent background with Midnight Ink (#111111) text, no visible border, and a 140px border-radius. Minimal horizontal padding of 18px and vertical padding of 11px for a refined, clickable area.
+Pill-shaped (99px radius) background in Neon Green (#00AC5C) with Polar White (#F3F3F3) text. Text uses Aeonik, weight 400, size 13px. Example: '2/5 SPOTS LEFT FOR APRIL'.
 
-### Feature Card
-**Role:** Informational content container
+### Header Navigation Link
+**Role:** Navigation items in the primary header
 
-Background of Off-White Sage (#f3efeb), with a 20px border-radius, and generous 28px padding on all sides. Used for important informational blocks.
+Polar White text (#F3F3F3), Aeonik, weight 400, size 16px. Underline on hover. Example: 'SERVICES'.
 
-### Expanded Feature Card
-**Role:** Detailed content container
+### Header Navigation Tag
+**Role:** Highlighted new navigation items
 
-Similar to Feature Card, with an Off-White Sage (#f3efeb) background and 32px border-radius, but featuring larger 56px padding on top/bottom and 28-56px variable horizontal padding for more expansive content.
+Navigation link with an Amber Glow (#E7C59A) 'NEW' tag appended. Text uses Aeonik, weight 400, size 13px. Example: 'PORTFOLIO NEW'.
 
-### Stat Display Card
-**Role:** Quick view data presentation
+### Chat Button
+**Role:** Persistent contact CTA in the header
 
-Transparent background, 32px border-radius, with 32px top/bottom padding and 18-28px horizontal padding. Content is separated by implicit spacing, not explicit internal borders.
+Black button with Absolute Zero (#FFFFFF) text (Aeonik, weight 400, size 14px), 8px radius, with small icon. No border. Example: 'LET'S CHAT'.
 
-### Inline Text Link
-**Role:** Navigation or contextual information link
+### Service Feature Card
+**Role:** Used to highlight key service offerings
 
-Midnight Ink (#111111) text, with no underline for a clean appearance. Implied padding when interactive derived from a base unit of 10px.
+Implied dark background on Deep Space (#080808), with Polar White (#F3F3F3) headline (Aeonik, weight 700, size 23px) and Ash Gray (#949494) body text (Aeonik, weight 400, size 16px). No explicit border or shadow, but clear visual separation through composition.
+
+### Manifesto Button
+**Role:** Secondary call to action button, typically for more information.
+
+Dark Carbon (#333333) background, Absolute Zero (#FFFFFF) text (Aeonik, weight 400), with a 4.5px radius. Subtle light gradient suggests a slight emboss. Example: 'READ MANIFESTO'.
 
 ## Do's and Don'ts
 
 ### Do
-- Use Midnight Ink (#111111) as the primary text color against Canvas White (#ffffff) or Off-White Sage (#f3efeb) to maintain high contrast.
-- Apply a 160px border-radius to all primary and ghost buttons, and 140px to navigation elements for a consistent pill-shaped aesthetic.
-- Separate major content sections with 80px vertical spacing to ensure comfortable density and visual breathing room.
-- Utilize Geist at weight 700 for headings, sizes 40px and 60px, with -0.0300em letter spacing to create impactful, condensed titles.
-- Use Geist Mono sparingly for numerical data or technical terms, leveraging its 'ss08' feature for distinct presentation.
-- Implement Soft Concrete (#d8d3cc) for subtle 1px borders on ghost buttons and divider lines to avoid heavy visual separation.
-- Employ Off-White Sage (#f3efeb) as a background for secondary content blocks or cards to provide a warm, soft distinction from the main Canvas White background.
+- Prioritize high contrast between text and background, typically Polar White (#F3F3F3) on Midnight Void (#101010) or Absolute Zero (#FFFFFF) on Dark Carbon (#333333).
+- Use Aeonik at size 63px, weight 700, and lineHeight 0.95 for primary display headlines to maintain a commanding yet compact presence.
+- Employ Amber Glow (#E7C59A) exclusively for key attention-grabbing elements, such as 'NEW' labels or critical status indicators.
+- Maintain a default border radius of 8px for most interactive elements and cards, using 99px only for circular or pill-shaped tags.
+- Utilize Input font for any content that benefits from a monospace, data-like presentation, especially at -0.037em letter spacing for specific technical details.
+- Structure layouts with ample section-gap (64px) to create a spacious, breathable feel between content blocks despite the dark theme.
+- Employ Neon Green (#00AC5C) to denote positive status, availability, or success, ensuring it stands out as an unambiguous indicator.
 
 ### Don't
-- Avoid introducing additional saturated colors; maintain the predominantly monochrome palette with only subtle Highlight Orange accents in decorative elements.
-- Do not use box-shadows for elevation; rely on background color changes or subtle borders for surface differentiation.
-- Do not use generic circular or square button radii; adhere to the specific 160px and 140px values for interactive elements.
-- Avoid dense, unbroken blocks of text; break up content with generous padding, section gaps, and clear typographic hierarchy.
-- Do not use default browser link styles; all links should be styled with Midnight Ink (#111111) and no underline by default.
-- Do not use thin or light text weights for body copy; ensure readability with Geist at weight 400 or 500 for paragraph text.
-- Avoid cluttering the layout; maintain the spacious and comfortable density by respecting elementGap of 24px and cardPadding of 28px.
-
-## Surfaces
-
-| Level | Name | Value | Purpose |
-|-------|------|-------|---------|
-| 1 | Canvas White | `#ffffff` | Dominant page background, main content area. |
-| 2 | Off-White Sage | `#f3efeb` | Secondary background for cards and distinct content sections, offering a subtle visual break. |
-| 3 | Faded Stone | `#e9eaeb` | Background for subtle borders, navigation elements, or very light dividers, almost blending into the canvas. |
+- Do not introduce additional vibrant colors; stick to Amber Glow (#E7C59A) and Neon Green (#00AC5C) as the only chromatic accents.
+- Avoid using drop shadows for elevation; rely on varied shades of dark neutrals like Midnight Void (#101010) and Deep Space (#080808) for depth perception.
+- Do not deviate from the specified tight line-heights for headlines, as they are crucial for the dense, impactful typographic style.
+- Do not use generic system fonts; Aeonik and Input are essential to the brand's distinctive technical aesthetic.
+- Avoid excessive rounding; maintain sharp or subtly rounded corners (8px) for most UI elements, reserving pill shapes for specific tags.
+- Do not use full-width background images that break the defined dark background color palette; visual interest comes from typographic treatment and data visualization.
 
 ## Imagery
 
-The site uses a combination of high-contrast, black-and-white, highly detailed illustrations and occasional, stark product/lifestyle photography. Illustrations are the primary visual element, depicting urban landscapes (like a cityscape) or abstract financial concepts with fine linework, often with a single bird or abstract element for movement. Photography is minimal, often cropped tightly on individuals (lifestyle) or objects, maintaining the monochrome or desaturated tone. Icons are outlined, thin stroke, and monochromatic, used functionally rather than decoratively. The overall density of imagery is balanced; it serves to add atmosphere and context without overwhelming the clean UI.
+The visual language is characterized by abstract, pixelated graphics, specifically 'hands' composed of stark white dots on a black background, which adds a digitized, almost retro-tech aesthetic. There are no traditional photographs or realistic illustrations. Icons are simple, outlined, and monochromatic, matching the overall dark theme's precision. These graphics appear to be decorative, creating atmosphere and visual interest without being literal product showcases. The density of imagery is low; large areas of the screen are dominated by text and UI elements, with graphics serving as large-scale background motifs. Treatment is full-bleed for the abstract graphics, often low-opacity or subtle, allowing them to complement rather than compete with text.
 
 ## Layout
 
-The page follows a contained, centered layout, with content constrained to a `pageMaxWidth` of 1200px. The hero section is a two-column split, with a bold headline and primary CTA on the left, balanced by a large, detailed monochrome illustration on the right. Section rhythm is consistent, primarily using 80px vertical gaps between major content blocks. Content is often presented in a grid-like fashion, such as the three-column card grid for feature highlights. Navigation is a simple, sticky top bar with logo, prominent brand name, a few text links, and filled/ghost buttons for login/signup. The density is comfortable, ensuring plenty of whitespace around elements.
+The page primarily uses a full-bleed, dark-themed model with content centered within an implied maximum width, though no explicit max-width is strictly enforced visually. The hero section is full-viewport, featuring a prominent centered headline over an abstract pixelated graphic on a deep black background. Sections are delineated by consistent vertical spacing of approximately 64px, with subtle shifts in background darkness creating a sense of depth rather than sharp dividers. Content arrangement leans towards centered stacks or clear two-column grid layouts for textual features and service descriptions. The density is comfortable, with generous breathing room around content blocks. Navigation is a sticky top bar with a left-aligned logo and right-aligned links and a prominent 'LET'S CHAT' button.
 
 ## Agent Prompt Guide
 
-Quick Color Reference:
-- text: #111111
-- background: #ffffff
-- border: #e9eaeb
-- accent: #ff9900
-- primary action: #000000 (filled action)
+### Quick Color Reference
+- Text: #F3F3F3
+- Background: #101010
+- CTA: #333333 (background), #FFFFFF (text)
+- Border: #333333
+- Accent: #E7C59A
 
-Example Component Prompts:
-- Create a Primary Action Button: #000000 background, #ffffff text, 9999px radius, compact pill padding. Use this filled treatment for the main CTA.
-- Generate a Feature Card titled 'Equity Compensation' using Off-White Sage (#f3efeb) background, 20px border-radius, padding 28px. Inside, use Geist weight 500 at 24px for the title and Geist weight 400 at 16px for body text, both in Midnight Ink (#111111).
-- Build a Ghost Button 'See More' with Canvas White (#ffffff) background, Midnight Ink (#111111) text, Soft Concrete (#d8d3cc) 1px border, and 160px border-radius, with 24px horizontal padding and 11px vertical padding.
+### 3-5 Example Component Prompts
+1. **Create a hero section:** background #101010. Headline 'World-class branding and websites for startups.' using Aeonik, size 63px, weight 700, #F3F3F3, letterSpacing -0.011em, lineHeight 0.95. Below, add a 'START NOW' button: transparent background, Aeonik, size 16px, weight 400, #F3F3F3, 8px border-radius. Next to it, a 'VIEW WORK' button: transparent background, Aeonik, size 16px, weight 400, #949494, 8px border-radius.
+2. **Generate a service feature block:** background #080808. Title 'AWARD-WINNING LOGOS' using Aeonik, size 23px, weight 700, #F3F3F3. Body text 'Easy to remember and distinctive logos, giving your brand a unique identity.' using Aeonik, size 16px, weight 400, #949494. Ensure consistent 24px padding within the block, and the block is visually separated by 64px from other content.
+3. **Design a persistent header bar:** background #101010. Logo 'Hyperstudio' using Aeonik, size 18px, weight 700, #F3F3F3. Navigation links 'SERVICES', 'PROCESS' using Aeonik, size 16px, weight 400, #F3F3F3. Add a 'PORTFOLIO NEW' link: 'PORTFOLIO' using Aeonik, size 16px, weight 400, #F3F3F3; 'NEW' tag appending it with background #E7C59A, text #F3F3F3, Aeonik, size 13px, weight 400. Include a 'LET'S CHAT' button on the right: background #000000, text #FFFFFF, Aeonik, size 14px, weight 400, 8px border-radius, with an icon.
+4. **Create a 'Why Hyperstudio?' section:** background #101010. Main heading 'Why Hyperstudio?' using Aeonik, size 44px, weight 700, #F3F3F3. Body text paragraph using Aeonik, size 18px, weight 400, #F3F3F3, with lineHeight 1.31. Below, add a 'READ MANIFESTO' button: background #333333, text #FFFFFF, Aeonik, size 16px, weight 400, 4.5px border-radius.
 
 ## Similar Brands
 
-- **Wealthfront** — High-contrast, professional, and clean interface with a focus on clear typography and understated design.
-- **Linear** — Monochromatic color palette with carefully selected grays and a strong emphasis on typography for information hierarchy.
-- **Stripe** — Minimalist aesthetic characterized by abundant whitespace, crisp typography, and functional use of color only for accents and interactive elements.
-- **Kraken** — Financial platform with a serious, high-contrast, black-and-white visual style that conveys trustworthiness and precision.
+- **Vercel** — Shares a strong monochrome dark theme combined with minimal, deliberate accent colors for interactive elements and status indicators.
+- **Linear** — Features a similar crisp, high-contrast dark UI, heavy reliance on sophisticated typography (including custom fonts), and subtle use of color for functional cues rather than decoration.
+- **Framer** — Employs a precise, minimalist aesthetic with a focus on clear hierarchy, dark backgrounds, and subtle grays, paired with a distinct, confident typeface.
+- **Stripe** — Exhibits clean, geometric typography and a high-fidelity, high-contrast interface, although often in a lighter theme, the precision and controlled use of color are comparable.
 
 ## Quick Start
 
@@ -197,42 +181,42 @@ Example Component Prompts:
 ```css
 :root {
   /* Colors */
-  --color-midnight-ink: #111111;
-  --color-canvas-white: #ffffff;
-  --color-off-white-sage: #f3efeb;
-  --color-faded-stone: #e9eaeb;
-  --color-gunmetal-gray: #615e5b;
-  --color-soft-concrete: #d8d3cc;
-  --color-action-black: #000000;
-  --color-highlight-orange: #ff9900;
+  --color-midnight-void: #101010;
+  --color-deep-space: #080808;
+  --color-polar-white: #F3F3F3;
+  --color-absolute-zero: #FFFFFF;
+  --color-ash-gray: #949494;
+  --color-dark-carbon: #333333;
+  --color-slate: #C1C1C1;
+  --color-light-gradients: #B5B5B5;
+  --gradient-light-gradients: linear-gradient(rgb(181, 181, 181), rgb(228, 228, 228));
+  --color-amber-glow: #E7C59A;
+  --color-neon-green: #00AC5C;
 
   /* Typography — Font Families */
-  --font-geist: 'Geist', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-geist-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-aeonik: 'Aeonik', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-input: 'Input', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 
   /* Typography — Scale */
-  --text-caption: 10px;
-  --leading-caption: 1.2;
-  --text-body-sm: 12px;
-  --leading-body-sm: 1.2;
-  --text-body: 14px;
-  --leading-body: 1.2;
-  --text-body-lg: 16px;
-  --leading-body-lg: 1.2;
-  --text-heading-sm: 20px;
-  --leading-heading-sm: 1.2;
-  --text-heading: 24px;
-  --leading-heading: 1.2;
-  --text-heading-lg: 32px;
-  --leading-heading-lg: 1.2;
-  --text-display-sm: 40px;
-  --leading-display-sm: 1.2;
-  --text-display: 60px;
-  --leading-display: 1.2;
+  --text-caption: 13px;
+  --leading-caption: 1.43;
+  --tracking-caption: -0.007px;
+  --text-subheading: 18px;
+  --leading-subheading: 1.28;
+  --text-heading-sm: 21px;
+  --leading-heading-sm: 1.22;
+  --text-heading: 23px;
+  --leading-heading: 1.11;
+  --text-heading-lg: 34px;
+  --leading-heading-lg: 1.07;
+  --text-display: 44px;
+  --leading-display: 1.03;
+  --text-display-lg: 63px;
+  --leading-display-lg: 0.95;
+  --tracking-display-lg: -0.011px;
 
   /* Typography — Weights */
   --font-weight-regular: 400;
-  --font-weight-medium: 500;
   --font-weight-bold: 700;
 
   /* Spacing */
@@ -243,41 +227,24 @@ Example Component Prompts:
   --spacing-16: 16px;
   --spacing-20: 20px;
   --spacing-24: 24px;
-  --spacing-28: 28px;
-  --spacing-32: 32px;
-  --spacing-36: 36px;
   --spacing-40: 40px;
-  --spacing-52: 52px;
-  --spacing-56: 56px;
-  --spacing-60: 60px;
-  --spacing-64: 64px;
-  --spacing-80: 80px;
-  --spacing-88: 88px;
 
   /* Layout */
-  --page-max-width: 1200px;
-  --section-gap: 80px;
-  --card-padding: 28px;
-  --element-gap: 24px;
+  --section-gap: 64px;
+  --card-padding: 24px;
+  --element-gap: 10px;
 
   /* Border Radius */
-  --radius-lg: 10px;
+  --radius-md: 4.5px;
+  --radius-lg: 8px;
   --radius-2xl: 20px;
-  --radius-3xl: 32px;
-  --radius-full: 140px;
-  --radius-full-2: 160px;
+  --radius-full: 99px;
 
   /* Named Radii */
-  --radius-cards: 32px;
-  --radius-small: 10px;
-  --radius-medium: 20px;
-  --radius-buttons: 160px;
-  --radius-navigation: 140px;
-
-  /* Surfaces */
-  --surface-canvas-white: #ffffff;
-  --surface-off-white-sage: #f3efeb;
-  --surface-faded-stone: #e9eaeb;
+  --radius-tags: 20px;
+  --radius-buttons: 8px;
+  --radius-default: 8px;
+  --radius-statusicons: 99px;
 }
 ```
 
@@ -286,38 +253,38 @@ Example Component Prompts:
 ```css
 @theme {
   /* Colors */
-  --color-midnight-ink: #111111;
-  --color-canvas-white: #ffffff;
-  --color-off-white-sage: #f3efeb;
-  --color-faded-stone: #e9eaeb;
-  --color-gunmetal-gray: #615e5b;
-  --color-soft-concrete: #d8d3cc;
-  --color-action-black: #000000;
-  --color-highlight-orange: #ff9900;
+  --color-midnight-void: #101010;
+  --color-deep-space: #080808;
+  --color-polar-white: #F3F3F3;
+  --color-absolute-zero: #FFFFFF;
+  --color-ash-gray: #949494;
+  --color-dark-carbon: #333333;
+  --color-slate: #C1C1C1;
+  --color-light-gradients: #B5B5B5;
+  --color-amber-glow: #E7C59A;
+  --color-neon-green: #00AC5C;
 
   /* Typography */
-  --font-geist: 'Geist', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-geist-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-aeonik: 'Aeonik', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-input: 'Input', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 
   /* Typography — Scale */
-  --text-caption: 10px;
-  --leading-caption: 1.2;
-  --text-body-sm: 12px;
-  --leading-body-sm: 1.2;
-  --text-body: 14px;
-  --leading-body: 1.2;
-  --text-body-lg: 16px;
-  --leading-body-lg: 1.2;
-  --text-heading-sm: 20px;
-  --leading-heading-sm: 1.2;
-  --text-heading: 24px;
-  --leading-heading: 1.2;
-  --text-heading-lg: 32px;
-  --leading-heading-lg: 1.2;
-  --text-display-sm: 40px;
-  --leading-display-sm: 1.2;
-  --text-display: 60px;
-  --leading-display: 1.2;
+  --text-caption: 13px;
+  --leading-caption: 1.43;
+  --tracking-caption: -0.007px;
+  --text-subheading: 18px;
+  --leading-subheading: 1.28;
+  --text-heading-sm: 21px;
+  --leading-heading-sm: 1.22;
+  --text-heading: 23px;
+  --leading-heading: 1.11;
+  --text-heading-lg: 34px;
+  --leading-heading-lg: 1.07;
+  --text-display: 44px;
+  --leading-display: 1.03;
+  --text-display-lg: 63px;
+  --leading-display-lg: 0.95;
+  --tracking-display-lg: -0.011px;
 
   /* Spacing */
   --spacing-4: 4px;
@@ -326,23 +293,12 @@ Example Component Prompts:
   --spacing-16: 16px;
   --spacing-20: 20px;
   --spacing-24: 24px;
-  --spacing-28: 28px;
-  --spacing-32: 32px;
-  --spacing-36: 36px;
   --spacing-40: 40px;
-  --spacing-52: 52px;
-  --spacing-56: 56px;
-  --spacing-60: 60px;
-  --spacing-64: 64px;
-  --spacing-80: 80px;
-  --spacing-88: 88px;
 
   /* Border Radius */
-  --radius-lg: 10px;
+  --radius-md: 4.5px;
+  --radius-lg: 8px;
   --radius-2xl: 20px;
-  --radius-3xl: 32px;
-  --radius-full: 140px;
-  --radius-full-2: 160px;
+  --radius-full: 99px;
 }
 ```
-
