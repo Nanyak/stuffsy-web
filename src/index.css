@@ -1,124 +1,70 @@
 @import "tailwindcss";
 @config "../tailwind.config.js";
-@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap');
-
-@custom-variant dark (&:is(.dark *));
 
 /* ─────────────────────────────────────────────────────────────
-   Design Tokens — Light mode
-   Palette: cool-neutral base, muted indigo primary.
-   Surfaces step gently: bg (0.985) → card (1.0) → muted (0.965)
+   Titan — Monochrome Financial Ledger
+   Light-only. Palette: black/white with warm off-white depth.
    ───────────────────────────────────────────────────────────── */
 :root {
-  --radius: 0.5rem;
+  /* ── Titan color palette ── */
+  --color-midnight-ink:     #111111;
+  --color-canvas-white:     #ffffff;
+  --color-off-white-sage:   #f3efeb;
+  --color-faded-stone:      #e9eaeb;
+  --color-gunmetal-gray:    #615e5b;
+  --color-soft-concrete:    #d8d3cc;
+  --color-action-black:     #000000;
+  --color-highlight-orange: #ff9900;
 
-  --background:             oklch(0.985 0.003 260);
-  --foreground:             oklch(0.180 0.014 260);
+  /* ── Semantic aliases (shadcn + Tailwind utilities) ── */
+  --background:             #ffffff;
+  --foreground:             #111111;
+  --card:                   #ffffff;
+  --card-foreground:        #111111;
+  --popover:                #ffffff;
+  --popover-foreground:     #111111;
+  --primary:                #000000;
+  --primary-foreground:     #ffffff;
+  --secondary:              #f3efeb;
+  --secondary-foreground:   #111111;
+  --muted:                  #f3efeb;
+  --muted-foreground:       #615e5b;
+  --accent:                 #f3efeb;
+  --accent-foreground:      #111111;
+  --destructive:            #dc2626;
+  --destructive-foreground: #ffffff;
+  --border:                 #e9eaeb;
+  --input:                  #e9eaeb;
+  --ring:                   #111111;
+  --radius:                 0.5rem;
 
-  --card:                   oklch(1 0 0);
-  --card-foreground:        oklch(0.180 0.014 260);
+  /* ── Sidebar (shadcn compat) ── */
+  --sidebar:                        #f3efeb;
+  --sidebar-foreground:             #111111;
+  --sidebar-primary:                #000000;
+  --sidebar-primary-foreground:     #ffffff;
+  --sidebar-accent:                 #e9eaeb;
+  --sidebar-accent-foreground:      #111111;
+  --sidebar-border:                 #e9eaeb;
+  --sidebar-ring:                   #111111;
 
-  --popover:                oklch(1 0 0);
-  --popover-foreground:     oklch(0.180 0.014 260);
+  /* ── Component-level inline-style tokens ── */
+  --c-text-hi:       #111111;
+  --c-text-mid:      #615e5b;
+  --c-text-lo:       #615e5b;
+  --c-border:        #e9eaeb;
+  --c-border-soft:   #d8d3cc;
+  --c-surface:       #ffffff;
+  --c-surface-2:     #f3efeb;
 
-  --primary:                oklch(0.545 0.185 268);
-  --primary-foreground:     oklch(1 0 0);
-
-  --secondary:              oklch(0.965 0.004 260);
-  --secondary-foreground:   oklch(0.180 0.014 260);
-
-  --muted:                  oklch(0.965 0.004 260);
-  --muted-foreground:       oklch(0.510 0.010 260);
-
-  --accent:                 oklch(0.965 0.004 260);
-  --accent-foreground:      oklch(0.180 0.014 260);
-
-  --destructive:            oklch(0.580 0.220 27);
-  --destructive-foreground: oklch(1 0 0);
-
-  --border:                 oklch(0.910 0.005 260);
-  --input:                  oklch(0.910 0.005 260);
-  --ring:                   oklch(0.545 0.185 268);
-
-  --sidebar:                oklch(0.980 0.003 260);
-  --sidebar-foreground:     oklch(0.180 0.014 260);
-  --sidebar-primary:        oklch(0.545 0.185 268);
-  --sidebar-primary-foreground: oklch(1 0 0);
-  --sidebar-accent:         oklch(0.965 0.004 260);
-  --sidebar-accent-foreground: oklch(0.180 0.014 260);
-  --sidebar-border:         oklch(0.910 0.005 260);
-  --sidebar-ring:           oklch(0.545 0.185 268);
-}
-
-/* ─────────────────────────────────────────────────────────────
-   Design Tokens — Dark mode
-   Deep blue-charcoal base, indigo brightens for contrast.
-   ───────────────────────────────────────────────────────────── */
-.dark {
-  --background:             oklch(0.130 0.010 265);
-  --foreground:             oklch(0.935 0.005 258);
-
-  --card:                   oklch(0.170 0.010 265);
-  --card-foreground:        oklch(0.935 0.005 258);
-
-  --popover:                oklch(0.170 0.010 265);
-  --popover-foreground:     oklch(0.935 0.005 258);
-
-  --primary:                oklch(0.630 0.190 268);
-  --primary-foreground:     oklch(1 0 0);
-
-  --secondary:              oklch(0.210 0.010 265);
-  --secondary-foreground:   oklch(0.935 0.005 258);
-
-  --muted:                  oklch(0.210 0.010 265);
-  --muted-foreground:       oklch(0.600 0.008 265);
-
-  --accent:                 oklch(0.210 0.010 265);
-  --accent-foreground:      oklch(0.935 0.005 258);
-
-  --destructive:            oklch(0.680 0.190 22);
-  --destructive-foreground: oklch(1 0 0);
-
-  --border:                 oklch(1 0 0 / 7%);
-  --input:                  oklch(1 0 0 / 10%);
-  --ring:                   oklch(0.630 0.190 268);
-
-  --sidebar:                oklch(0.170 0.010 265);
-  --sidebar-foreground:     oklch(0.935 0.005 258);
-  --sidebar-primary:        oklch(0.630 0.190 268);
-  --sidebar-primary-foreground: oklch(1 0 0);
-  --sidebar-accent:         oklch(0.210 0.010 265);
-  --sidebar-accent-foreground: oklch(0.935 0.005 258);
-  --sidebar-border:         oklch(1 0 0 / 7%);
-  --sidebar-ring:           oklch(0.630 0.190 268);
-}
-
-/* ─────────────────────────────────────────────────────────────
-   Extended tokens — for inline-styled components
-   These complement the Tailwind theme vars above, providing
-   dark-mode-aware values for borders, shadows and tints that
-   can't be expressed through standard shadcn tokens alone.
-   ───────────────────────────────────────────────────────────── */
-:root {
-  --c-primary-text:   oklch(0.440 0.185 268);      /* primary for text/icons */
-  --c-text-lo:        oklch(0.620 0.008 260);       /* low-emphasis text */
-  --c-border-subtle:  rgba(0, 0, 0, 0.07);          /* hair-line card border */
-  --c-border-primary: oklch(0.545 0.185 268 / 0.28);/* primary-tinted border */
-  --c-primary-bg:     oklch(0.545 0.185 268 / 0.10);/* primary tinted bg */
-  --c-shadow-sm:      0 1px 4px rgba(0, 0, 0, 0.04);
-  --c-shadow-md:      0 4px 16px rgba(0, 0, 0, 0.07);
-  --c-shadow-lg:      0 8px 28px rgba(0, 0, 0, 0.08);
-}
-
-.dark {
-  --c-primary-text:   oklch(0.720 0.170 268);
-  --c-text-lo:        oklch(0.430 0.008 265);
-  --c-border-subtle:  rgba(255, 255, 255, 0.07);
-  --c-border-primary: oklch(0.630 0.190 268 / 0.35);
-  --c-primary-bg:     oklch(0.630 0.190 268 / 0.12);
-  --c-shadow-sm:      0 1px 4px rgba(0, 0, 0, 0.20);
-  --c-shadow-md:      0 4px 16px rgba(0, 0, 0, 0.30);
-  --c-shadow-lg:      0 8px 28px rgba(0, 0, 0, 0.35);
+  /* Legacy compat tokens (consumed by remaining shadcn components) */
+  --c-primary-text:   #111111;
+  --c-border-subtle:  #e9eaeb;
+  --c-border-primary: #d8d3cc;
+  --c-primary-bg:     #f3efeb;
+  --c-shadow-sm:      none;
+  --c-shadow-md:      none;
+  --c-shadow-lg:      none;
 }
 
 /* ─────────────────────────────────────────────────────────────
@@ -133,32 +79,32 @@
   --radius-3xl: calc(var(--radius) + 12px);
   --radius-4xl: calc(var(--radius) + 16px);
 
-  --color-background:                   var(--background);
-  --color-foreground:                   var(--foreground);
-  --color-card:                         var(--card);
-  --color-card-foreground:              var(--card-foreground);
-  --color-popover:                      var(--popover);
-  --color-popover-foreground:           var(--popover-foreground);
-  --color-primary:                      var(--primary);
-  --color-primary-foreground:           var(--primary-foreground);
-  --color-secondary:                    var(--secondary);
-  --color-secondary-foreground:         var(--secondary-foreground);
-  --color-muted:                        var(--muted);
-  --color-muted-foreground:             var(--muted-foreground);
-  --color-accent:                       var(--accent);
-  --color-accent-foreground:            var(--accent-foreground);
-  --color-destructive:                  var(--destructive);
-  --color-border:                       var(--border);
-  --color-input:                        var(--input);
-  --color-ring:                         var(--ring);
-  --color-sidebar:                      var(--sidebar);
-  --color-sidebar-foreground:           var(--sidebar-foreground);
-  --color-sidebar-primary:              var(--sidebar-primary);
-  --color-sidebar-primary-foreground:   var(--sidebar-primary-foreground);
-  --color-sidebar-accent:               var(--sidebar-accent);
-  --color-sidebar-accent-foreground:    var(--sidebar-accent-foreground);
-  --color-sidebar-border:               var(--sidebar-border);
-  --color-sidebar-ring:                 var(--sidebar-ring);
+  --color-background:                  var(--background);
+  --color-foreground:                  var(--foreground);
+  --color-card:                        var(--card);
+  --color-card-foreground:             var(--card-foreground);
+  --color-popover:                     var(--popover);
+  --color-popover-foreground:          var(--popover-foreground);
+  --color-primary:                     var(--primary);
+  --color-primary-foreground:          var(--primary-foreground);
+  --color-secondary:                   var(--secondary);
+  --color-secondary-foreground:        var(--secondary-foreground);
+  --color-muted:                       var(--muted);
+  --color-muted-foreground:            var(--muted-foreground);
+  --color-accent:                      var(--accent);
+  --color-accent-foreground:           var(--accent-foreground);
+  --color-destructive:                 var(--destructive);
+  --color-border:                      var(--border);
+  --color-input:                       var(--input);
+  --color-ring:                        var(--ring);
+  --color-sidebar:                     var(--sidebar);
+  --color-sidebar-foreground:          var(--sidebar-foreground);
+  --color-sidebar-primary:             var(--sidebar-primary);
+  --color-sidebar-primary-foreground:  var(--sidebar-primary-foreground);
+  --color-sidebar-accent:              var(--sidebar-accent);
+  --color-sidebar-accent-foreground:   var(--sidebar-accent-foreground);
+  --color-sidebar-border:              var(--sidebar-border);
+  --color-sidebar-ring:                var(--sidebar-ring);
 }
 
 /* ─────────────────────────────────────────────────────────────
@@ -179,13 +125,12 @@
     font-family: 'Inter', system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    font-feature-settings: "cv11", "ss01";
-    letter-spacing: -0.011em;
+    font-feature-settings: "ss02", "ss03";
   }
 
   h1, h2, h3, h4, h5, h6 {
-    letter-spacing: -0.022em;
-    font-weight: 600;
+    letter-spacing: -0.030em;
+    font-weight: 700;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -206,54 +151,18 @@
 }
 
 @keyframes fade-up-lg {
-  from { opacity: 0; transform: translateY(20px); }
+  from { opacity: 0; transform: translateY(16px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50%       { transform: translateY(-10px); }
-}
+.fade-in   { animation: fade-up    0.30s ease-out both; }
+.fade-in-1 { animation: fade-up-lg 0.60s cubic-bezier(0.16, 1, 0.3, 1) 0.05s both; }
+.fade-in-2 { animation: fade-up-lg 0.60s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both; }
+.fade-in-3 { animation: fade-up-lg 0.60s cubic-bezier(0.16, 1, 0.3, 1) 0.25s both; }
+.fade-in-4 { animation: fade-up-lg 0.60s cubic-bezier(0.16, 1, 0.3, 1) 0.35s both; }
+.fade-in-5 { animation: fade-up-lg 0.60s cubic-bezier(0.16, 1, 0.3, 1) 0.45s both; }
 
-@keyframes float-delayed {
-  0%, 100% { transform: translateY(0px); }
-  50%       { transform: translateY(-10px); }
-}
-
-@keyframes shimmer-slide {
-  from { transform: translateX(-100%); }
-  to   { transform: translateX(100%); }
-}
-
-@keyframes pulse-glow {
-  0%, 100% { opacity: 0.4; }
-  50%       { opacity: 0.8; }
-}
-
-.fade-in   { animation: fade-up 0.35s ease-out both; }
-.fade-in-1 { animation: fade-up-lg 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.05s both; }
-.fade-in-2 { animation: fade-up-lg 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.18s both; }
-.fade-in-3 { animation: fade-up-lg 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.30s both; }
-.fade-in-4 { animation: fade-up-lg 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.42s both; }
-.fade-in-5 { animation: fade-up-lg 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.54s both; }
-
-.animate-float          { animation: float 5s ease-in-out infinite; }
-.animate-float-delayed  { animation: float 5s ease-in-out 1.8s infinite; }
-.animate-pulse-glow     { animation: pulse-glow 3s ease-in-out infinite; }
-
-.shimmer-line {
-  position: relative;
-  overflow: hidden;
-}
-.shimmer-line::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, transparent 0%, rgba(0,0,0,0.04) 50%, transparent 100%);
-  animation: shimmer-slide 2.5s linear infinite;
-}
-
-/* Full-bleed helper — breaks out of Layout's container+px-4 */
+/* Full-bleed helper */
 .full-bleed {
   width: 100vw;
   position: relative;
@@ -261,24 +170,18 @@
   transform: translateX(-50%);
 }
 
-/* ─────────────────────────────────────────────────────────────
-   Interactive card — CSS-based hover/focus-within state
-   Replaces onMouseEnter/Leave inline-style hacks; dark-mode safe
-   ───────────────────────────────────────────────────────────── */
-.interactive-card {
-  border: 1px solid var(--c-border-subtle);
-  box-shadow: var(--c-shadow-sm);
-  transition: border-color 150ms ease, box-shadow 150ms ease;
-}
-.interactive-card:hover,
-.interactive-card:focus-within {
-  border-color: var(--c-border-primary);
-  box-shadow: var(--c-shadow-md);
-}
-
-/* Static surface card (no hover effect) */
+/* Surface card */
 .surface-card {
   background: var(--card);
   border: 1px solid var(--c-border-subtle);
-  box-shadow: var(--c-shadow-sm);
+}
+
+/* Interactive card — CSS-based hover */
+.interactive-card {
+  border: 1px solid #e9eaeb;
+  transition: border-color 150ms ease;
+}
+.interactive-card:hover,
+.interactive-card:focus-within {
+  border-color: #d8d3cc;
 }

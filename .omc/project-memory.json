@@ -1,0 +1,223 @@
+{
+  "version": "1.0.0",
+  "lastScanned": 1777747372312,
+  "projectRoot": "/Users/thangdq/stuffsy/stuffsy-web",
+  "techStack": {
+    "languages": [
+      {
+        "name": "JavaScript/TypeScript",
+        "version": null,
+        "confidence": "high",
+        "markers": [
+          "package.json"
+        ]
+      },
+      {
+        "name": "TypeScript",
+        "version": null,
+        "confidence": "high",
+        "markers": [
+          "tsconfig.json"
+        ]
+      }
+    ],
+    "frameworks": [
+      {
+        "name": "react",
+        "version": "19.2.0",
+        "category": "frontend"
+      },
+      {
+        "name": "react-dom",
+        "version": "19.2.0",
+        "category": "frontend"
+      },
+      {
+        "name": "vite",
+        "version": "7.2.4",
+        "category": "build"
+      }
+    ],
+    "packageManager": "npm",
+    "runtime": null
+  },
+  "build": {
+    "buildCommand": "npm run build",
+    "testCommand": null,
+    "lintCommand": "npm run lint",
+    "devCommand": "npm run dev",
+    "scripts": {
+      "dev": "vite",
+      "build": "tsc -b && vite build",
+      "lint": "eslint .",
+      "preview": "vite preview"
+    }
+  },
+  "conventions": {
+    "namingStyle": null,
+    "importStyle": null,
+    "testPattern": null,
+    "fileOrganization": "type-based"
+  },
+  "structure": {
+    "isMonorepo": false,
+    "workspaces": [],
+    "mainDirectories": [
+      "public",
+      "src"
+    ],
+    "gitBranches": {
+      "defaultBranch": "main",
+      "branchingStrategy": null
+    }
+  },
+  "customNotes": [],
+  "directoryMap": {
+    "dist": {
+      "path": "dist",
+      "purpose": "Distribution/build output",
+      "fileCount": 4,
+      "lastAccessed": 1777747372305,
+      "keyFiles": [
+        "index.html",
+        "robots.txt",
+        "sitemap.xml",
+        "vite.svg"
+      ]
+    },
+    "public": {
+      "path": "public",
+      "purpose": "Public files",
+      "fileCount": 3,
+      "lastAccessed": 1777747372305,
+      "keyFiles": [
+        "robots.txt",
+        "sitemap.xml",
+        "vite.svg"
+      ]
+    },
+    "src": {
+      "path": "src",
+      "purpose": "Source code",
+      "fileCount": 5,
+      "lastAccessed": 1777747372307,
+      "keyFiles": [
+        "App.css",
+        "App.tsx",
+        "index.css",
+        "main.tsx",
+        "vite-env.d.ts"
+      ]
+    },
+    "dist/assets": {
+      "path": "dist/assets",
+      "purpose": "Static assets",
+      "fileCount": 2,
+      "lastAccessed": 1777747372308,
+      "keyFiles": [
+        "index-D2blwCZw.js",
+        "index-_UETVJAD.css"
+      ]
+    },
+    "src/assets": {
+      "path": "src/assets",
+      "purpose": "Static assets",
+      "fileCount": 1,
+      "lastAccessed": 1777747372308,
+      "keyFiles": [
+        "react.svg"
+      ]
+    },
+    "src/components": {
+      "path": "src/components",
+      "purpose": "UI components",
+      "fileCount": 1,
+      "lastAccessed": 1777747372308,
+      "keyFiles": [
+        "FileStorage.tsx"
+      ]
+    },
+    "src/lib": {
+      "path": "src/lib",
+      "purpose": "Library code",
+      "fileCount": 3,
+      "lastAccessed": 1777747372309,
+      "keyFiles": [
+        "storageUtils.ts",
+        "tokens.ts",
+        "utils.ts"
+      ]
+    },
+    "src/services": {
+      "path": "src/services",
+      "purpose": "Business logic services",
+      "fileCount": 3,
+      "lastAccessed": 1777747372309,
+      "keyFiles": [
+        "auth_service.ts",
+        "storage_service.ts",
+        "url_shortener_service.tsx"
+      ]
+    },
+    "src/types": {
+      "path": "src/types",
+      "purpose": "Type definitions",
+      "fileCount": 1,
+      "lastAccessed": 1777747372309,
+      "keyFiles": [
+        "storage.ts"
+      ]
+    }
+  },
+  "hotPaths": [
+    {
+      "path": "src/index.css",
+      "accessCount": 3,
+      "lastAccessed": 1777747806760,
+      "type": "file"
+    },
+    {
+      "path": "src/lib/tokens.ts",
+      "accessCount": 2,
+      "lastAccessed": 1777747657702,
+      "type": "file"
+    },
+    {
+      "path": "src/components/layout/Navbar.tsx",
+      "accessCount": 2,
+      "lastAccessed": 1777747671602,
+      "type": "file"
+    },
+    {
+      "path": "src/components/layout/Layout.tsx",
+      "accessCount": 2,
+      "lastAccessed": 1777747678393,
+      "type": "file"
+    },
+    {
+      "path": "src/components/pages/HomePage.tsx",
+      "accessCount": 2,
+      "lastAccessed": 1777747773995,
+      "type": "file"
+    },
+    {
+      "path": "DESIGN.md",
+      "accessCount": 1,
+      "lastAccessed": 1777747428337,
+      "type": "file"
+    },
+    {
+      "path": "tailwind.config.js",
+      "accessCount": 1,
+      "lastAccessed": 1777747563713,
+      "type": "file"
+    },
+    {
+      "path": "index.html",
+      "accessCount": 1,
+      "lastAccessed": 1777747802531,
+      "type": "file"
+    }
+  ],
+  "userDirectives": []
+}
