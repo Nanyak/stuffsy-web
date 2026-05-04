@@ -11,19 +11,19 @@ interface FolderCardProps {
 export function FolderCard({ name, onOpen, onDelete }: FolderCardProps) {
   return (
     <div
-      className="interactive-card group p-4 rounded-2xl flex flex-col items-center text-center space-y-3 cursor-default transition-all duration-200"
-      style={{ background: T.surface }}
+      className="interactive-card group p-4 rounded-2xl flex flex-col items-center text-center space-y-3 cursor-default transition-all duration-200 hover:-translate-y-0.5"
+      style={{ background: T.surface, border: '1px solid #333333' }}
       onDoubleClick={() => onOpen(name)}
     >
       <div className="p-3 rounded-xl transition-colors duration-200" style={{
-        background: T.primaryBg,
-        border: '1px solid var(--c-border-primary)',
+        background: 'rgba(231,197,154,0.08)',
+        border: '1px solid rgba(231,197,154,0.20)',
       }}>
-        <Folder className="h-9 w-9" style={{ color: T.primary }} />
+        <Folder className="h-9 w-9" style={{ color: '#E7C59A' }} />
       </div>
 
       <div className="w-full space-y-0.5">
-        <p className="font-semibold text-sm truncate" title={name} style={{ color: T.textHi }}>{name}</p>
+        <p className="font-semibold text-sm truncate" title={name} style={{ color: T.textHi, letterSpacing: '-0.011em' }}>{name}</p>
         <p className="text-xs" style={{ color: T.textLo }}>Folder</p>
       </div>
 

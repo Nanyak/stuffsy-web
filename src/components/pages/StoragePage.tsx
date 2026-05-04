@@ -6,8 +6,6 @@ import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import type { StagedFile, FileInfo } from "@/types/storage";
 import { uploadFile, listFiles, deleteFile, getDownloadUrl } from "@/services/storage_service";
 import { generateFileId, createImagePreview, getFolderContents, formatFileSize, getFileIcon, KEEP_FILE } from "@/lib/storageUtils";
-import { Button } from "@/components/ui/button";
-import { T } from "@/lib/tokens";
 
 type FilterType = 'all' | 'documents' | 'images' | 'videos' | 'other'
 
@@ -234,32 +232,29 @@ export function StoragePage() {
       <div className="relative overflow-hidden mb-6">
         <div className="relative py-8">
           <div className="flex items-center gap-2 mb-4">
-            <span className="text-xs font-bold tracking-widest uppercase" style={{ color: T.primaryL }}>Tool</span>
+            <span className="text-xs font-bold tracking-widest uppercase" style={{ color: '#949494' }}>Tool</span>
           </div>
           <div className="flex items-start gap-4">
-            <div className="p-3.5 rounded-2xl flex-shrink-0" style={{
-              background: T.primaryBg,
-              border: '1px solid var(--c-border-primary)',
+            <div className="p-3.5 rounded-xl flex-shrink-0" style={{
+              background: 'rgba(231,197,154,0.08)',
+              border: '1px solid rgba(231,197,154,0.20)',
             }}>
-              <Cloud className="h-7 w-7" style={{ color: T.primary }} />
+              <Cloud className="h-7 w-7" style={{ color: '#E7C59A' }} />
             </div>
             <div>
-              <h1 className="text-4xl font-extrabold tracking-tight leading-tight mb-2" style={{
-                fontFamily: T.fontDisp,
-                background: `linear-gradient(135deg, var(--foreground) 0%, var(--primary) 100%)`,
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
+              <h1 className="text-4xl font-bold leading-tight mb-2" style={{
+                color: '#F3F3F3',
+                letterSpacing: '-0.011em',
               }}>
                 Cloud Storage
               </h1>
-              <p className="text-sm leading-relaxed" style={{ color: T.textMid }}>
+              <p className="text-sm leading-relaxed" style={{ color: '#949494' }}>
                 Upload, organize, and share your files securely in the cloud.
               </p>
             </div>
           </div>
         </div>
-        <div style={{ height: '1px', background: `linear-gradient(to right, var(--c-border-primary), var(--c-border-subtle), transparent)` }} />
+        <div style={{ height: '1px', background: '#333333' }} />
       </div>
 
       {/* ── Notification banner ────────────────────────────── */}
@@ -303,9 +298,10 @@ export function StoragePage() {
               onClick={() => setFilterType(item.id)}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all duration-150 cursor-pointer shrink-0"
               style={{
-                background: isActive ? T.primary : T.surface2,
-                color: isActive ? 'white' : T.textMid,
-                border: isActive ? 'none' : '1px solid var(--c-border-subtle)',
+                background: isActive ? '#E7C59A' : '#080808',
+                color: isActive ? '#101010' : '#949494',
+                border: `1px solid ${isActive ? '#E7C59A' : '#333333'}`,
+                fontWeight: isActive ? 600 : 400,
               }}
             >
               <item.icon className="h-3.5 w-3.5" />
@@ -321,9 +317,8 @@ export function StoragePage() {
         {/* Sidebar — desktop only */}
         <aside className="hidden md:block w-48 shrink-0 sticky top-20" aria-label="File type filter">
           <div className="rounded-2xl overflow-hidden" style={{
-            background: T.surface2,
-            border: '1px solid var(--c-border-subtle)',
-            boxShadow: 'var(--c-shadow-sm)',
+            background: '#080808',
+            border: '1px solid #333333',
           }}>
             {/* Upload button */}
             <div className="p-3">
@@ -331,9 +326,8 @@ export function StoragePage() {
                 onClick={() => setShowUpload(v => !v)}
                 className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl font-semibold text-sm transition-all duration-200 cursor-pointer"
                 style={{
-                  background: T.primary,
-                  color: 'white',
-                  boxShadow: showUpload ? 'none' : 'var(--c-shadow-sm)',
+                  background: '#333333',
+                  color: '#FFFFFF',
                 }}
                 aria-expanded={showUpload}
               >
@@ -353,9 +347,9 @@ export function StoragePage() {
                     className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium transition-all duration-150 cursor-pointer text-left"
                     aria-current={isActive ? 'page' : undefined}
                     style={{
-                      background: isActive ? T.primaryBg : 'transparent',
-                      color: isActive ? T.primaryL : T.textMid,
-                      border: isActive ? '1px solid var(--c-border-primary)' : '1px solid transparent',
+                      background: isActive ? 'rgba(231,197,154,0.08)' : 'transparent',
+                      color: isActive ? '#E7C59A' : '#949494',
+                      border: isActive ? '1px solid rgba(231,197,154,0.20)' : '1px solid transparent',
                     }}
                   >
                     <item.icon className="h-4 w-4 shrink-0" />
@@ -370,12 +364,12 @@ export function StoragePage() {
         {/* Main content */}
         <div className="flex-1 min-w-0 space-y-6">
 
-          {/* Mobile upload button */}
-          <div className="md:hidden">
+          {/* Mobile upload button - sticky at bottom */}
+          <div className="md:hidden fixed bottom-6 left-6 right-6 z-40">
             <button
               onClick={() => setShowUpload(v => !v)}
-              className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl font-semibold text-sm transition-all duration-200 cursor-pointer"
-              style={{ background: T.primary, color: 'white', boxShadow: 'var(--c-shadow-sm)' }}
+              className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-semibold text-sm transition-all duration-200 cursor-pointer shadow-lg"
+              style={{ background: '#333333', color: '#FFFFFF' }}
               aria-expanded={showUpload}
             >
               <Upload className="h-4 w-4" />
@@ -398,9 +392,9 @@ export function StoragePage() {
 
           {/* Recent Files — only at root with "all" filter */}
           {filterType === 'all' && currentPath.length === 0 && recentFiles.length > 0 && (
-            <div className="surface-card rounded-2xl overflow-hidden">
+            <div className="rounded-2xl overflow-hidden" style={{ background: '#080808', border: '1px solid #333333' }}>
               <div className="px-5 pt-5 pb-3">
-                <p className="text-xs font-bold tracking-widest uppercase mb-4" style={{ color: T.textLo }}>Recent Files</p>
+                <p className="text-xs font-bold tracking-widest uppercase mb-4" style={{ color: '#949494', letterSpacing: '0.06em' }}>Recent Files</p>
                 <div className="space-y-1" role="list" aria-label="Recent files">
                   {recentFiles.map(f => {
                     const FileIcon = getFileIcon(f.content_type)
@@ -409,37 +403,47 @@ export function StoragePage() {
                       <div
                         key={f.key}
                         role="listitem"
-                        className="flex items-center gap-3 px-3 py-2.5 rounded-xl group transition-colors duration-150 hover:bg-[oklch(0.545_0.185_268_/_0.05)] focus-within:bg-[oklch(0.545_0.185_268_/_0.05)]"
+                        className="flex items-center gap-3 px-3 py-2.5 rounded-xl group transition-colors duration-150"
+                        style={{ cursor: 'default' }}
+                        onMouseEnter={e => (e.currentTarget.style.background = '#141414')}
+                        onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
                       >
                         <div className="p-1.5 rounded-lg flex-shrink-0" style={{
-                          background: T.primaryBg,
-                          border: '1px solid var(--c-border-subtle)',
+                          background: 'rgba(231,197,154,0.08)',
+                          border: '1px solid #333333',
                         }}>
-                          <FileIcon className="h-3.5 w-3.5" style={{ color: T.primaryL }} />
+                          <FileIcon className="h-3.5 w-3.5" style={{ color: '#E7C59A' }} />
                         </div>
-                        <span className="flex-1 text-sm truncate" style={{ color: T.textMid }}>{name}</span>
-                        <span className="text-xs shrink-0" style={{ color: T.textLo }}>{formatFileSize(f.size)}</span>
+                        <span className="flex-1 text-sm truncate" style={{ color: '#949494', letterSpacing: '-0.011em' }}>{name}</span>
+                        <span className="text-xs shrink-0" style={{ color: '#949494' }}>{formatFileSize(f.size)}</span>
                         {/* Visible on hover AND keyboard focus */}
                         <div className="flex gap-1 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity duration-150">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-7 w-7 p-0 cursor-pointer"
-                            style={{ color: T.primaryL }}
+                          <button
+                            className="h-7 w-7 p-0 cursor-pointer rounded-md flex items-center justify-center transition-colors duration-150"
+                            style={{ color: '#E7C59A' }}
                             aria-label={`Download ${name}`}
                             onClick={() => handleDownload(f.key)}
+                            onMouseEnter={e => (e.currentTarget.style.background = '#1a1a1a')}
+                            onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
                           >
                             <Download className="h-3.5 w-3.5" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-7 w-7 p-0 cursor-pointer hover:bg-destructive hover:text-white transition-all"
+                          </button>
+                          <button
+                            className="h-7 w-7 p-0 cursor-pointer rounded-md flex items-center justify-center transition-colors duration-150"
+                            style={{ color: '#949494' }}
                             aria-label={`Delete ${name}`}
                             onClick={() => handleDelete(f.key)}
+                            onMouseEnter={e => {
+                              e.currentTarget.style.background = '#dc2626'
+                              e.currentTarget.style.color = '#FFFFFF'
+                            }}
+                            onMouseLeave={e => {
+                              e.currentTarget.style.background = 'transparent'
+                              e.currentTarget.style.color = '#949494'
+                            }}
                           >
                             <Trash2 className="h-3.5 w-3.5" />
-                          </Button>
+                          </button>
                         </div>
                       </div>
                     )

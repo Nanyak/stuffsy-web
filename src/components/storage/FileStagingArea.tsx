@@ -27,8 +27,19 @@ export function FileStagingArea({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const folderInputRef = useRef<HTMLInputElement>(null);
 
-  const handleDragEnter = (e: React.DragEvent) => { e.preventDefault(); e.stopPropagation(); setIsDragging(true); };
-  const handleDragLeave = (e: React.DragEvent) => { e.preventDefault(); e.stopPropagation(); setIsDragging(false); };
+  const handleDragEnter = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    // Only set to false if we're leaving the drop zone completely
+    if (e.currentTarget === e.target) {
+      setIsDragging(false);
+    }
+  };
   const handleDragOver = (e: React.DragEvent) => { e.preventDefault(); e.stopPropagation(); };
 
   const handleDrop = async (e: React.DragEvent) => {
@@ -69,6 +80,38 @@ export function FileStagingArea({
 
   return (
     <div className="space-y-4">
+      {/* Full-screen drag overlay */}
+      {isDragging && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center"
+          style={{
+            background: 'rgba(0, 0, 0, 0.8)',
+            backdropFilter: 'blur(4px)',
+          }}
+          onDragEnter={handleDragEnter}
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
+        >
+          <div
+            className="border-4 border-dashed rounded-3xl p-16 text-center animate-pulse"
+            style={{
+              borderColor: '#E7C59A',
+              background: 'rgba(231, 197, 154, 0.1)',
+              maxWidth: '600px',
+            }}
+          >
+            <Upload className="h-20 w-20 mx-auto mb-6" style={{ color: '#E7C59A' }} />
+            <p style={{ color: '#F3F3F3', fontSize: '24px', fontWeight: 700, marginBottom: '12px', letterSpacing: '-0.011em' }}>
+              Drop files here
+            </p>
+            <p style={{ color: '#949494', fontSize: '16px' }}>
+              Upload to: <span style={{ color: '#E7C59A', fontWeight: 600 }}>{currentPathLabel}</span>
+            </p>
+          </div>
+        </div>
+      )}
+
       <input ref={fileInputRef} type="file" multiple className="hidden" onChange={handleFileSelect} />
       <input
         ref={folderInputRef}
@@ -86,23 +129,23 @@ export function FileStagingArea({
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
         onClick={() => fileInputRef.current?.click()}
-        className={`border-2 border-dashed rounded-xl p-10 text-center transition-all duration-200 cursor-pointer ${
-          isDragging
-            ? "border-primary bg-primary/10 scale-[1.01]"
-            : "border-border hover:border-primary/50 hover:bg-muted/30"
-        }`}
+        className="border-2 border-dashed rounded-xl p-10 text-center transition-all duration-200 cursor-pointer"
+        style={{
+          borderColor: '#333333',
+          background: '#080808',
+        }}
       >
-        <div className={`p-4 rounded-full inline-block mb-4 transition-colors duration-200 ${isDragging ? "bg-primary/20" : "bg-muted"}`}>
-          <Upload className={`h-8 w-8 transition-colors duration-200 ${isDragging ? "text-primary" : "text-muted-foreground"}`} />
+        <div className="p-4 rounded-full inline-block mb-4" style={{ background: '#1a1a1a' }}>
+          <Upload className="h-8 w-8" style={{ color: '#949494' }} />
         </div>
-        <p className="text-foreground font-medium mb-1">
+        <p style={{ color: '#F3F3F3', fontWeight: 500, marginBottom: '8px' }}>
           Drag and drop files or folders here
         </p>
-        <p className="text-muted-foreground text-sm mb-1">
+        <p style={{ color: '#949494', fontSize: '14px', marginBottom: '4px' }}>
           or click to browse your computer
         </p>
-        <p className="text-xs text-muted-foreground mb-4">
-          Uploading to: <span className="font-medium text-foreground">{currentPathLabel}</span>
+        <p style={{ color: '#949494', fontSize: '12px', marginBottom: '16px' }}>
+          Uploading to: <span style={{ color: '#F3F3F3', fontWeight: 500 }}>{currentPathLabel}</span>
         </p>
         <div className="flex items-center justify-center gap-3">
           <Button
@@ -110,6 +153,7 @@ export function FileStagingArea({
             onClick={(e) => { e.stopPropagation(); fileInputRef.current?.click(); }}
             disabled={isUploading}
             className="cursor-pointer"
+            style={{ borderColor: '#333333', color: '#949494' }}
           >
             <Upload className="h-4 w-4 mr-2" />
             Select Files
@@ -119,6 +163,7 @@ export function FileStagingArea({
             onClick={(e) => { e.stopPropagation(); folderInputRef.current?.click(); }}
             disabled={isUploading}
             className="cursor-pointer"
+            style={{ borderColor: '#333333', color: '#949494' }}
           >
             <FolderOpen className="h-4 w-4 mr-2" />
             Upload Folder
@@ -127,15 +172,20 @@ export function FileStagingArea({
       </div>
 
       {stagedFiles.length > 0 && (
-        <div className="space-y-4 p-4 rounded-2xl" style={{ background: 'oklch(0.976 0.004 260)', border: '1px solid rgba(0,0,0,0.07)' }}>
+        <div className="space-y-4 p-4 rounded-2xl" style={{ background: '#080808', border: '1px solid #333333' }}>
           <div className="flex items-center justify-between">
-            <p className="text-sm font-semibold text-foreground">
+            <p className="text-sm font-semibold" style={{ color: '#F3F3F3', letterSpacing: '-0.011em' }}>
               {stagedFiles.length} file{stagedFiles.length !== 1 ? "s" : ""} ready to upload
             </p>
             <Button
               onClick={onUploadAll}
               disabled={isUploading || stagedFiles.length === 0}
               className="cursor-pointer transition-all duration-200"
+              style={{
+                background: isUploading ? '#1a1a1a' : '#E7C59A',
+                color: isUploading ? '#949494' : '#101010',
+                border: 'none',
+              }}
             >
               <CloudUpload className="h-4 w-4 mr-2" />
               {isUploading ? "Uploading..." : "Upload All"}

@@ -5,7 +5,7 @@ import { FileList } from "./FileList";
 import { EmptyState } from "./EmptyState";
 import { Breadcrumb } from "./Breadcrumb";
 import type { FileInfo, ViewMode } from "@/types/storage";
-import { Loader2, FolderPlus, Check, X } from "lucide-react";
+import { FolderPlus, Check, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -70,9 +70,22 @@ export function FileBrowser({
 
   if (isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center py-20">
-        <Loader2 className="h-10 w-10 animate-spin text-primary mb-4" />
-        <p className="text-sm text-muted-foreground">Loading your files...</p>
+      <div className="space-y-4">
+        <div className="h-8" />
+        <div className="surface-card rounded-2xl overflow-hidden p-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+            {[...Array(10)].map((_, i) => (
+              <div key={i} className="animate-pulse">
+                <div style={{
+                  height: '180px',
+                  background: '#1a1a1a',
+                  borderRadius: '16px',
+                  border: '1px solid #333333',
+                }} />
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     );
   }

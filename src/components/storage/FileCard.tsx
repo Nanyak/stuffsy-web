@@ -17,8 +17,8 @@ export function FileCard({ file, onDownload, onDelete }: FileCardProps) {
 
   return (
     <div
-      className="interactive-card group p-4 rounded-2xl flex flex-col items-center text-center space-y-3 cursor-default transition-all duration-200"
-      style={{ background: T.surface }}
+      className="interactive-card group p-4 rounded-2xl flex flex-col items-center text-center space-y-3 cursor-default transition-all duration-200 hover:-translate-y-0.5"
+      style={{ background: T.surface, border: '1px solid #333333' }}
     >
       <div className="p-3 rounded-xl transition-colors duration-200" style={{
         background: T.primaryBg,
@@ -28,7 +28,7 @@ export function FileCard({ file, onDownload, onDelete }: FileCardProps) {
       </div>
 
       <div className="w-full space-y-0.5">
-        <p className="font-semibold text-sm truncate" title={fileName} style={{ color: T.textHi }}>{fileName}</p>
+        <p className="font-semibold text-sm truncate" title={fileName} style={{ color: T.textHi, letterSpacing: '-0.011em' }}>{fileName}</p>
         <p className="text-xs" style={{ color: T.textLo }}>{formatFileSize(file.size)}</p>
         <p className="text-xs" style={{ color: T.textLo }}>{formattedDate}</p>
       </div>

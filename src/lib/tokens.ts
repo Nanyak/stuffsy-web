@@ -18,8 +18,9 @@ export const fontMono = "'IBM Plex Mono', ui-monospace, monospace"
 
 /* ── Semantic T aliases (used by ShortenerPage, AiPage, etc.) ── */
 export const T = {
-  primary:   '#E7C59A',
+  primary:   '#E7C59A',    // Amber Glow
   primaryL:  '#E7C59A',
+  success:   '#00AC5C',    // Neon Green
   textHi:    '#F3F3F3',
   textMid:   '#949494',
   textLo:    '#949494',
@@ -30,4 +31,5 @@ export const T = {
   primaryBg: 'rgba(231,197,154,0.08)',
   fontDisp:  "'Inter', system-ui, sans-serif",
   fontBody:  "'Inter', system-ui, sans-serif",
+  fontMono:  "'IBM Plex Mono', ui-monospace, monospace",
 } as const
