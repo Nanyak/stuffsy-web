@@ -34,8 +34,8 @@ export function Navbar() {
                 className={({ isActive }) =>
                   `flex items-center gap-1.5 px-4 py-2 text-xs font-medium tracking-wider transition-colors duration-150 cursor-pointer rounded-[8px] ${
                     isActive
-                      ? 'text-[#F3F3F3]'
-                      : 'text-[#949494] hover:text-[#F3F3F3]'
+                      ? 'text-[#5B8DEF]'
+                      : 'text-[#ABABAB] hover:text-[#F3F3F3]'
                   }`
                 }
               >

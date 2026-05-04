@@ -7,48 +7,48 @@
 :root {
   --background:             #101010;
   --foreground:             #F3F3F3;
-  --card:                   #080808;
+  --card:                   #161616;
   --card-foreground:        #F3F3F3;
-  --popover:                #080808;
+  --popover:                #161616;
   --popover-foreground:     #F3F3F3;
   --primary:                #333333;
   --primary-foreground:     #FFFFFF;
-  --secondary:              #1a1a1a;
+  --secondary:              #1E1E1E;
   --secondary-foreground:   #F3F3F3;
-  --muted:                  #1a1a1a;
-  --muted-foreground:       #949494;
-  --accent:                 #1a1a1a;
+  --muted:                  #1E1E1E;
+  --muted-foreground:       #ABABAB;
+  --accent:                 #1E1E1E;
   --accent-foreground:      #F3F3F3;
   --destructive:            #ef4444;
   --destructive-foreground: #FFFFFF;
-  --border:                 #333333;
-  --input:                  #1a1a1a;
-  --ring:                   #E7C59A;
+  --border:                 #3D3D3D;
+  --input:                  #1E1E1E;
+  --ring:                   #5B8DEF;
   --radius:                 0.5rem;
 
-  --sidebar:                        #080808;
+  --sidebar:                        #161616;
   --sidebar-foreground:             #F3F3F3;
   --sidebar-primary:                #333333;
   --sidebar-primary-foreground:     #FFFFFF;
-  --sidebar-accent:                 #1a1a1a;
+  --sidebar-accent:                 #1E1E1E;
   --sidebar-accent-foreground:      #F3F3F3;
-  --sidebar-border:                 #333333;
+  --sidebar-border:                 #3D3D3D;
   --sidebar-ring:                   #E7C59A;
 
   /* component inline-style tokens */
   --c-text-hi:       #F3F3F3;
-  --c-text-mid:      #949494;
-  --c-text-lo:       #949494;
-  --c-border:        #333333;
+  --c-text-mid:      #ABABAB;
+  --c-text-lo:       #ABABAB;
+  --c-border:        #3D3D3D;
   --c-border-soft:   #E7C59A;
-  --c-surface:       #080808;
+  --c-surface:       #161616;
   --c-surface-2:     #101010;
 
   /* legacy compat */
-  --c-primary-text:   #E7C59A;
-  --c-border-subtle:  #333333;
-  --c-border-primary: rgba(231,197,154,0.30);
-  --c-primary-bg:     rgba(231,197,154,0.08);
+  --c-primary-text:   #5B8DEF;
+  --c-border-subtle:  #3D3D3D;
+  --c-border-primary: rgba(91,141,239,0.35);
+  --c-primary-bg:     rgba(91,141,239,0.08);
   --c-shadow-sm:      none;
   --c-shadow-md:      none;
   --c-shadow-lg:      none;
@@ -149,7 +149,7 @@
 }
 
 .interactive-card {
-  border: 1px solid #333333;
+  border: 1px solid #3D3D3D;
   transition: border-color 150ms ease;
 }
 .interactive-card:hover,

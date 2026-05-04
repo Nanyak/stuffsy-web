@@ -5,7 +5,7 @@ import {
   ArrowRight, Zap, Share2, CheckCircle, MousePointer2,
   Folder, FileText, Copy, Upload,
 } from 'lucide-react'
-import { ink as INK, gun as GUN, sage as SAGE, stone as STONE, soft as SOFT, black as BLACK, white as WHITE, font as FONT, void_ as VOID } from '@/lib/tokens'
+import { ink as INK, gun as GUN, sage as SAGE, stone as STONE, soft as SOFT, black as BLACK, white as WHITE, font as FONT, void_ as VOID, blue as BLUE, neon as NEON } from '@/lib/tokens'
 
 /* ── Pill button helpers ───────────────────────────────────── */
 const pillPrimary: React.CSSProperties = {
@@ -125,7 +125,7 @@ export function HomePage() {
           <div className="flex flex-wrap items-center justify-center gap-8">
             {['3 Tools Available', 'Always Free', 'No Account Required', 'Fast & Secure'].map((s, i) => (
               <span key={i} className="flex items-center gap-2 text-xs font-medium" style={{ color: GUN }}>
-                <CheckCircle className="h-3.5 w-3.5" style={{ color: SOFT }} />
+                <CheckCircle className="h-3.5 w-3.5" style={{ color: NEON }} />
                 {s}
               </span>
             ))}
@@ -352,7 +352,7 @@ function MockFileBrowser() {
                 flex: 1, background: '#141414',
                 border: `1px solid ${STONE}`, borderRadius: '8px', padding: '10px',
               }}>
-                <Folder className="h-4 w-4" style={{ color: SOFT, marginBottom: '6px' }} />
+                <Folder className="h-4 w-4" style={{ color: BLUE, marginBottom: '6px' }} />
                 <p style={{ fontSize: '11px', fontWeight: 600, color: INK, marginBottom: '2px' }}>{f.name}</p>
                 <p style={{ fontSize: '10px', color: GUN }}>{f.n}</p>
               </div>
@@ -393,7 +393,7 @@ function MockStepPicker() {
             display: 'flex', alignItems: 'center', gap: '10px',
             padding: '9px 12px', borderRadius: '8px',
             background: t.dim ? '#1a1a1a' : '#141414',
-            border: `1px solid ${t.dim ? STONE : SOFT}`,
+            border: `1px solid ${t.dim ? STONE : BLUE}`,
             opacity: t.dim ? 0.45 : 1,
           }}>
             <span style={{ color: t.dim ? GUN : INK }}>{t.icon}</span>
@@ -417,11 +417,11 @@ function MockStepUse() {
     <MockPanel>
       <p style={{ fontSize: '10px', color: GUN, marginBottom: '10px', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 600 }}>Upload Files</p>
       <div style={{
-        border: `1.5px dashed ${SOFT}`,
+        border: `1.5px dashed ${BLUE}`,
         borderRadius: '8px', padding: '20px', textAlign: 'center',
         background: '#141414', marginBottom: '12px',
       }}>
-        <Upload className="h-5 w-5" style={{ color: SOFT, margin: '0 auto 8px' }} />
+        <Upload className="h-5 w-5" style={{ color: BLUE, margin: '0 auto 8px' }} />
         <p style={{ fontSize: '12px', fontWeight: 600, color: INK, marginBottom: '2px' }}>Drop files here</p>
         <p style={{ fontSize: '11px', color: GUN }}>or click to browse</p>
       </div>
@@ -433,10 +433,10 @@ function MockStepUse() {
         <div key={f.name} style={{ marginBottom: '8px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
             <span style={{ fontSize: '11px', color: GUN }}>{f.name}</span>
-            <span style={{ fontSize: '11px', color: f.done ? SOFT : INK, fontWeight: 600 }}>{f.label}</span>
+            <span style={{ fontSize: '11px', color: f.done ? NEON : INK, fontWeight: 600 }}>{f.label}</span>
           </div>
           <div style={{ height: '3px', background: STONE, borderRadius: '99px', overflow: 'hidden' }}>
-            <div style={{ width: f.pct, height: '100%', background: f.done ? SOFT : INK, borderRadius: '99px' }} />
+            <div style={{ width: f.pct, height: '100%', background: f.done ? NEON : BLUE, borderRadius: '99px' }} />
           </div>
         </div>
       ))}
@@ -458,13 +458,13 @@ function MockStepShare() {
             display: 'flex', alignItems: 'center', gap: '8px',
             padding: '8px 12px', borderRadius: '8px',
             background: l.active ? '#141414' : '#1a1a1a',
-            border: `1px solid ${l.active ? SOFT : STONE}`,
+            border: `1px solid ${l.active ? BLUE : STONE}`,
           }}>
             <span style={{ flex: 1, fontSize: '11px', fontFamily: 'monospace', color: l.active ? INK : GUN }}>{l.label}</span>
             <span style={{
               fontSize: '10px', padding: '2px 8px', borderRadius: '99px',
-              background: l.active ? SOFT : STONE,
-              color: l.active ? '#101010' : GUN,
+              background: l.active ? BLUE : STONE,
+              color: l.active ? '#FFFFFF' : GUN,
               display: 'flex', alignItems: 'center', gap: '4px', fontWeight: 600,
             }}>
               {l.active ? <><CheckCircle className="h-2.5 w-2.5" /> Copied</> : <><Copy className="h-2.5 w-2.5" /> Copy</>}
@@ -483,7 +483,7 @@ function MiniStoragePreview() {
       <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
         {['Documents', 'Photos'].map(name => (
           <div key={name} style={{ flex: 1, background: '#1a1a1a', border: `1px solid ${STONE}`, borderRadius: '6px', padding: '8px' }}>
-            <Folder className="h-4 w-4" style={{ color: SOFT, marginBottom: '5px' }} />
+            <Folder className="h-4 w-4" style={{ color: BLUE, marginBottom: '5px' }} />
             <p style={{ fontSize: '10px', fontWeight: 600, color: INK }}>{name}</p>
           </div>
         ))}
@@ -524,11 +524,11 @@ function MiniShortenerPreview() {
           display: 'flex', alignItems: 'center', gap: '7px',
           padding: '6px 9px', borderRadius: '6px',
           background: '#1a1a1a',
-          border: `1px solid ${l.active ? SOFT : STONE}`,
+          border: `1px solid ${l.active ? BLUE : STONE}`,
           marginBottom: '4px',
         }}>
           <span style={{ flex: 1, fontSize: '10px', fontFamily: 'monospace', color: l.active ? INK : GUN }}>{l.label}</span>
-          <Copy className="h-3 w-3" style={{ color: l.active ? SOFT : GUN }} />
+          <Copy className="h-3 w-3" style={{ color: l.active ? BLUE : GUN }} />
         </div>
       ))}
     </div>
@@ -567,7 +567,7 @@ function StepText({ num, icon, title, desc }: { num: string; icon: React.ReactNo
           width: '44px', height: '44px', borderRadius: '8px',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           background: SAGE, border: `1px solid ${STONE}`,
-          color: SOFT, flexShrink: 0,
+          color: BLUE, flexShrink: 0,
         }}>
           {icon}
         </div>
@@ -598,7 +598,7 @@ function ToolCard({ to, icon, name, description, preview }: {
         textDecoration: 'none', transition: 'border-color 150ms',
       }}
       onMouseEnter={e => {
-        (e.currentTarget as HTMLElement).style.borderColor = SOFT
+        (e.currentTarget as HTMLElement).style.borderColor = BLUE
       }}
       onMouseLeave={e => {
         (e.currentTarget as HTMLElement).style.borderColor = STONE
@@ -610,7 +610,7 @@ function ToolCard({ to, icon, name, description, preview }: {
         <div style={{
           width: '44px', height: '44px', borderRadius: '8px',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          background: SAGE, border: `1px solid ${STONE}`, color: SOFT,
+          background: SAGE, border: `1px solid ${STONE}`, color: BLUE,
         }}>
           {icon}
         </div>
@@ -630,7 +630,7 @@ function ToolCard({ to, icon, name, description, preview }: {
         {name}
         <ArrowRight
           className="h-4 w-4 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200"
-          style={{ color: SOFT }}
+          style={{ color: BLUE }}
         />
       </h3>
       <p style={{ fontSize: '13px', lineHeight: 1.6, color: GUN }}>{description}</p>

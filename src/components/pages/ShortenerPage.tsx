@@ -147,7 +147,7 @@ export function ShortenerPage() {
               className="h-11 px-5 font-semibold cursor-pointer transition-all duration-200 shrink-0"
               disabled={isLoading || !url.trim()}
               style={(!isLoading && url.trim()) ? {
-                boxShadow: '0 0 20px rgba(231,197,154,0.25)',
+                boxShadow: '0 0 20px rgba(91,141,239,0.25)',
               } : {}}
             >
               {isLoading ? (
