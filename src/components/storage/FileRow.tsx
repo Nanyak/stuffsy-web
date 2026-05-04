@@ -1,30 +1,53 @@
-import { Download, Trash2 } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Download, Trash2, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { FileInfo } from "@/types/storage";
 import { formatFileSize, getFileIcon } from "@/lib/storageUtils";
 import { T } from "@/lib/tokens";
 
+const PREVIEWABLE = (ct: string) => ct.includes('pdf') || ct.startsWith('video/') || ct.startsWith('image/');
+
 interface FileRowProps {
   file: FileInfo;
   onDownload: (key: string) => void;
   onDelete: (key: string) => void;
+  onGetPreviewUrl?: (key: string) => Promise<string>;
+  onPreview?: (file: FileInfo) => void;
 }
 
-export function FileRow({ file, onDownload, onDelete }: FileRowProps) {
+export function FileRow({ file, onDownload, onDelete, onGetPreviewUrl, onPreview }: FileRowProps) {
   const FileIcon = getFileIcon(file.content_type);
   const fileName = file.key.split('/').pop() || file.key;
   const formattedDate = new Date(file.last_modified).toLocaleDateString();
   const fileType = file.content_type.split('/')[0] || 'file';
+  const isImage = file.content_type.startsWith('image/');
+  const isVideo = file.content_type.startsWith('video/');
+  const canPreview = PREVIEWABLE(file.content_type);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    if ((isImage || isVideo) && onGetPreviewUrl) {
+      onGetPreviewUrl(file.key).then(setPreviewUrl).catch(() => {});
+    }
+  }, [file.key]);
 
   return (
     <tr className="border-b border-border/60 transition-colors duration-150 group hover:bg-[oklch(0.545_0.185_268_/_0.04)] dark:hover:bg-[oklch(0.630_0.190_268_/_0.06)]">
       <td className="py-3 px-4">
         <div className="flex items-center gap-3">
-          <div className="p-1.5 rounded-lg" style={{
+          <div className="rounded-lg overflow-hidden flex items-center justify-center shrink-0" style={{
             background: T.primaryBg,
             border: '1px solid var(--c-border-subtle)',
+            width: '32px',
+            height: '32px',
           }}>
-            <FileIcon className="h-4 w-4" style={{ color: T.primaryL }} />
+            {previewUrl && isImage ? (
+              <img src={previewUrl} alt={fileName} className="w-full h-full object-cover" />
+            ) : previewUrl && isVideo ? (
+              <video src={previewUrl} className="w-full h-full object-cover" muted preload="metadata" />
+            ) : (
+              <FileIcon className="h-4 w-4 m-1.5" style={{ color: T.primaryL }} />
+            )}
           </div>
           <span className="font-medium text-sm truncate max-w-xs" title={fileName} style={{ color: T.textHi }}>
             {fileName}
@@ -36,6 +59,18 @@ export function FileRow({ file, onDownload, onDelete }: FileRowProps) {
       <td className="py-3 px-4 text-sm text-muted-foreground">{formattedDate}</td>
       <td className="py-3 px-4">
         <div className="flex gap-1 justify-end">
+          {canPreview && (
+            <Button
+              variant="ghost"
+              size="sm"
+              className="cursor-pointer transition-all duration-200"
+              style={{ color: T.primaryL }}
+              aria-label={`Preview ${fileName}`}
+              onClick={(e) => { e.stopPropagation(); onPreview?.(file); }}
+            >
+              <Eye className="h-4 w-4" />
+            </Button>
+          )}
           <Button
             variant="ghost"
             size="sm"

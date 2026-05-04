@@ -9,9 +9,11 @@ interface FileListProps {
   onDelete: (key: string) => void;
   onOpenFolder: (name: string) => void;
   onDeleteFolder: (name: string) => void;
+  onGetPreviewUrl?: (key: string) => Promise<string>;
+  onPreview?: (file: FileInfo) => void;
 }
 
-export function FileList({ folders, files, onDownload, onDelete, onOpenFolder, onDeleteFolder }: FileListProps) {
+export function FileList({ folders, files, onDownload, onDelete, onOpenFolder, onDeleteFolder, onGetPreviewUrl, onPreview }: FileListProps) {
   return (
     <div className="overflow-x-auto">
       <table className="w-full">
@@ -39,6 +41,8 @@ export function FileList({ folders, files, onDownload, onDelete, onOpenFolder, o
               file={file}
               onDownload={onDownload}
               onDelete={onDelete}
+              onGetPreviewUrl={onGetPreviewUrl}
+              onPreview={onPreview}
             />
           ))}
         </tbody>

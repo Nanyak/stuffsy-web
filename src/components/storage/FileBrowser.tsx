@@ -19,6 +19,8 @@ interface FileBrowserProps {
   onDelete: (key: string) => void;
   onDeleteFolder: (name: string) => void;
   onCreateFolder: (name: string) => Promise<void>;
+  onGetPreviewUrl?: (key: string) => Promise<string>;
+  onPreview?: (file: FileInfo) => void;
   isLoading?: boolean;
 }
 
@@ -32,6 +34,8 @@ export function FileBrowser({
   onDelete,
   onDeleteFolder,
   onCreateFolder,
+  onGetPreviewUrl,
+  onPreview,
   isLoading,
 }: FileBrowserProps) {
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
@@ -159,6 +163,8 @@ export function FileBrowser({
               onDelete={onDelete}
               onOpenFolder={onOpenFolder}
               onDeleteFolder={onDeleteFolder}
+              onGetPreviewUrl={onGetPreviewUrl}
+              onPreview={onPreview}
             /></div>
           ) : (
             <FileList
@@ -168,6 +174,8 @@ export function FileBrowser({
               onDelete={onDelete}
               onOpenFolder={onOpenFolder}
               onDeleteFolder={onDeleteFolder}
+              onGetPreviewUrl={onGetPreviewUrl}
+              onPreview={onPreview}
             />
           )}
         </div>

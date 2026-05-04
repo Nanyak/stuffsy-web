@@ -9,9 +9,11 @@ interface FileGridProps {
   onDelete: (key: string) => void;
   onOpenFolder: (name: string) => void;
   onDeleteFolder: (name: string) => void;
+  onGetPreviewUrl?: (key: string) => Promise<string>;
+  onPreview?: (file: FileInfo) => void;
 }
 
-export function FileGrid({ folders, files, onDownload, onDelete, onOpenFolder, onDeleteFolder }: FileGridProps) {
+export function FileGrid({ folders, files, onDownload, onDelete, onOpenFolder, onDeleteFolder, onGetPreviewUrl, onPreview }: FileGridProps) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
       {folders.map((name) => (
@@ -28,6 +30,8 @@ export function FileGrid({ folders, files, onDownload, onDelete, onOpenFolder, o
           file={file}
           onDownload={onDownload}
           onDelete={onDelete}
+          onGetPreviewUrl={onGetPreviewUrl}
+          onPreview={onPreview}
         />
       ))}
     </div>

@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import { Cloud, HardDrive, FileText, FileImage, FileVideo, File as FileIcon, Upload, AlertCircle, X, CheckCircle2, Download, Trash2 } from "lucide-react";
 import { FileStagingArea } from "@/components/storage/FileStagingArea";
 import { FileBrowser } from "@/components/storage/FileBrowser";
+import { FilePreviewModal } from "@/components/storage/FilePreviewModal";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import type { StagedFile, FileInfo } from "@/types/storage";
 import { uploadFile, listFiles, deleteFile, getDownloadUrl } from "@/services/storage_service";
@@ -60,6 +61,7 @@ export function StoragePage() {
   const [confirmState, setConfirmState] = useState<ConfirmState>({
     open: false, title: '', description: '', onConfirm: () => {},
   });
+  const [previewFile, setPreviewFile] = useState<FileInfo | null>(null);
 
   const { folders, files: currentFiles } = getFolderContents(allFiles, currentPath);
   const displayedFiles = filterFiles(currentFiles, filterType);
@@ -409,18 +411,17 @@ export function StoragePage() {
                         onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
                       >
                         <div className="p-1.5 rounded-lg flex-shrink-0" style={{
-                          background: 'rgba(231,197,154,0.08)',
+                          background: 'rgba(91,141,239,0.08)',
                           border: '1px solid #333333',
                         }}>
-                          <FileIcon className="h-3.5 w-3.5" style={{ color: '#E7C59A' }} />
+                          <FileIcon className="h-3.5 w-3.5" style={{ color: '#5B8DEF' }} />
                         </div>
                         <span className="flex-1 text-sm truncate" style={{ color: '#949494', letterSpacing: '-0.011em' }}>{name}</span>
                         <span className="text-xs shrink-0" style={{ color: '#949494' }}>{formatFileSize(f.size)}</span>
-                        {/* Visible on hover AND keyboard focus */}
                         <div className="flex gap-1 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity duration-150">
                           <button
                             className="h-7 w-7 p-0 cursor-pointer rounded-md flex items-center justify-center transition-colors duration-150"
-                            style={{ color: '#E7C59A' }}
+                            style={{ color: '#5B8DEF' }}
                             aria-label={`Download ${name}`}
                             onClick={() => handleDownload(f.key)}
                             onMouseEnter={e => (e.currentTarget.style.background = '#1a1a1a')}
@@ -464,10 +465,22 @@ export function StoragePage() {
             onDelete={handleDelete}
             onDeleteFolder={handleDeleteFolder}
             onCreateFolder={handleCreateFolder}
+            onGetPreviewUrl={async (key) => { const r = await getDownloadUrl(key); return r.url; }}
+            onPreview={setPreviewFile}
             isLoading={isLoading}
           />
         </div>
       </div>
+
+      {/* ── File preview modal ───────────────────────────── */}
+      {previewFile && (
+        <FilePreviewModal
+          file={previewFile}
+          onClose={() => setPreviewFile(null)}
+          onDownload={handleDownload}
+          onGetPreviewUrl={async (key) => { const r = await getDownloadUrl(key); return r.url; }}
+        />
+      )}
 
       {/* ── Confirm dialog ────────────────────────────────── */}
       <ConfirmDialog

@@ -185,15 +185,57 @@
       "type": "file"
     },
     {
+      "path": "src/components/storage/FileCard.tsx",
+      "accessCount": 8,
+      "lastAccessed": 1777908151060,
+      "type": "file"
+    },
+    {
+      "path": "src/components/pages/StoragePage.tsx",
+      "accessCount": 7,
+      "lastAccessed": 1777908081403,
+      "type": "file"
+    },
+    {
+      "path": "src/components/storage/FileRow.tsx",
+      "accessCount": 7,
+      "lastAccessed": 1777908155512,
+      "type": "file"
+    },
+    {
       "path": "src/index.css",
       "accessCount": 6,
       "lastAccessed": 1777906793639,
       "type": "file"
     },
     {
+      "path": "src/components/storage/FileList.tsx",
+      "accessCount": 5,
+      "lastAccessed": 1777908047740,
+      "type": "file"
+    },
+    {
+      "path": "src/components/storage/FileBrowser.tsx",
+      "accessCount": 5,
+      "lastAccessed": 1777908059012,
+      "type": "file"
+    },
+    {
+      "path": "src/components/storage/FilePreviewModal.tsx",
+      "accessCount": 5,
+      "lastAccessed": 1777908144777,
+      "type": "file"
+    },
+    {
       "path": "src/lib/tokens.ts",
-      "accessCount": 2,
-      "lastAccessed": 1777906787012,
+      "accessCount": 3,
+      "lastAccessed": 1777907465123,
+      "type": "file"
+    },
+    {
+      "path": "src/components/storage/FileGrid.tsx",
+      "accessCount": 3,
+      "lastAccessed": 1777908037764,
       "type": "file"
     },
     {
@@ -218,6 +260,18 @@
       "path": "src/components/pages/AiPage.tsx",
       "accessCount": 1,
       "lastAccessed": 1777906908882,
+      "type": "file"
+    },
+    {
+      "path": "src/lib/storageUtils.ts",
+      "accessCount": 1,
+      "lastAccessed": 1777907465175,
+      "type": "file"
+    },
+    {
+      "path": "src/services/storage_service.ts",
+      "accessCount": 1,
+      "lastAccessed": 1777907511615,
       "type": "file"
     }
   ],
