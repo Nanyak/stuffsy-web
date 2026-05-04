@@ -17,7 +17,7 @@ export function FileList({ folders, files, onDownload, onDelete, onOpenFolder, o
   return (
     <div className="overflow-x-auto">
       <table className="w-full">
-        <thead style={{ borderBottom: '1px solid rgba(0,0,0,0.07)' }}>
+        <thead className="border-b border-border/60">
           <tr>
             <th className="py-2.5 px-4 text-left text-xs font-bold text-muted-foreground uppercase tracking-wider">Name</th>
             <th className="py-2.5 px-4 text-left text-xs font-bold text-muted-foreground uppercase tracking-wider">Size</th>
