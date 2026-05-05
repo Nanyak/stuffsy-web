@@ -209,6 +209,12 @@
       "type": "file"
     },
     {
+      "path": "src/components/pages/AiPage.tsx",
+      "accessCount": 6,
+      "lastAccessed": 1777947285265,
+      "type": "file"
+    },
+    {
       "path": "src/components/storage/FileList.tsx",
       "accessCount": 5,
       "lastAccessed": 1777908047740,
@@ -236,12 +242,6 @@
       "path": "src/components/storage/FileGrid.tsx",
       "accessCount": 3,
       "lastAccessed": 1777908037764,
-      "type": "file"
-    },
-    {
-      "path": "src/components/pages/AiPage.tsx",
-      "accessCount": 3,
-      "lastAccessed": 1777946733478,
       "type": "file"
     },
     {

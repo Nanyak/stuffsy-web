@@ -68,6 +68,7 @@ export function AiPage() {
   const [streaming,       setStreaming]       = useState(false)
   const [sessions,        setSessions]        = useState<ChatSession[]>(loadSessions)
   const [hoveredSession,  setHoveredSession]  = useState<string | null>(null)
+  const [activeSessionId, setActiveSessionId] = useState<string | null>(null)
   const cleanupRef  = useRef<(() => void) | null>(null)
   const bottomRef   = useRef<HTMLDivElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
@@ -136,7 +137,7 @@ export function AiPage() {
 
   const reset = useCallback(() => {
     cleanupRef.current?.()
-    if (messages.length > 0) {
+    if (messages.length > 0 && !activeSessionId) {
       const title = messages.find(m => m.role === 'user')?.content.slice(0, 60) ?? 'Chat'
       const session: ChatSession = {
         id: `s-${Date.now()}`,
@@ -154,7 +155,8 @@ export function AiPage() {
     setMessages([])
     setInput('')
     setStreaming(false)
-  }, [messages, scope])
+    setActiveSessionId(null)
+  }, [messages, scope, activeSessionId])
 
   const loadSession = useCallback((session: ChatSession) => {
     cleanupRef.current?.()
@@ -162,6 +164,7 @@ export function AiPage() {
     setScope(session.scope)
     setInput('')
     setStreaming(false)
+    setActiveSessionId(session.id)
   }, [])
 
   const deleteSession = useCallback((id: string, e: React.MouseEvent) => {
