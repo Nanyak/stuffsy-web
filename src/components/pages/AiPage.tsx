@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
-import { Send, Sparkles, ChevronDown, ChevronUp, FileText, Folders, RotateCcw, Image, ArrowLeft } from 'lucide-react'
+import { Send, Sparkles, ChevronDown, ChevronUp, FileText, Folders, RotateCcw, Image, ArrowLeft, MessageSquare, Trash2 } from 'lucide-react'
 import { queryAI, type SourceChunk } from '@/services/ai_service'
 import { T } from '@/lib/tokens'
 
@@ -17,6 +17,14 @@ type Message = {
 
 type Scope = { label: string; value: string; icon: React.ElementType }
 
+type ChatSession = {
+  id: string
+  title: string
+  messages: Message[]
+  scope: Scope
+  timestamp: number
+}
+
 const SCOPES: Scope[] = [
   { label: 'All Files',  value: 'all',       icon: Folders   },
   { label: 'Documents',  value: 'documents', icon: FileText  },
@@ -29,15 +37,37 @@ const SUGGESTED = [
   'Find anything related to invoices or payments',
 ]
 
+const SESSIONS_KEY = 'stuffsy_ai_sessions'
+const MAX_SESSIONS = 20
+
 let idCounter = 0
 const uid = () => `msg-${++idCounter}`
 
+function loadSessions(): ChatSession[] {
+  try { return JSON.parse(localStorage.getItem(SESSIONS_KEY) ?? '[]') }
+  catch { return [] }
+}
+
+function persistSessions(sessions: ChatSession[]) {
+  localStorage.setItem(SESSIONS_KEY, JSON.stringify(sessions))
+}
+
+function relativeTime(ts: number): string {
+  const diff = Date.now() - ts
+  if (diff < 60_000) return 'just now'
+  if (diff < 3_600_000) return `${Math.floor(diff / 60_000)}m ago`
+  if (diff < 86_400_000) return `${Math.floor(diff / 3_600_000)}h ago`
+  return `${Math.floor(diff / 86_400_000)}d ago`
+}
+
 /* ── Page ──────────────────────────────────────────────────── */
 export function AiPage() {
-  const [messages,  setMessages]  = useState<Message[]>([])
-  const [input,     setInput]     = useState('')
-  const [scope,     setScope]     = useState<Scope>(SCOPES[0])
-  const [streaming, setStreaming] = useState(false)
+  const [messages,        setMessages]        = useState<Message[]>([])
+  const [input,           setInput]           = useState('')
+  const [scope,           setScope]           = useState<Scope>(SCOPES[0])
+  const [streaming,       setStreaming]       = useState(false)
+  const [sessions,        setSessions]        = useState<ChatSession[]>(loadSessions)
+  const [hoveredSession,  setHoveredSession]  = useState<string | null>(null)
   const cleanupRef  = useRef<(() => void) | null>(null)
   const bottomRef   = useRef<HTMLDivElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
@@ -104,11 +134,44 @@ export function AiPage() {
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send() }
   }
 
-  const reset = () => {
+  const reset = useCallback(() => {
     cleanupRef.current?.()
+    if (messages.length > 0) {
+      const title = messages.find(m => m.role === 'user')?.content.slice(0, 60) ?? 'Chat'
+      const session: ChatSession = {
+        id: `s-${Date.now()}`,
+        title,
+        messages: messages.map(m => ({ ...m, isStreaming: false })),
+        scope,
+        timestamp: Date.now(),
+      }
+      setSessions(prev => {
+        const next = [session, ...prev].slice(0, MAX_SESSIONS)
+        persistSessions(next)
+        return next
+      })
+    }
     setMessages([])
+    setInput('')
     setStreaming(false)
-  }
+  }, [messages, scope])
+
+  const loadSession = useCallback((session: ChatSession) => {
+    cleanupRef.current?.()
+    setMessages(session.messages)
+    setScope(session.scope)
+    setInput('')
+    setStreaming(false)
+  }, [])
+
+  const deleteSession = useCallback((id: string, e: React.MouseEvent) => {
+    e.stopPropagation()
+    setSessions(prev => {
+      const next = prev.filter(s => s.id !== id)
+      persistSessions(next)
+      return next
+    })
+  }, [])
 
   return (
     <div style={{ height: '100vh', display: 'flex', overflow: 'hidden', fontFamily: T.fontBody, background: T.surface2 }}>
@@ -119,10 +182,10 @@ export function AiPage() {
       {/* ── Sidebar ─────────────────────────────────────────── */}
       <aside
         className="hidden md:flex flex-col flex-shrink-0"
-        style={{ width: '220px', background: T.surface, borderRight: `1px solid ${T.border}` }}
+        style={{ width: '220px', background: T.surface, borderRight: `1px solid ${T.border}`, overflow: 'hidden' }}
       >
         {/* Wordmark */}
-        <div style={{ padding: '16px 16px 14px', borderBottom: `1px solid ${T.border}` }}>
+        <div style={{ padding: '16px 16px 14px', borderBottom: `1px solid ${T.border}`, flexShrink: 0 }}>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
             <Link
               to="/"
@@ -136,7 +199,7 @@ export function AiPage() {
         </div>
 
         {/* Scope */}
-        <div style={{ padding: '16px 12px 8px' }}>
+        <div style={{ padding: '16px 12px 8px', flexShrink: 0 }}>
           <p style={{
             fontSize: '10px', fontWeight: 700, letterSpacing: '0.06em',
             textTransform: 'uppercase', color: T.textMid, marginBottom: '6px', paddingLeft: '4px',
@@ -168,8 +231,68 @@ export function AiPage() {
           })}
         </div>
 
+        {/* History */}
+        <div style={{
+          flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column',
+          borderTop: `1px solid ${T.border}`,
+        }}>
+          {sessions.length > 0 && (
+            <p style={{
+              fontSize: '10px', fontWeight: 700, letterSpacing: '0.06em',
+              textTransform: 'uppercase', color: T.textMid,
+              padding: '12px 16px 6px', flexShrink: 0,
+            }}>
+              History
+            </p>
+          )}
+          <div style={{ flex: 1, overflowY: 'auto', padding: '0 8px 8px' }}>
+            {sessions.map(s => (
+              <div
+                key={s.id}
+                onClick={() => loadSession(s)}
+                onMouseEnter={() => setHoveredSession(s.id)}
+                onMouseLeave={() => setHoveredSession(null)}
+                style={{
+                  display: 'flex', alignItems: 'center', gap: '6px',
+                  padding: '7px 8px', borderRadius: '6px', cursor: 'pointer',
+                  background: hoveredSession === s.id ? T.border : 'transparent',
+                  transition: 'background 150ms', marginBottom: '2px',
+                }}
+              >
+                <MessageSquare className="h-3 w-3 flex-shrink-0" style={{ color: T.textMid }} />
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <p style={{
+                    fontSize: '12px', color: T.textHi, margin: 0,
+                    overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+                  }}>
+                    {s.title}
+                  </p>
+                  <p style={{ fontSize: '10px', color: T.textMid, margin: 0 }}>
+                    {relativeTime(s.timestamp)}
+                  </p>
+                </div>
+                {hoveredSession === s.id && (
+                  <button
+                    onClick={(e) => deleteSession(s.id, e)}
+                    style={{
+                      flexShrink: 0, padding: '2px 3px', background: 'transparent', border: 'none',
+                      cursor: 'pointer', borderRadius: '4px',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      color: T.textMid, transition: 'color 150ms',
+                    }}
+                    onMouseEnter={e => (e.currentTarget.style.color = '#dc2626')}
+                    onMouseLeave={e => (e.currentTarget.style.color = T.textMid)}
+                  >
+                    <Trash2 className="h-3 w-3" />
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+
         {/* New chat + back link */}
-        <div style={{ marginTop: 'auto', padding: '12px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+        <div style={{ padding: '12px', display: 'flex', flexDirection: 'column', gap: '8px', flexShrink: 0, borderTop: `1px solid ${T.border}` }}>
           <button
             onClick={reset}
             style={{
@@ -282,7 +405,7 @@ export function AiPage() {
             <div style={{
               display: 'flex', alignItems: 'flex-end', gap: '10px',
               background: T.surface2, border: `1px solid ${streaming ? T.borderEm : T.border}`,
-              borderRadius: '8px', padding: '10px 14px', transition: 'border-color 150ms',
+              borderRadius: '8px', padding: '8px 12px', transition: 'border-color 150ms',
             }}>
               <textarea
                 ref={textareaRef}
@@ -294,21 +417,22 @@ export function AiPage() {
                 style={{
                   flex: 1, resize: 'none', border: 'none', outline: 'none',
                   background: 'transparent', fontFamily: T.fontBody,
-                  fontSize: '14px', color: T.textHi, lineHeight: 1.5, overflowY: 'hidden',
+                  fontSize: '14px', color: T.textHi, lineHeight: 1.5,
+                  overflowY: 'hidden', padding: '4px 0',
                 }}
               />
               <button
                 onClick={send}
                 disabled={!input.trim() || streaming}
                 style={{
-                  width: '34px', height: '34px', borderRadius: '8px', flexShrink: 0,
+                  width: '28px', height: '28px', borderRadius: '6px', flexShrink: 0,
                   background: (!input.trim() || streaming) ? T.border : T.primary,
                   border: 'none', cursor: (!input.trim() || streaming) ? 'default' : 'pointer',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  transition: 'background 150ms',
+                  transition: 'background 150ms', marginBottom: '1px',
                 }}
               >
-                <Send className="h-3.5 w-3.5" style={{ color: (!input.trim() || streaming) ? T.textMid : '#101010' }} />
+                <Send className="h-3 w-3" style={{ color: (!input.trim() || streaming) ? T.textMid : '#101010' }} />
               </button>
             </div>
             <p style={{ fontSize: '11px', color: T.textMid, marginTop: '8px', textAlign: 'center' }}>

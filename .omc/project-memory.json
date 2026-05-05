@@ -239,6 +239,12 @@
       "type": "file"
     },
     {
+      "path": "src/components/pages/AiPage.tsx",
+      "accessCount": 3,
+      "lastAccessed": 1777946733478,
+      "type": "file"
+    },
+    {
       "path": "src/components/ui/button.tsx",
       "accessCount": 2,
       "lastAccessed": 1777906804570,
@@ -254,12 +260,6 @@
       "path": "src/components/layout/Navbar.tsx",
       "accessCount": 1,
       "lastAccessed": 1777906814407,
-      "type": "file"
-    },
-    {
-      "path": "src/components/pages/AiPage.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1777906908882,
       "type": "file"
     },
     {
