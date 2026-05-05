@@ -171,10 +171,18 @@ export function StoragePage() {
 
   const handleDownload = async (key: string) => {
     try {
-      const response = await getDownloadUrl(key);
-      window.open(response.url, "_blank");
+      const { url } = await getDownloadUrl(key);
+      const blob = await fetch(url).then(r => r.blob());
+      const objectUrl = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = objectUrl;
+      a.download = key.split('/').pop() || 'download';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(objectUrl);
     } catch {
-      notify('error', 'Failed to get download link. Please try again.')
+      notify('error', 'Failed to download file. Please try again.')
     }
   };
 

@@ -21,6 +21,14 @@ function App() {
       <AuthProvider>
         <Routes>
           <Route path="/s/:code" element={<RedirectPage />} />
+          <Route
+            path="/ai"
+            element={
+              <ProtectedRoute>
+                <AiPage />
+              </ProtectedRoute>
+            }
+          />
           <Route element={<Layout />}>
             <Route path="/" element={<HomePage />} />
             <Route
@@ -32,14 +40,6 @@ function App() {
               }
             />
             <Route path="/shortener" element={<ShortenerPage />} />
-            <Route
-              path="/ai"
-              element={
-                <ProtectedRoute>
-                  <AiPage />
-                </ProtectedRoute>
-              }
-            />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/confirm-signup" element={<ConfirmSignupPage />} />
