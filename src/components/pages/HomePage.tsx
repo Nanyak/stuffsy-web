@@ -259,20 +259,6 @@ export function HomePage() {
           </div>
         </div>
       </section>
-
-      {/* ── FOOTER ──────────────────────────────────────────── */}
-      <footer style={{ borderTop: `1px solid ${STONE}`, background: VOID }}>
-        <div
-          className="flex flex-col sm:flex-row items-center justify-between gap-4 py-10 px-6"
-          style={{ maxWidth: '1200px', margin: '0 auto' }}
-        >
-          <div>
-            <p className="font-bold text-base" style={{ letterSpacing: '-0.011em', color: INK }}>Stuffsy</p>
-            <p className="text-xs mt-1" style={{ color: GUN }}>Built for everyday needs.</p>
-          </div>
-          <p className="text-xs" style={{ color: GUN }}>&copy; 2026 Stuffsy. All rights reserved.</p>
-        </div>
-      </footer>
     </div>
   )
 }
