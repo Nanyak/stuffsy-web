@@ -2,6 +2,7 @@ import { useState, useRef, useEffect, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { Send, Sparkles, ChevronDown, ChevronUp, FileText, Folders, RotateCcw, Image, ArrowLeft, MessageSquare, Trash2 } from 'lucide-react'
+import ReactMarkdown from 'react-markdown'
 import { streamAI, type SourceChunk } from '@/services/ai_service'
 import { useAuth } from '@/contexts/AuthContext'
 import { T } from '@/lib/tokens'
@@ -539,7 +540,9 @@ function AssistantBubble({ msg }: { msg: Message }) {
           fontSize: '14px', color: msg.isError ? '#dc2626' : T.textHi, lineHeight: 1.7,
           whiteSpace: 'pre-wrap',
         }}>
-          {msg.content || (msg.isStreaming && <span style={{ color: T.textMid }}>Thinking…</span>)}
+          {msg.content
+            ? <ReactMarkdown>{msg.content}</ReactMarkdown>
+            : msg.isStreaming && <span style={{ color: T.textMid }}>Thinking…</span>}
           {msg.isStreaming && <span className="animate-pulse" style={{ color: T.primary }}>▋</span>}
         </div>
       </div>
