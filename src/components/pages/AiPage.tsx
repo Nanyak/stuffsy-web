@@ -34,9 +34,9 @@ const SCOPES: Scope[] = [
 ]
 
 const SUGGESTED = [
-  'Summarize my most recent documents',
-  'What files did I upload this week?',
+  'What topics are covered in my uploaded files?',
   'Find anything related to invoices or payments',
+  'Give me a summary of the key points in my documents',
 ]
 
 const SESSIONS_KEY = 'stuffsy_ai_sessions'
