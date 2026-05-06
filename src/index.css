@@ -156,3 +156,24 @@
 .interactive-card:focus-within {
   border-color: #E7C59A;
 }
+
+/* ChatGPT/Claude-style markdown rendering */
+.ai-bubble p                              { margin: 0 0 0.75em; }
+.ai-bubble p:last-child                   { margin-bottom: 0; }
+.ai-bubble h1                             { font-size: 1.1em; font-weight: 700; margin: 1em 0 0.35em; }
+.ai-bubble h2                             { font-size: 1em;   font-weight: 700; margin: 0.9em 0 0.3em; }
+.ai-bubble h3                             { font-size: 0.95em; font-weight: 600; margin: 0.75em 0 0.25em; }
+.ai-bubble h1:first-child,
+.ai-bubble h2:first-child,
+.ai-bubble h3:first-child                 { margin-top: 0; }
+.ai-bubble ul, .ai-bubble ol              { margin: 0 0 0.75em 1.5em; padding: 0; }
+.ai-bubble ul                             { list-style-type: disc; }
+.ai-bubble ol                             { list-style-type: decimal; }
+.ai-bubble li                             { margin: 0.2em 0; line-height: 1.6; }
+.ai-bubble li:last-child                  { margin-bottom: 0; }
+.ai-bubble li > ul, .ai-bubble li > ol    { margin: 0.2em 0 0.2em 1.25em; }
+.ai-bubble strong                         { font-weight: 600; }
+.ai-bubble code                           { font-family: monospace; font-size: 0.875em; background: rgba(255,255,255,0.08); padding: 0.15em 0.35em; border-radius: 4px; }
+.ai-bubble pre                            { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 0.75em 1em; overflow-x: auto; margin: 0 0 0.75em; }
+.ai-bubble pre code                       { background: none; padding: 0; font-size: 0.85em; }
+.ai-bubble blockquote                     { border-left: 3px solid rgba(255,255,255,0.2); margin: 0 0 0.75em; padding: 0.25em 0 0.25em 0.75em; color: rgba(243,243,243,0.65); }

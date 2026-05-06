@@ -538,8 +538,9 @@ function AssistantBubble({ msg }: { msg: Message }) {
           background: msg.isError ? 'rgba(220,38,38,0.08)' : T.surface,
           border: `1px solid ${msg.isError ? 'rgba(220,38,38,0.2)' : T.border}`,
           fontSize: '14px', color: msg.isError ? '#dc2626' : T.textHi, lineHeight: 1.7,
-          whiteSpace: 'pre-wrap',
-        }}>
+        }}
+          className="ai-bubble"
+        >
           {msg.content
             ? <ReactMarkdown>{msg.content}</ReactMarkdown>
             : msg.isStreaming && <span style={{ color: T.textMid }}>Thinking…</span>}
