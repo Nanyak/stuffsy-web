@@ -2,7 +2,8 @@ import { useState, useRef, useEffect, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { Send, Sparkles, ChevronDown, ChevronUp, FileText, Folders, RotateCcw, Image, ArrowLeft, MessageSquare, Trash2 } from 'lucide-react'
-import { queryAI, type SourceChunk } from '@/services/ai_service'
+import { streamAI, type SourceChunk } from '@/services/ai_service'
+import { useAuth } from '@/contexts/AuthContext'
 import { T } from '@/lib/tokens'
 
 /* ── Types ─────────────────────────────────────────────────── */
@@ -62,6 +63,7 @@ function relativeTime(ts: number): string {
 
 /* ── Page ──────────────────────────────────────────────────── */
 export function AiPage() {
+  const { getAccessToken } = useAuth()
   const [messages,        setMessages]        = useState<Message[]>([])
   const [input,           setInput]           = useState('')
   const [scope,           setScope]           = useState<Scope>(SCOPES[0])
@@ -69,7 +71,7 @@ export function AiPage() {
   const [sessions,        setSessions]        = useState<ChatSession[]>(loadSessions)
   const [hoveredSession,  setHoveredSession]  = useState<string | null>(null)
   const [activeSessionId, setActiveSessionId] = useState<string | null>(null)
-  const cleanupRef  = useRef<(() => void) | null>(null)
+  const abortRef    = useRef<AbortController | null>(null)
   const bottomRef   = useRef<HTMLDivElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
@@ -86,11 +88,14 @@ export function AiPage() {
     el.style.height = `${Math.min(el.scrollHeight, 160)}px`
   }, [input])
 
-  useEffect(() => () => { cleanupRef.current?.() }, [])
+  useEffect(() => () => { abortRef.current?.abort() }, [])
 
-  const send = useCallback(() => {
+  const send = useCallback(async () => {
     const question = input.trim()
     if (!question || streaming) return
+
+    const token = getAccessToken()
+    if (!token) return
 
     setInput('')
     setStreaming(true)
@@ -101,42 +106,45 @@ export function AiPage() {
 
     setMessages(prev => [...prev, userMsg, assistantMsg])
 
-    cleanupRef.current = queryAI({
-      question,
-      scope: scope.value,
-      onToken: (token) => {
-        setMessages(prev => prev.map(m =>
-          m.id === assistantId ? { ...m, content: m.content + token } : m
-        ))
-      },
-      onSource: (source) => {
-        setMessages(prev => prev.map(m =>
-          m.id === assistantId ? { ...m, sources: [...(m.sources ?? []), source] } : m
-        ))
-      },
-      onDone: () => {
-        setMessages(prev => prev.map(m =>
-          m.id === assistantId ? { ...m, isStreaming: false } : m
-        ))
-        setStreaming(false)
-      },
-      onError: (err) => {
+    const controller = new AbortController()
+    abortRef.current = controller
+
+    try {
+      for await (const event of streamAI({ question, scope: scope.value, token, signal: controller.signal })) {
+        if (event.type === 'token') {
+          setMessages(prev => prev.map(m =>
+            m.id === assistantId ? { ...m, content: m.content + event.data } : m
+          ))
+        } else if (event.type === 'source') {
+          setMessages(prev => prev.map(m =>
+            m.id === assistantId ? { ...m, sources: [...(m.sources ?? []), event.data] } : m
+          ))
+        } else if (event.type === 'done') {
+          break
+        }
+      }
+    } catch (err) {
+      if (err instanceof Error && err.name !== 'AbortError') {
         setMessages(prev => prev.map(m =>
           m.id === assistantId
             ? { ...m, content: err.message, isStreaming: false, isError: true }
             : m
         ))
-        setStreaming(false)
-      },
-    })
-  }, [input, streaming, scope])
+      }
+    } finally {
+      setMessages(prev => prev.map(m =>
+        m.id === assistantId ? { ...m, isStreaming: false } : m
+      ))
+      setStreaming(false)
+    }
+  }, [input, streaming, scope, getAccessToken])
 
   const handleKey = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send() }
   }
 
   const reset = useCallback(() => {
-    cleanupRef.current?.()
+    abortRef.current?.abort()
     if (messages.length > 0 && !activeSessionId) {
       const title = messages.find(m => m.role === 'user')?.content.slice(0, 60) ?? 'Chat'
       const session: ChatSession = {
@@ -159,7 +167,7 @@ export function AiPage() {
   }, [messages, scope, activeSessionId])
 
   const loadSession = useCallback((session: ChatSession) => {
-    cleanupRef.current?.()
+    abortRef.current?.abort()
     setMessages(session.messages)
     setScope(session.scope)
     setInput('')
