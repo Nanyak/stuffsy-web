@@ -53,15 +53,13 @@ export function FileCard({ file, isSelected, selectionActive, onToggleSelect, on
     >
       {/* Checkbox */}
       <button
-        className="absolute top-2 left-2 z-10 transition-opacity duration-150 cursor-pointer"
-        style={{ opacity: isSelected ? 1 : undefined }}
+        className={`absolute top-2 left-2 z-10 transition-opacity duration-150 cursor-pointer ${isSelected ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
         onClick={(e) => { e.stopPropagation(); onToggleSelect(file.key); }}
         aria-label={isSelected ? `Deselect ${fileName}` : `Select ${fileName}`}
       >
         <div
-          className="w-5 h-5 rounded-full flex items-center justify-center transition-all duration-150 group-hover:opacity-100"
+          className="w-5 h-5 rounded-full flex items-center justify-center transition-all duration-150"
           style={{
-            opacity: isSelected ? 1 : 0,
             background: isSelected ? '#5B8DEF' : 'rgba(0,0,0,0.55)',
             border: isSelected ? '1.5px solid #5B8DEF' : '1.5px solid rgba(255,255,255,0.5)',
           }}

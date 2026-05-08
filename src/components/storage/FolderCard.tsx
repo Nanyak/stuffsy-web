@@ -31,15 +31,13 @@ export function FolderCard({ name, isSelected, selectionActive, onToggleSelect, 
     >
       {/* Checkbox */}
       <button
-        className="absolute top-2 left-2 z-10 transition-opacity duration-150 cursor-pointer"
-        style={{ opacity: isSelected ? 1 : undefined }}
+        className={`absolute top-2 left-2 z-10 transition-opacity duration-150 cursor-pointer ${isSelected ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
         onClick={(e) => { e.stopPropagation(); onToggleSelect(name); }}
         aria-label={isSelected ? `Deselect folder ${name}` : `Select folder ${name}`}
       >
         <div
-          className="w-5 h-5 rounded-full flex items-center justify-center transition-all duration-150 group-hover:opacity-100"
+          className="w-5 h-5 rounded-full flex items-center justify-center transition-all duration-150"
           style={{
-            opacity: isSelected ? 1 : 0,
             background: isSelected ? '#E7C59A' : 'rgba(0,0,0,0.55)',
             border: isSelected ? '1.5px solid #E7C59A' : '1.5px solid rgba(255,255,255,0.5)',
           }}

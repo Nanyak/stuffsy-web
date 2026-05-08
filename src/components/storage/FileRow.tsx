@@ -40,9 +40,8 @@ export function FileRow({ file, isSelected, onToggleSelect, onDownload, onDelete
     >
       <td className="py-3 pl-3 pr-1 w-10">
         <button
-          className="w-5 h-5 rounded-full flex items-center justify-center transition-all duration-150 cursor-pointer group-hover:opacity-100"
+          className={`w-5 h-5 rounded-full flex items-center justify-center transition-all duration-150 cursor-pointer ${isSelected ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
           style={{
-            opacity: isSelected ? 1 : 0,
             background: isSelected ? '#5B8DEF' : 'transparent',
             border: isSelected ? '1.5px solid #5B8DEF' : '1.5px solid #555555',
           }}
