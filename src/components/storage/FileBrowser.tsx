@@ -5,7 +5,7 @@ import { FileList } from "./FileList";
 import { EmptyState } from "./EmptyState";
 import { Breadcrumb } from "./Breadcrumb";
 import type { FileInfo, ViewMode } from "@/types/storage";
-import { FolderPlus, Check, X } from "lucide-react";
+import { FolderPlus, Check, X, Download, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -13,6 +13,14 @@ interface FileBrowserProps {
   folders: string[];
   files: FileInfo[];
   currentPath: string[];
+  selectedFiles: Set<string>;
+  selectedFolders: Set<string>;
+  onSelectFile: (key: string) => void;
+  onSelectFolder: (name: string) => void;
+  onSelectAll: () => void;
+  onClearSelection: () => void;
+  onBulkDelete: () => void;
+  onBulkDownload: () => void;
   onNavigate: (path: string[]) => void;
   onOpenFolder: (name: string) => void;
   onDownload: (key: string) => void;
@@ -28,6 +36,14 @@ export function FileBrowser({
   folders,
   files,
   currentPath,
+  selectedFiles,
+  selectedFolders,
+  onSelectFile,
+  onSelectFolder,
+  onSelectAll,
+  onClearSelection,
+  onBulkDelete,
+  onBulkDownload,
   onNavigate,
   onOpenFolder,
   onDownload,
@@ -43,6 +59,9 @@ export function FileBrowser({
   const [newFolderName, setNewFolderName] = useState("");
   const [isCreating, setIsCreating] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const selectionActive = selectedFiles.size > 0 || selectedFolders.size > 0;
+  const totalSelected = selectedFiles.size + selectedFolders.size;
 
   const startCreate = () => {
     setCreatingFolder(true);
@@ -98,57 +117,103 @@ export function FileBrowser({
     <div className="space-y-4">
       {/* Toolbar */}
       <div className="flex items-center justify-between gap-3 flex-wrap">
-        <div className="flex items-center gap-3 flex-1 min-w-0">
-          <Breadcrumb path={currentPath} onNavigate={onNavigate} />
-          {(folders.length > 0 || files.length > 0) && (
-            <span className="text-xs text-muted-foreground whitespace-nowrap">
-              {folders.length + files.length} item{folders.length + files.length !== 1 ? "s" : ""}
+        {selectionActive ? (
+          /* Selection action bar */
+          <div className="flex items-center gap-3 flex-1 flex-wrap">
+            <span className="text-sm font-semibold" style={{ color: '#F3F3F3' }}>
+              {totalSelected} selected
             </span>
-          )}
-        </div>
-        <div className="flex items-center gap-2 shrink-0">
-          {creatingFolder ? (
-            <div className="flex items-center gap-2">
-              <Input
-                ref={inputRef}
-                value={newFolderName}
-                onChange={(e) => setNewFolderName(e.target.value)}
-                onKeyDown={handleKeyDown}
-                placeholder="Folder name"
-                className="h-8 w-40 text-sm"
-                disabled={isCreating}
-              />
+            {selectedFiles.size > 0 && (
               <Button
+                variant="outline"
                 size="sm"
-                className="h-8 cursor-pointer"
-                onClick={confirmCreate}
-                disabled={isCreating || !newFolderName.trim()}
+                className="cursor-pointer gap-1.5"
+                onClick={onBulkDownload}
               >
-                <Check className="h-4 w-4" />
+                <Download className="h-4 w-4" />
+                Download
               </Button>
-              <Button
-                size="sm"
-                variant="ghost"
-                className="h-8 cursor-pointer"
-                onClick={cancelCreate}
-                disabled={isCreating}
-              >
-                <X className="h-4 w-4" />
-              </Button>
-            </div>
-          ) : (
+            )}
             <Button
               variant="outline"
               size="sm"
-              onClick={startCreate}
-              className="cursor-pointer gap-1.5"
+              className="cursor-pointer gap-1.5 hover:bg-destructive hover:text-white hover:border-destructive transition-all duration-200"
+              onClick={onBulkDelete}
             >
-              <FolderPlus className="h-4 w-4" />
-              New folder
+              <Trash2 className="h-4 w-4" />
+              Delete
             </Button>
-          )}
-          {!isEmpty && <ViewToggle viewMode={viewMode} onViewChange={setViewMode} />}
-        </div>
+            <button
+              className="flex items-center gap-1 text-sm cursor-pointer transition-opacity duration-150 hover:opacity-70"
+              style={{ color: '#949494' }}
+              onClick={onClearSelection}
+              aria-label="Clear selection"
+            >
+              <X className="h-4 w-4" />
+              Clear
+            </button>
+          </div>
+        ) : (
+          /* Normal toolbar */
+          <div className="flex items-center gap-3 flex-1 min-w-0">
+            <Breadcrumb path={currentPath} onNavigate={onNavigate} />
+            {(folders.length > 0 || files.length > 0) && (
+              <span className="text-xs text-muted-foreground whitespace-nowrap">
+                {folders.length + files.length} item{folders.length + files.length !== 1 ? "s" : ""}
+              </span>
+            )}
+          </div>
+        )}
+
+        {!selectionActive && (
+          <div className="flex items-center gap-2 shrink-0">
+            {creatingFolder ? (
+              <div className="flex items-center gap-2">
+                <Input
+                  ref={inputRef}
+                  value={newFolderName}
+                  onChange={(e) => setNewFolderName(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  placeholder="Folder name"
+                  className="h-8 w-40 text-sm"
+                  disabled={isCreating}
+                />
+                <Button
+                  size="sm"
+                  className="h-8 cursor-pointer"
+                  onClick={confirmCreate}
+                  disabled={isCreating || !newFolderName.trim()}
+                >
+                  <Check className="h-4 w-4" />
+                </Button>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="h-8 cursor-pointer"
+                  onClick={cancelCreate}
+                  disabled={isCreating}
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+            ) : (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={startCreate}
+                className="cursor-pointer gap-1.5"
+              >
+                <FolderPlus className="h-4 w-4" />
+                New folder
+              </Button>
+            )}
+            {!isEmpty && <ViewToggle viewMode={viewMode} onViewChange={setViewMode} />}
+          </div>
+        )}
+
+        {selectionActive && !isEmpty && (
+          <ViewToggle viewMode={viewMode} onViewChange={setViewMode} />
+        )}
       </div>
 
       {isEmpty ? (
@@ -159,6 +224,11 @@ export function FileBrowser({
             <div className="p-4"><FileGrid
               folders={folders}
               files={files}
+              selectedFiles={selectedFiles}
+              selectedFolders={selectedFolders}
+              selectionActive={selectionActive}
+              onSelectFile={onSelectFile}
+              onSelectFolder={onSelectFolder}
               onDownload={onDownload}
               onDelete={onDelete}
               onOpenFolder={onOpenFolder}
@@ -170,6 +240,11 @@ export function FileBrowser({
             <FileList
               folders={folders}
               files={files}
+              selectedFiles={selectedFiles}
+              selectedFolders={selectedFolders}
+              onSelectFile={onSelectFile}
+              onSelectFolder={onSelectFolder}
+              onSelectAll={onSelectAll}
               onDownload={onDownload}
               onDelete={onDelete}
               onOpenFolder={onOpenFolder}

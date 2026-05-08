@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Download, Trash2, Eye } from "lucide-react";
+import { Download, Trash2, Eye, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { FileInfo } from "@/types/storage";
 import { formatFileSize, getFileIcon } from "@/lib/storageUtils";
@@ -9,13 +9,15 @@ const PREVIEWABLE = (ct: string) => ct.includes('pdf') || ct.startsWith('video/'
 
 interface FileRowProps {
   file: FileInfo;
+  isSelected: boolean;
+  onToggleSelect: (key: string) => void;
   onDownload: (key: string) => void;
   onDelete: (key: string) => void;
   onGetPreviewUrl?: (key: string) => Promise<string>;
   onPreview?: (file: FileInfo) => void;
 }
 
-export function FileRow({ file, onDownload, onDelete, onGetPreviewUrl, onPreview }: FileRowProps) {
+export function FileRow({ file, isSelected, onToggleSelect, onDownload, onDelete, onGetPreviewUrl, onPreview }: FileRowProps) {
   const FileIcon = getFileIcon(file.content_type);
   const fileName = file.key.split('/').pop() || file.key;
   const formattedDate = new Date(file.last_modified).toLocaleDateString();
@@ -32,7 +34,24 @@ export function FileRow({ file, onDownload, onDelete, onGetPreviewUrl, onPreview
   }, [file.key]);
 
   return (
-    <tr className="border-b border-border/60 transition-colors duration-150 group hover:bg-[oklch(0.545_0.185_268_/_0.04)] dark:hover:bg-[oklch(0.630_0.190_268_/_0.06)]">
+    <tr
+      className="border-b border-border/60 transition-colors duration-150 group"
+      style={{ background: isSelected ? 'rgba(91,141,239,0.06)' : undefined }}
+    >
+      <td className="py-3 pl-3 pr-1 w-10">
+        <button
+          className="w-5 h-5 rounded-full flex items-center justify-center transition-all duration-150 cursor-pointer group-hover:opacity-100"
+          style={{
+            opacity: isSelected ? 1 : 0,
+            background: isSelected ? '#5B8DEF' : 'transparent',
+            border: isSelected ? '1.5px solid #5B8DEF' : '1.5px solid #555555',
+          }}
+          onClick={(e) => { e.stopPropagation(); onToggleSelect(file.key); }}
+          aria-label={isSelected ? `Deselect ${fileName}` : `Select ${fileName}`}
+        >
+          {isSelected && <Check className="h-3 w-3 text-white" strokeWidth={3} />}
+        </button>
+      </td>
       <td className="py-3 px-4">
         <div className="flex items-center gap-3">
           <div className="rounded-lg overflow-hidden flex items-center justify-center shrink-0" style={{

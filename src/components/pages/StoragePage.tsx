@@ -62,6 +62,8 @@ export function StoragePage() {
     open: false, title: '', description: '', onConfirm: () => {},
   });
   const [previewFile, setPreviewFile] = useState<FileInfo | null>(null);
+  const [selectedFiles, setSelectedFiles] = useState<Set<string>>(new Set());
+  const [selectedFolders, setSelectedFolders] = useState<Set<string>>(new Set());
 
   const { folders, files: currentFiles } = getFolderContents(allFiles, currentPath);
   const displayedFiles = filterFiles(currentFiles, filterType);
@@ -186,42 +188,127 @@ export function StoragePage() {
     }
   };
 
+  const clearSelection = () => {
+    setSelectedFiles(new Set());
+    setSelectedFolders(new Set());
+  };
+
+  const handleToggleFileSelect = (key: string) => {
+    setSelectedFiles(prev => {
+      const next = new Set(prev);
+      next.has(key) ? next.delete(key) : next.add(key);
+      return next;
+    });
+  };
+
+  const handleToggleFolderSelect = (name: string) => {
+    setSelectedFolders(prev => {
+      const next = new Set(prev);
+      next.has(name) ? next.delete(name) : next.add(name);
+      return next;
+    });
+  };
+
+  const handleSelectAll = () => {
+    const allFileKeys = displayedFiles.map(f => f.key);
+    const allFolderNames = folders;
+    const allFilesSelected = allFileKeys.every(k => selectedFiles.has(k));
+    const allFoldersSelected = allFolderNames.every(n => selectedFolders.has(n));
+    if (allFilesSelected && allFoldersSelected && (allFileKeys.length + allFolderNames.length) > 0) {
+      clearSelection();
+    } else {
+      setSelectedFiles(new Set(allFileKeys));
+      setSelectedFolders(new Set(allFolderNames));
+    }
+  };
+
   const handleDelete = (key: string) => {
     const fileName = key.split("/").pop() || key;
     openConfirm(
       `Delete "${fileName}"?`,
       'This file will be permanently deleted and cannot be recovered.',
       async () => {
-        closeConfirm()
+        closeConfirm();
+        const prevFiles = allFiles;
+        setAllFiles(prev => prev.filter(f => f.key !== key));
         try {
           await deleteFile(key);
-          await fetchFiles();
         } catch {
-          notify('error', `Failed to delete "${fileName}". Please try again.`)
+          setAllFiles(prevFiles);
+          notify('error', `Failed to delete "${fileName}". Please try again.`);
         }
       }
     )
   };
 
-  const handleOpenFolder = (name: string) => setCurrentPath(prev => [...prev, name]);
-  const handleNavigate  = (path: string[]) => setCurrentPath(path);
+  const handleOpenFolder = (name: string) => { setCurrentPath(prev => [...prev, name]); clearSelection(); };
+  const handleNavigate  = (path: string[]) => { setCurrentPath(path); clearSelection(); };
 
   const handleDeleteFolder = (name: string) => {
     openConfirm(
       `Delete folder "${name}"?`,
       'All files inside this folder will be permanently deleted.',
       async () => {
-        closeConfirm()
+        closeConfirm();
         const folderPrefix = currentPath.length > 0 ? `${currentPath.join("/")}/${name}/` : `${name}/`;
         const toDelete = allFiles.filter(f => f.key.startsWith(folderPrefix));
+        const prevFiles = allFiles;
+        setAllFiles(prev => prev.filter(f => !f.key.startsWith(folderPrefix)));
         try {
           await Promise.all(toDelete.map(f => deleteFile(f.key)));
-          await fetchFiles();
         } catch {
-          notify('error', `Failed to delete folder "${name}". Please try again.`)
+          setAllFiles(prevFiles);
+          notify('error', `Failed to delete folder "${name}". Please try again.`);
         }
       }
     )
+  };
+
+  const handleBulkDelete = () => {
+    const fileCount = selectedFiles.size;
+    const folderCount = selectedFolders.size;
+    const total = fileCount + folderCount;
+    openConfirm(
+      `Delete ${total} item${total !== 1 ? 's' : ''}?`,
+      'These items will be permanently deleted and cannot be recovered.',
+      async () => {
+        closeConfirm();
+        const fileKeysToDelete = new Set(selectedFiles);
+        const folderNamesToDelete = new Set(selectedFolders);
+        const prevFiles = allFiles;
+        setAllFiles(prev => {
+          let filtered = prev.filter(f => !fileKeysToDelete.has(f.key));
+          for (const name of folderNamesToDelete) {
+            const prefix = currentPath.length > 0 ? `${currentPath.join('/')}/${name}/` : `${name}/`;
+            filtered = filtered.filter(f => !f.key.startsWith(prefix));
+          }
+          return filtered;
+        });
+        clearSelection();
+        try {
+          const folderFiles = prevFiles.filter(f => {
+            for (const name of folderNamesToDelete) {
+              const prefix = currentPath.length > 0 ? `${currentPath.join('/')}/${name}/` : `${name}/`;
+              if (f.key.startsWith(prefix)) return true;
+            }
+            return false;
+          });
+          await Promise.all([
+            ...[...fileKeysToDelete].map(key => deleteFile(key)),
+            ...folderFiles.map(f => deleteFile(f.key)),
+          ]);
+        } catch {
+          setAllFiles(prevFiles);
+          notify('error', 'Failed to delete some items. Please try again.');
+        }
+      }
+    );
+  };
+
+  const handleBulkDownload = async () => {
+    for (const key of selectedFiles) {
+      await handleDownload(key);
+    }
   };
 
   const handleCreateFolder = async (name: string) => {
@@ -467,6 +554,14 @@ export function StoragePage() {
             folders={folders}
             files={displayedFiles}
             currentPath={currentPath}
+            selectedFiles={selectedFiles}
+            selectedFolders={selectedFolders}
+            onSelectFile={handleToggleFileSelect}
+            onSelectFolder={handleToggleFolderSelect}
+            onSelectAll={handleSelectAll}
+            onClearSelection={clearSelection}
+            onBulkDelete={handleBulkDelete}
+            onBulkDownload={handleBulkDownload}
             onNavigate={handleNavigate}
             onOpenFolder={handleOpenFolder}
             onDownload={handleDownload}

@@ -1,19 +1,36 @@
-import { Folder, Trash2, ChevronRight } from "lucide-react";
+import { Folder, Trash2, ChevronRight, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { T } from "@/lib/tokens";
 
 interface FolderRowProps {
   name: string;
+  isSelected: boolean;
+  onToggleSelect: (name: string) => void;
   onOpen: (name: string) => void;
   onDelete: (name: string) => void;
 }
 
-export function FolderRow({ name, onOpen, onDelete }: FolderRowProps) {
+export function FolderRow({ name, isSelected, onToggleSelect, onOpen, onDelete }: FolderRowProps) {
   return (
     <tr
-      className="border-b border-border/60 transition-colors duration-150 cursor-pointer group hover:bg-[oklch(0.545_0.185_268_/_0.04)] dark:hover:bg-[oklch(0.630_0.190_268_/_0.06)]"
+      className="border-b border-border/60 transition-colors duration-150 group"
+      style={{ background: isSelected ? 'rgba(231,197,154,0.06)' : undefined }}
       onDoubleClick={() => onOpen(name)}
     >
+      <td className="py-3 pl-3 pr-1 w-10">
+        <button
+          className="w-5 h-5 rounded-full flex items-center justify-center transition-all duration-150 cursor-pointer group-hover:opacity-100"
+          style={{
+            opacity: isSelected ? 1 : 0,
+            background: isSelected ? '#E7C59A' : 'transparent',
+            border: isSelected ? '1.5px solid #E7C59A' : '1.5px solid #555555',
+          }}
+          onClick={(e) => { e.stopPropagation(); onToggleSelect(name); }}
+          aria-label={isSelected ? `Deselect folder ${name}` : `Select folder ${name}`}
+        >
+          {isSelected && <Check className="h-3 w-3" style={{ color: '#101010' }} strokeWidth={3} />}
+        </button>
+      </td>
       <td className="py-3 px-4">
         <button
           className="flex items-center gap-3 w-full text-left cursor-pointer"
