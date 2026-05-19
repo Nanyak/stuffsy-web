@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { Send, Sparkles, ChevronDown, ChevronUp, FileText, Folders, RotateCcw, Image, ArrowLeft, MessageSquare, Trash2 } from 'lucide-react'
 import ReactMarkdown from 'react-markdown'
-import { streamAI, type SourceChunk } from '@/services/ai_service'
+import { streamChat, type ChatHistoryMessage, type SourceChunk } from '@/services/ai_service'
 import { useAuth } from '@/contexts/AuthContext'
 import { T } from '@/lib/tokens'
 
@@ -40,18 +40,66 @@ const SUGGESTED = [
 ]
 
 const SESSIONS_KEY = 'stuffsy_ai_sessions'
+const ACTIVE_SESSION_KEY = 'stuffsy_ai_active_session'
 const MAX_SESSIONS = 20
 
 let idCounter = 0
 const uid = () => `msg-${++idCounter}`
+const sessionUid = () => {
+  if (typeof crypto !== 'undefined' && 'randomUUID' in crypto) {
+    return `s-${crypto.randomUUID()}`
+  }
+  return `s-${Date.now()}-${Math.random().toString(36).slice(2)}`
+}
+
+function normalizeScope(value?: string): Scope {
+  return SCOPES.find(s => s.value === value) ?? SCOPES[0]
+}
+
+function cleanMessages(messages: Message[]): Message[] {
+  return messages.map(m => ({ ...m, isStreaming: false }))
+}
+
+function chatHistoryFrom(messages: Message[]): ChatHistoryMessage[] {
+  return messages
+    .filter(m => !m.isError && !m.isStreaming && m.content.trim())
+    .map(m => ({ role: m.role, content: m.content }))
+}
 
 function loadSessions(): ChatSession[] {
-  try { return JSON.parse(localStorage.getItem(SESSIONS_KEY) ?? '[]') }
+  try {
+    const sessions = JSON.parse(localStorage.getItem(SESSIONS_KEY) ?? '[]') as ChatSession[]
+    return sessions.map(session => ({
+      ...session,
+      messages: cleanMessages(session.messages ?? []),
+      scope: normalizeScope(session.scope?.value),
+      timestamp: session.timestamp || Date.now(),
+      title: session.title || 'New chat',
+    }))
+  }
   catch { return [] }
 }
 
 function persistSessions(sessions: ChatSession[]) {
   localStorage.setItem(SESSIONS_KEY, JSON.stringify(sessions))
+}
+
+function persistActiveSessionId(id: string | null) {
+  if (id) localStorage.setItem(ACTIVE_SESSION_KEY, id)
+  else localStorage.removeItem(ACTIVE_SESSION_KEY)
+}
+
+function getInitialChatState() {
+  const sessions = loadSessions()
+  const activeSessionId = localStorage.getItem(ACTIVE_SESSION_KEY)
+  const activeSession = sessions.find(s => s.id === activeSessionId)
+
+  return {
+    sessions,
+    activeSessionId: activeSession?.id ?? null,
+    messages: activeSession?.messages ?? [],
+    scope: activeSession?.scope ?? SCOPES[0],
+  }
 }
 
 function relativeTime(ts: number): string {
@@ -65,16 +113,25 @@ function relativeTime(ts: number): string {
 /* ── Page ──────────────────────────────────────────────────── */
 export function AiPage() {
   const { getAccessToken } = useAuth()
-  const [messages,        setMessages]        = useState<Message[]>([])
+  const [initialState] = useState(getInitialChatState)
+  const [messages,        setMessages]        = useState<Message[]>(initialState.messages)
   const [input,           setInput]           = useState('')
-  const [scope,           setScope]           = useState<Scope>(SCOPES[0])
+  const [scope,           setScope]           = useState<Scope>(initialState.scope)
   const [streaming,       setStreaming]       = useState(false)
-  const [sessions,        setSessions]        = useState<ChatSession[]>(loadSessions)
+  const [sessions,        setSessions]        = useState<ChatSession[]>(initialState.sessions)
   const [hoveredSession,  setHoveredSession]  = useState<string | null>(null)
-  const [activeSessionId, setActiveSessionId] = useState<string | null>(null)
+  const [activeSessionId, setActiveSessionId] = useState<string | null>(initialState.activeSessionId)
   const abortRef    = useRef<AbortController | null>(null)
   const bottomRef   = useRef<HTMLDivElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
+
+  const persistSessionList = useCallback((updater: (prev: ChatSession[]) => ChatSession[]) => {
+    setSessions(prev => {
+      const next = updater(prev).slice(0, MAX_SESSIONS)
+      persistSessions(next)
+      return next
+    })
+  }, [])
 
   useEffect(() => {
     if (messages.length > 0) {
@@ -91,6 +148,44 @@ export function AiPage() {
 
   useEffect(() => () => { abortRef.current?.abort() }, [])
 
+  useEffect(() => {
+    persistActiveSessionId(activeSessionId)
+  }, [activeSessionId])
+
+  useEffect(() => {
+    if (!activeSessionId) return
+
+    persistSessionList(prev => {
+      const activeSession = prev.find(session => session.id === activeSessionId)
+      if (!activeSession) return prev
+
+      const title = messages.find(m => m.role === 'user')?.content.slice(0, 60) || activeSession.title || 'New chat'
+      const updatedSession = {
+        ...activeSession,
+        title,
+        messages: cleanMessages(messages),
+        scope,
+        timestamp: Date.now(),
+      }
+
+      return [updatedSession, ...prev.filter(session => session.id !== activeSessionId)]
+    })
+  }, [activeSessionId, messages, scope, persistSessionList])
+
+  const createSession = useCallback((title = 'New chat') => {
+    const session: ChatSession = {
+      id: sessionUid(),
+      title,
+      messages: [],
+      scope,
+      timestamp: Date.now(),
+    }
+
+    persistSessionList(prev => [session, ...prev.filter(s => s.id !== session.id)])
+    setActiveSessionId(session.id)
+    return session.id
+  }, [persistSessionList, scope])
+
   const send = useCallback(async () => {
     const question = input.trim()
     if (!question || streaming) return
@@ -104,14 +199,24 @@ export function AiPage() {
     const userMsg: Message = { id: uid(), role: 'user', content: question }
     const assistantId = uid()
     const assistantMsg: Message = { id: assistantId, role: 'assistant', content: '', sources: [], isStreaming: true }
+    const history = chatHistoryFrom(messages)
 
+    if (!activeSessionId) {
+      createSession(question.slice(0, 60) || 'New chat')
+    }
     setMessages(prev => [...prev, userMsg, assistantMsg])
 
     const controller = new AbortController()
     abortRef.current = controller
 
     try {
-      for await (const event of streamAI({ question, scope: scope.value, token, signal: controller.signal })) {
+      for await (const event of streamChat({
+        message: question,
+        scope: scope.value,
+        token,
+        history,
+        signal: controller.signal,
+      })) {
         if (event.type === 'token') {
           setMessages(prev => prev.map(m =>
             m.id === assistantId ? { ...m, content: m.content + event.data } : m
@@ -138,7 +243,7 @@ export function AiPage() {
       ))
       setStreaming(false)
     }
-  }, [input, streaming, scope, getAccessToken])
+  }, [activeSessionId, createSession, getAccessToken, input, messages, scope, streaming])
 
   const handleKey = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send() }
@@ -146,31 +251,16 @@ export function AiPage() {
 
   const reset = useCallback(() => {
     abortRef.current?.abort()
-    if (messages.length > 0 && !activeSessionId) {
-      const title = messages.find(m => m.role === 'user')?.content.slice(0, 60) ?? 'Chat'
-      const session: ChatSession = {
-        id: `s-${Date.now()}`,
-        title,
-        messages: messages.map(m => ({ ...m, isStreaming: false })),
-        scope,
-        timestamp: Date.now(),
-      }
-      setSessions(prev => {
-        const next = [session, ...prev].slice(0, MAX_SESSIONS)
-        persistSessions(next)
-        return next
-      })
-    }
     setMessages([])
     setInput('')
     setStreaming(false)
     setActiveSessionId(null)
-  }, [messages, scope, activeSessionId])
+  }, [])
 
   const loadSession = useCallback((session: ChatSession) => {
     abortRef.current?.abort()
-    setMessages(session.messages)
-    setScope(session.scope)
+    setMessages(cleanMessages(session.messages))
+    setScope(normalizeScope(session.scope?.value))
     setInput('')
     setStreaming(false)
     setActiveSessionId(session.id)
@@ -178,12 +268,14 @@ export function AiPage() {
 
   const deleteSession = useCallback((id: string, e: React.MouseEvent) => {
     e.stopPropagation()
-    setSessions(prev => {
-      const next = prev.filter(s => s.id !== id)
-      persistSessions(next)
-      return next
-    })
-  }, [])
+    persistSessionList(prev => prev.filter(s => s.id !== id))
+    if (activeSessionId === id) {
+      setMessages([])
+      setInput('')
+      setStreaming(false)
+      setActiveSessionId(null)
+    }
+  }, [activeSessionId, persistSessionList])
 
   return (
     <div style={{ height: '100vh', display: 'flex', overflow: 'hidden', fontFamily: T.fontBody, background: T.surface2 }}>
@@ -267,11 +359,12 @@ export function AiPage() {
                 style={{
                   display: 'flex', alignItems: 'center', gap: '6px',
                   padding: '7px 8px', borderRadius: '6px', cursor: 'pointer',
-                  background: hoveredSession === s.id ? T.border : 'transparent',
+                  background: activeSessionId === s.id ? T.primaryBg : hoveredSession === s.id ? T.border : 'transparent',
+                  outline: activeSessionId === s.id ? `1px solid ${T.borderEm}` : 'none',
                   transition: 'background 150ms', marginBottom: '2px',
                 }}
               >
-                <MessageSquare className="h-3 w-3 flex-shrink-0" style={{ color: T.textMid }} />
+                <MessageSquare className="h-3 w-3 flex-shrink-0" style={{ color: activeSessionId === s.id ? T.primary : T.textMid }} />
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <p style={{
                     fontSize: '12px', color: T.textHi, margin: 0,

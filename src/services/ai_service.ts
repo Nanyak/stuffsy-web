@@ -13,6 +13,11 @@ type AIEvent =
   | { type: 'token';  data: string }
   | { type: 'done' }
 
+export type ChatHistoryMessage = {
+  role: 'user' | 'assistant'
+  content: string
+}
+
 export async function* streamAI(opts: {
   question: string
   scope: string
@@ -27,7 +32,40 @@ export async function* streamAI(opts: {
 
   if (!resp.ok) throw new Error('AI service is not available yet. Backend coming soon.')
 
-  const reader = resp.body!.getReader()
+  yield* streamEvents(resp)
+}
+
+export async function* streamChat(opts: {
+  message: string
+  scope: string
+  token: string
+  history: ChatHistoryMessage[]
+  signal?: AbortSignal
+}): AsyncGenerator<AIEvent> {
+  const resp = await fetch(`${BASE}/v1/api/ai/chat`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${opts.token}`,
+      Accept: 'text/event-stream',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      message: opts.message,
+      scope: opts.scope,
+      history: opts.history,
+    }),
+    signal: opts.signal,
+  })
+
+  if (!resp.ok) throw new Error('AI service is not available yet. Backend coming soon.')
+
+  yield* streamEvents(resp)
+}
+
+async function* streamEvents(resp: Response): AsyncGenerator<AIEvent> {
+  if (!resp.body) throw new Error('AI service returned an empty response.')
+
+  const reader = resp.body.getReader()
   const decoder = new TextDecoder()
   let buf = ''
 
